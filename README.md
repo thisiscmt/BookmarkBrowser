@@ -9,7 +9,9 @@ The app has the following features:
 * Can navigate to the last viewed directory upon startup
 
 It uses the following open source libraries:
+* [jQuery](http://jquery.com)
 * [jQuery Mobile](http://jquerymobile.com)
 * [KnockoutJS](http://knockoutjs.com)
 * [CloudFox](http://cloudfox.codeplex.com), only the wrapper for accessing Mozilla's Sync API, which I modified slightly
 * [Json.NET](http://json.codeplex.com)
+* [DateJS](http://www.datejs.com)
