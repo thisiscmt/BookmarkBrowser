@@ -15,3 +15,5 @@ It uses the following open source libraries:
 * [CloudFox](http://cloudfox.codeplex.com), only the wrapper for accessing Mozilla's Sync API, which I modified slightly
 * [Json.NET](http://json.codeplex.com)
 * [DateJS](http://www.datejs.com)
+
+I also want to thank [kentbye](http://github.com/kentbye) for resurrecting the color swatches from older versions of jQuery Mobile and [incorporating them](http://github.com/kentbye/jquery-mobile-five-swatches-theme) into the default theme for version 1.4.
