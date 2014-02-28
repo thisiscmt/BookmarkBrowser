@@ -5,6 +5,8 @@ This web application is for accessing Firefox Sync bookmarks from a mobile devic
 The app has the following features:
 * Stores your Sync credentials and key in the browser's local storage to make refreshing the data easier
 * Stores all data in local storage for faster navigation through your bookmark structure
+* Can refresh bookmark data upon startup
+* Can navigate to the last viewed directory upon startup
 
 It uses the following open source libraries:
 * [jQuery Mobile](http://jquerymobile.com)
