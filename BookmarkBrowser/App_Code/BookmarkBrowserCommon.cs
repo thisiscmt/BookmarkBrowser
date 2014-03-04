@@ -42,9 +42,9 @@ namespace BookmarkBrowser
 
             try
             {
-                var lstRoot = client.DecryptPayload<Bookmark>(client.GetCollection("bookmarks", null, null, null, -1, -1, CloudFox.Weave.SortOrder.Index));
-                CloudFox.Presentation.Directory mainDir = CloudFox.Presentation.BookmarksStructureBuilder.Build(lstRoot);
-                count = lstRoot.Where(x => x.BookmarkType == BookmarkType.Bookmark).Count();
+                var bookmarks = client.DecryptPayload<Bookmark>(client.GetCollection("bookmarks", null, null, null, -1, -1, CloudFox.Weave.SortOrder.Index));
+                CloudFox.Presentation.Directory mainDir = CloudFox.Presentation.BookmarksStructureBuilder.Build(bookmarks);
+                count = bookmarks.Where(x => x.BookmarkType == BookmarkType.Bookmark).Count();
                 mainDir.Tag = count.ToString();
 
                 return mainDir;
@@ -69,7 +69,7 @@ namespace BookmarkBrowser
 
             try
             {
-                filePath = HttpContext.Current.Request.MapPath("/") + "Log\\errors.log";
+                filePath = HttpContext.Current.Request.MapPath("/") + "Logs\\errors.log";
 
                 using (StreamWriter sr = new StreamWriter(filePath, true, System.Text.Encoding.UTF8)) 
                 {

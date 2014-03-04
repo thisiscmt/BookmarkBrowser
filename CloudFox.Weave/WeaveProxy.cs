@@ -229,14 +229,14 @@ namespace CloudFox.Weave
         {
             Bookmark bm;
             WeaveBasicObject bmWBO;
-            List<string> lstParentID;
+            List<string> directoryIDs;
             string bmJSON;
 
-            lstParentID = new List<string>();
-            lstParentID.Add(dir);
-            var lstParent = DecryptPayload<Bookmark>(GetCollection("bookmarks", lstParentID, null, null, -1, -1, SortOrder.Index));
+            directoryIDs = new List<string>();
+            directoryIDs.Add(dir);
+            var parent = DecryptPayload<Bookmark>(GetCollection("bookmarks", directoryIDs, null, null, -1, -1, SortOrder.Index));
 
-            if (lstParent == null || lstParent.Count() == 0)
+            if (parent == null || parent.Count() == 0)
             {
                 throw new Exception("Could not find selected parent directory.");
             }
@@ -245,7 +245,7 @@ namespace CloudFox.Weave
             bm.BookmarkType = BookmarkType.Bookmark;
             bm.Description = "";
             bm.ParentName = dir;
-            bm.ParentId = lstParent.First().Id;
+            bm.ParentId = parent.First().Id;
             bm.Title = title;
             bm.Uri = url;
             bmJSON = JsonConvert.SerializeObject(bm);
