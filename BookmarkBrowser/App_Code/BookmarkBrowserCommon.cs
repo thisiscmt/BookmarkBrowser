@@ -78,7 +78,7 @@ namespace BookmarkBrowser
                         msg = msg + "Event description: " + desc;
                     }
 
-                    msg = msg + Environment.NewLine + "Event timestamp: " + timestamp.ToString("M/dd/yyyy H:mm yy");
+                    msg = msg + Environment.NewLine + "Event timestamp: " + timestamp.ToString("M/dd/yyyy H:mm tt");
 
                     if (!string.IsNullOrEmpty(longDesc))
                     {
