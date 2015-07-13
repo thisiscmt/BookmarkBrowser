@@ -6,7 +6,7 @@
     <title>Home</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="Styles/jquery-mobile-five-swatches.min.css"/>
-    <link rel="stylesheet" href="Styles/jquery.mobile.icons.min.css.css"/>
+    <link rel="stylesheet" href="Styles/jquery.mobile.icons.min.css"/>
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.1/jquery.mobile-1.4.1.min.css" />
     <link rel="stylesheet" href="Styles/Site.css"/>
 </head>

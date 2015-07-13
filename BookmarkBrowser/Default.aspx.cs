@@ -5,7 +5,7 @@ using System.Web.Services;
 using System.Web.Script.Services;
 using System.Diagnostics;
 using System.Reflection;
-using CloudFox.Presentation;
+using System.Threading;
 
 namespace BookmarkBrowser
 {
@@ -25,6 +25,9 @@ namespace BookmarkBrowser
                     }
                 }
             }
+            catch (ThreadAbortException)
+            {
+            }
             catch (Exception ex)
             {
                 Session["CurrentException"] = ex;
@@ -32,11 +35,17 @@ namespace BookmarkBrowser
             }
         }
 
-        [WebMethod()]
-        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public static Directory LoadBookmarks(string userName, string password, string syncKey) {
-            CloudFox.Weave.WeaveProxy client = BookmarkBrowserCommon.BuildClient(userName, password, syncKey);
-            return BookmarkBrowserCommon.LoadBookmarks(client);
-        }
+        //[WebMethod()]
+        //[ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        //public static IEnumerable<Bookmark> GetBookmarks(string userName, string password) {
+        //    //CloudFox.Weave.WeaveProxy client = BookmarkBrowserCommon.BuildClient(userName, password, syncKey);
+        //    //return BookmarkBrowserCommon.LoadBookmarks(client);
+
+        //    SyncClient syncClient = new SyncClient();
+        //    syncClient.SignIn(userName, password);
+        //    List<Bookmark> bookmarks = (List<Bookmark>)syncClient.GetBookmarks();
+
+        //    return bookmarks;
+        //}
     }
 }

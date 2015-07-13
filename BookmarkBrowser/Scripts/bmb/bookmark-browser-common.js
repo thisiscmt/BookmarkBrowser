@@ -3,19 +3,34 @@ function loadBookmarks(userName, password, syncKey, action) {
     // The 'cache-control' header is needed to deal with a caching bug in Safari on iOS 6.
     // See http://stackoverflow.com/questions/12506897/is-safari-on-ios-6-caching-ajax-results
     $.ajax({
-        type: "POST",
-        url: "Default.aspx/LoadBookmarks",
+        type: "GET",
+        url: "api/bookmark?username=" + userName + "&password=" + password,
         contentType: "application/json; charset=utf-8",
-        data: "{'userName':'" + userName + "', 'password':'" + password + "', 'syncKey':'" + syncKey + "'}",
         dataType: "json",
-        headers: {"cache-control":"no-cache", "LoadAction":action},
+        headers: {"cache-control":"no-cache"},
         error: function (error) {
-            var resp = JSON.parse(error.responseText);
-            displayMessage(resp.Message, "Settings");
+            var msg;
+
+            if (error.statusText) {
+                msg = error.statusText;
+            }
+            else {
+                try {
+                    var resp = JSON.parse(error.responseText);
+                    msg = resp.Message;
+                }
+                catch (e) {
+                    msg = "Server error occurred";
+                }
+            }
+
+            displayMessage(msg, "Settings");
         },
         success: function (data) {
-            localStorage.setItem("CurrentBookmarks", JSON.stringify(data.d));
-            localStorage.setItem("BookmarkCount", data.d.Tag);
+            var mainDir = JSON.parse(data.Content);
+
+            localStorage.setItem("CurrentBookmarks", data.Content);
+            localStorage.setItem("BookmarkCount", mainDir.Tag);
             localStorage.setItem("LastRefresh", Date.now().toString("M/d/yyyy h:mm tt"));
             var loadOnStartup = "False";
             var lastDirOnStartup = "False";

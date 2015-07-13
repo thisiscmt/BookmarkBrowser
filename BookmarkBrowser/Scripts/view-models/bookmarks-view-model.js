@@ -77,6 +77,9 @@ function applyBindings() {
                 $(element).find("img").attr("src", "Images/bookmark.png");
                 $(element).find(".locationBlock").html(viewModel.Location).show();
             }
+            else if (viewModel.ItemType === 2) {
+                // TODO: Add code to adjust the list item to look like a spearator
+            }
         }
     };
 

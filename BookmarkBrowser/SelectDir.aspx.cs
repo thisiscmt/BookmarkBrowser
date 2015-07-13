@@ -6,7 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.Script.Services;
 using System.Web.Services;
-using CloudFox.Presentation;
+//using CloudFox.Presentation;
 
 namespace BookmarkBrowser
 {
@@ -36,12 +36,12 @@ namespace BookmarkBrowser
             }
         }
 
-        [WebMethod()]
-        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public static void SaveBookmark(string userName, string password, string syncKey, string url, string title, string dir)
-        {
-            CloudFox.Weave.WeaveProxy client = BookmarkBrowserCommon.BuildClient(userName, password, syncKey);
-            client.AddBookmark(url, title, dir);
-        }
+        //[WebMethod()]
+        //[ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        //public static void SaveBookmark(string userName, string password, string syncKey, string url, string title, string dir)
+        //{
+        //    CloudFox.Weave.WeaveProxy client = BookmarkBrowserCommon.BuildClient(userName, password, syncKey);
+        //    client.AddBookmark(url, title, dir);
+        //}
     }
 }

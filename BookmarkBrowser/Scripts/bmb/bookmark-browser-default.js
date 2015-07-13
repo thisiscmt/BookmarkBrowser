@@ -181,10 +181,10 @@ function Save_OnClick() {
             displayMessage("Password cannot be blank", "Settings");
             return false;
         }
-        if (!syncKey) {
-            displayMessage("Sync key cannot be blank", "Settings");
-            return false;
-        }
+        //if (!syncKey) {
+        //    displayMessage("Sync key cannot be blank", "Settings");
+        //    return false;
+        //}
 
         clearMessagePanel("Settings");
         $.mobile.loading("show", { theme: "c", text: "Loading ...", textVisible: true });
