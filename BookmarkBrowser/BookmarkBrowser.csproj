@@ -131,8 +131,8 @@
     <Content Include="Scripts\bmb\bookmark-browser-default.js" />
     <Content Include="Scripts\bmb\bookmark-browser-selectdir.js" />
     <Content Include="Scripts\lib\common.js" />
-    <Content Include="Scripts\lib\date.js" />
     <Content Include="Scripts\lib\modernizr.custom.2.7.1-min.js" />
+    <Content Include="Scripts\lib\moment.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Scripts\view-models\bookmarks-view-model.js" />
     <Content Include="SelectDir.aspx" />

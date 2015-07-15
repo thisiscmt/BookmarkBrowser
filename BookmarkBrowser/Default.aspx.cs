@@ -34,18 +34,5 @@ namespace BookmarkBrowser
                 Response.Redirect("~/Errors/Error.aspx", false);
             }
         }
-
-        //[WebMethod()]
-        //[ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        //public static IEnumerable<Bookmark> GetBookmarks(string userName, string password) {
-        //    //CloudFox.Weave.WeaveProxy client = BookmarkBrowserCommon.BuildClient(userName, password, syncKey);
-        //    //return BookmarkBrowserCommon.LoadBookmarks(client);
-
-        //    SyncClient syncClient = new SyncClient();
-        //    syncClient.SignIn(userName, password);
-        //    List<Bookmark> bookmarks = (List<Bookmark>)syncClient.GetBookmarks();
-
-        //    return bookmarks;
-        //}
     }
 }

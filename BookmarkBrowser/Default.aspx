@@ -30,7 +30,7 @@
                     Use this site to access your Sync bookmarks from a mobile device that isn't currently
                     supported by Firefox.<br /><br />
                         
-                    Click Settings to set your Sync username, password, and key. Once the information is 
+                    Click Settings to set your Sync username and password. Once the information is 
                     saved, you can refresh the bookmark data at any time from the settings page.
                 </div>
             </div>
@@ -142,12 +142,6 @@
                         <asp:Label ID="lblPassword" runat="server" Text="Password"></asp:Label>
                         <input id="txtPassword" type="password" data-mini="true" />
                     </div>
-
-                    <div class="bottomPadding15">
-                        <asp:Label ID="lblSyncKey" runat="server" Text="Sync key"></asp:Label>
-                        <input id="txtSyncKey" type="password" data-mini="true" />
-                    </div>
-
                 </div>
 
                 <div id="LoggedIn" class="hideMe smallText">
@@ -226,7 +220,7 @@
     <script type="text/javascript" src="http://code.jquery.com/mobile/1.4.1/jquery.mobile-1.4.1.min.js"></script>
     <script type="text/javascript" src="Scripts/lib/modernizr.custom.2.7.1-min.js"></script>
     <script type='text/javascript' src="http://cdnjs.cloudflare.com/ajax/libs/knockout/3.0.0/knockout-min.js"></script>
-    <script type='text/javascript' src='Scripts/lib/date.js'></script>
+    <script type='text/javascript' src='Scripts/lib/moment.min.js'></script>
     <script type='text/javascript' src='Scripts/lib/common.js'></script>
     <script type="text/javascript" src="Scripts/view-models/bookmarks-view-model.js"></script>
     <script type="text/javascript" src="Scripts/bmb/bookmark-browser-common.js"></script>
@@ -264,14 +258,13 @@
                         break;
                     default:
                         // If this is the initial visit to the site and the 'Load On Startup' option 
-                        // is set, load the bookmark data
+                        // is set, fetch the latest bookmark data
                         if (loadOnStartup === "True" && hasLoaded != "True" && localStorage.getItem("UserName")) {
                             $.mobile.loading("show", { theme: "c", text: "Loading ...", textVisible: true });
 
                             var userName = localStorage.getItem("UserName");
                             var password = localStorage.getItem("Password");
-                            var syncKey = localStorage.getItem("SyncKey");
-                            loadBookmarks(userName, password, syncKey, "Init");
+                            loadBookmarks(userName, password, "Init");
                         }
 
                         break;

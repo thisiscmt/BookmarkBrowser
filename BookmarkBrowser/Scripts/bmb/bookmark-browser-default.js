@@ -18,14 +18,13 @@ function Bookmarks_PageBeforeShow(event, ui) {
     }
 
     // For some reason an explicit refresh of the bookmark list is required when transitioning to 
-    // a new directory, otherwise the JQM styles won't be applied. This step wasn't necessary with 
-    // JQM 1.2 and Knockout 2.1, so maybe there is something weird going on in the newer version of 
-    // one or both of those.
+    // a new directory, otherwise the jQuery Mobile styles won't be applied. This step wasn't necessary 
+    // with JQM 1.2 and Knockout 2.1, so something obviously changed in the newer version of one or both 
+    // of those.
     $("#bmMain").listview("refresh");
 }
 
 function Bookmarks_PageChangeFailed(event, ui) {
-    // TODO
 }
 
 function doNavigation(sender) {
@@ -107,7 +106,6 @@ function Settings_PageBeforeShow(event, ui) {
 }
 
 function Settings_PageChangeFailed(event, ui) {
-    // TODO
 }
 
 function loadSettingsPage() {
@@ -118,7 +116,7 @@ function loadSettingsPage() {
     if (userName) {
         $("#lblCurUser").html(userName);
         $("#lblBookmarkCount").html(localStorage.getItem("BookmarkCount"));
-        $("#lblLastRefresh").html(localStorage.getItem("LastRefresh"));
+        $("#lblLastRefresh").html(moment(localStorage.getItem("LastRefresh")).format("LLL"));
 
         if (localStorage.getItem("LoadOnStartup") === "True") {
             loadOnStartup = true;
@@ -136,7 +134,6 @@ function loadSettingsPage() {
     else {
         $("#txtUserName").val("");
         $("#txtPassword").val("");
-        $("#txtSyncKey").val("");
         $("#chkLoadOnStartup").prop("checked", false).checkboxradio("refresh");
         $("#chkLastDirOnStartup").prop("checked", false).checkboxradio("refresh");
     }
@@ -145,7 +142,6 @@ function loadSettingsPage() {
 function Save_OnClick() {
     var userName;
     var password;
-    var syncKey;
     var loadOnStartup = "False";
     var lastDirOnStartup = "False";
 
@@ -171,7 +167,6 @@ function Save_OnClick() {
     else {
         userName = $("#txtUserName").val();
         password = $("#txtPassword").val();
-        syncKey = $("#txtSyncKey").val();
 
         if (!userName) {
             displayMessage("User name cannot be blank", "Settings");
@@ -181,14 +176,10 @@ function Save_OnClick() {
             displayMessage("Password cannot be blank", "Settings");
             return false;
         }
-        //if (!syncKey) {
-        //    displayMessage("Sync key cannot be blank", "Settings");
-        //    return false;
-        //}
 
         clearMessagePanel("Settings");
         $.mobile.loading("show", { theme: "c", text: "Loading ...", textVisible: true });
-        loadBookmarks(userName, password, syncKey, "Login");
+        loadBookmarks(userName, password, "Login");
     }
 
     return false;
@@ -199,7 +190,6 @@ function Logout_OnClick() {
 
     localStorage.removeItem("UserName");
     localStorage.removeItem("Password");
-    localStorage.removeItem("SyncKey");
     localStorage.removeItem("CurrentBookmarks");
     localStorage.removeItem("BookmarkCount");
     localStorage.removeItem("LastRefresh");
@@ -208,12 +198,15 @@ function Logout_OnClick() {
 
     $("#txtUserName").val("")
     $("#txtPassword").val("")
-    $("#txtSyncKey").val("")
     $("#LoggedIn").hide();
     $("#LoggedInButtons").hide();
     $("#LoggedOut").show();
 
-    ko.dataFor($("#bookmarkContainer")[0]).removeBookmarks();
+    var bindingModel = ko.dataFor($("#bookmarkContainer")[0]);
+
+    if (bindingModel) {
+        bindingModel.removeBookmarks();
+    }
 
     $.mobile.loading("hide");
     $("body").pagecontainer("change", "#Settings", { allowSamePageTransition: true });
@@ -226,8 +219,7 @@ function Refresh_OnClick() {
 
     var userName = localStorage.getItem("UserName");
     var password = localStorage.getItem("Password");
-    var syncKey = localStorage.getItem("SyncKey");
-    loadBookmarks(userName, password, syncKey, "Refresh");
+    loadBookmarks(userName, password, "Refresh");
 
     return false;
 }
