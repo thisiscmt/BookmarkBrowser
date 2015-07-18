@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="Styles/jquery-mobile-five-swatches.min.css"/>
     <link rel="stylesheet" href="Styles/jquery.mobile.icons.min.css"/>
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.1/jquery.mobile-1.4.1.min.css" />
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.1/jquery.mobile-1.4.1.min.css" />
     <link rel="stylesheet" href="Styles/Site.css"/>
 </head>
 <body>
@@ -216,10 +216,10 @@
         </div>
     </div>
 
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script type="text/javascript" src="http://code.jquery.com/mobile/1.4.1/jquery.mobile-1.4.1.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/mobile/1.4.1/jquery.mobile-1.4.1.min.js"></script>
+    <script type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.0.0/knockout-min.js"></script>
     <script type="text/javascript" src="Scripts/lib/modernizr.custom.2.7.1-min.js"></script>
-    <script type='text/javascript' src="http://cdnjs.cloudflare.com/ajax/libs/knockout/3.0.0/knockout-min.js"></script>
     <script type='text/javascript' src='Scripts/lib/moment.min.js'></script>
     <script type='text/javascript' src='Scripts/lib/common.js'></script>
     <script type="text/javascript" src="Scripts/view-models/bookmarks-view-model.js"></script>
