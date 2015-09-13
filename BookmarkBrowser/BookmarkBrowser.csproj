@@ -292,9 +292,7 @@
       <DependentUpon>SelectDir.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Code\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\FxSyncNet\FxSyncNet.csproj">
       <Project>{3b75f58d-c92b-4d83-9618-ff4ae60b4d0b}</Project>
