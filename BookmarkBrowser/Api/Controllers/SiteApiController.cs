@@ -7,6 +7,7 @@ using System.Web.Http;
 using Newtonsoft.Json;
 using BookmarkBrowser.Api.Models;
 using BookmarkBrowser.Entities;
+using FxSyncNet;
 
 namespace BookmarkBrowser.Api.Controllers
 {
@@ -34,22 +35,48 @@ namespace BookmarkBrowser.Api.Controllers
             {
                 throw new HttpResponseException(Request.CreateResponse(
                     HttpStatusCode.BadRequest, 
-                    "Must supply Sync credentials"));
+                    "You must supply Sync credentials"));
             }
 
-            // We don't sign into Sync unless the request is for a valid collection
             FxSyncNet.SyncClient syncClient = new FxSyncNet.SyncClient();
 
             switch (collection.ToLower())
             {
                 case "bookmark":
-                    syncClient.SignIn(parms["username"], parms["password"]);
+                    try
+                    {
+                        syncClient.SignIn(parms["username"], parms["password"]);
 
-                    IEnumerable<FxSyncNet.Models.Bookmark> bookmarks = syncClient.GetBookmarks();
-                    Directory mainDir = Utility.BuildBookmarks(bookmarks);
-                    count = bookmarks.Where(x => x.Type == FxSyncNet.Models.BookmarkType.Bookmark).Count();
-                    mainDir.Tag = count.ToString();
-                    result.Content = JsonConvert.SerializeObject(mainDir);
+                        IEnumerable<FxSyncNet.Models.Bookmark> bookmarks = syncClient.GetBookmarks();
+                        Directory mainDir = Utility.BuildBookmarks(bookmarks);
+                        count = bookmarks.Where(x => x.Type == FxSyncNet.Models.BookmarkType.Bookmark).Count();
+                        mainDir.Tag = count.ToString();
+                        result.Content = JsonConvert.SerializeObject(mainDir);
+                    }
+                    catch (ServiceNotAvailableException ex)
+                    {
+                        throw new HttpResponseException(Request.CreateResponse(
+                            HttpStatusCode.GatewayTimeout, 
+                            Utility.GetExceptionMessage(ex)));
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        throw new HttpResponseException(Request.CreateResponse(
+                            HttpStatusCode.BadRequest, 
+                            Utility.GetExceptionMessage(ex)));
+                    }
+                    catch (AuthenticationException ex)
+                    {
+                        throw new HttpResponseException(Request.CreateResponse(
+                            HttpStatusCode.BadRequest, 
+                            Utility.GetExceptionMessage(ex)));
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new HttpResponseException(Request.CreateResponse(
+                            HttpStatusCode.BadRequest, 
+                            Utility.GetExceptionMessage(ex)));
+                    }
 
                     break;
                 default:

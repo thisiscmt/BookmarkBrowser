@@ -82,6 +82,25 @@ namespace BookmarkBrowser.Entities
             return rootDirectory;
         }
 
+        public static string GetExceptionMessage(Exception ex)
+        {
+            string msg = string.Empty;
+
+            if (ex != null)
+            {
+                if (ex.InnerException != null)
+                {
+                    msg = ex.InnerException.Message;
+                }
+                else
+                {
+                    msg = ex.Message;
+                }
+            }
+
+            return msg;
+        }
+
         public static void WriteEvent(string desc, DateTime timestamp, string longDesc = "", string source = "", 
                                       string process = "", string tag = "")
         {

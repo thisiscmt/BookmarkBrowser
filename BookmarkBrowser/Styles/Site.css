@@ -27,7 +27,6 @@
 {
     font-size:1.1em;
     margin:0px auto;
-    width:100%;
 }
 
 td.labelColumn
@@ -35,7 +34,6 @@ td.labelColumn
     padding-right:5px;
     padding-bottom:10px;
     text-align:right;
-    width:50%;
 }
 
 td.fieldColumn
@@ -43,13 +41,17 @@ td.fieldColumn
     padding-left:5px;
     padding-bottom:10px;
     text-align:left;
-    width:50%;
 }
 
 /* General */
 *
 {
     font-family:Arial, Helvetica, sans-serif;
+}
+
+#settingsForm
+{
+    font-size: 16px;
 }
 
 .smallText

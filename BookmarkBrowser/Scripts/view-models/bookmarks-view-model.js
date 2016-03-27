@@ -4,7 +4,6 @@
     var curNode;
     var nodePath;
     var nodeData;
-
     var showLastDir = localStorage.getItem("LastDirOnStartup");
 
     if (showLastDir && showLastDir === "True") {
@@ -78,7 +77,7 @@ function applyBindings() {
                 $(element).find(".locationBlock").html(viewModel.Location).show();
             }
             else if (viewModel.ItemType === 2) {
-                // TODO: Add code to adjust the list item to look like a spearator
+                // TODO: Add code to adjust the list item to look like a separator
             }
         }
     };

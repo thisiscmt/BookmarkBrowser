@@ -102,7 +102,7 @@ namespace FxSyncNet
             else
             {
                 if (response.StatusCode == HttpStatusCode.GatewayTimeout)
-                    throw new ServiceNotAvailableException("The service is not responding and seems to be down.");
+                    throw new ServiceNotAvailableException("The service is not responding and seems to be down");
                 else if(response.StatusCode == HttpStatusCode.BadRequest)
                 {
                     string data = response.Content.ReadAsStringAsync().Result;
@@ -111,17 +111,17 @@ namespace FxSyncNet
                     switch(error.ErrNo)
                     {
                         case 102:
-                            throw new AuthenticationException("Unknown account.");
+                            throw new AuthenticationException("Unknown account");
                         case 103:
-                            throw new AuthenticationException("Incorrect password.");
+                            throw new AuthenticationException("Incorrect password");
                         case 104:
-                            throw new AuthenticationException("Unverified account.");
+                            throw new AuthenticationException("Unverified account");
                         case 107:
-                            throw new AuthenticationException("Invalid user name format.");
+                            throw new AuthenticationException("Invalid user name format");
                     }
                 }
 
-                throw new Exception("An issue occured when calling the service.");
+                throw new Exception("An issue occured when calling the service");
             }
         }
 

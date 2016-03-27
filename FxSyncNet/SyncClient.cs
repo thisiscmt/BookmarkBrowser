@@ -79,10 +79,10 @@ namespace FxSyncNet
         public IEnumerable<Bookmark> GetBookmarks()
         {
             if (!isSignedIn)
-                throw new InvalidOperationException("Please sign in first.");
+                throw new InvalidOperationException("Please sign in first");
 
             if (storageClient == null || collectionKeys == null)
-                throw new InvalidOperationException("Please make sure you are correctly logged in to the sync service.");
+                throw new InvalidOperationException("Please make sure you are correctly logged in to the Sync service");
 
             IEnumerable<BasicStorageObject> collection = storageClient.GetCollection("bookmarks", true).Result;
             return Crypto.DecryptWbos<Bookmark>(collectionKeys, collection);

@@ -1,7 +1,7 @@
 ﻿// Bookmarks
 function Bookmarks_PageBeforeShow(event, ui) {
     if (!localStorage.getItem("CurrentBookmarks")) {
-        displayMessage("Go to the Settings page to enter your Sync credentials.", "Bookmarks");
+        displayMessage("Go to the Settings page to enter your Sync credentials", "Bookmarks");
         $("#bookmarkContainer").hide();
         return;
     }
@@ -114,9 +114,9 @@ function loadSettingsPage() {
     var lastDirOnStartup = false;
 
     if (userName) {
-        $("#lblCurUser").html(userName);
-        $("#lblBookmarkCount").html(localStorage.getItem("BookmarkCount"));
-        $("#lblLastRefresh").html(moment(localStorage.getItem("LastRefresh")).format("LLL"));
+        $("#currentUser").html(userName);
+        $("#bookmarkCount").html(localStorage.getItem("BookmarkCount"));
+        $("#lastRefresh").html(moment(localStorage.getItem("LastRefresh")).format("LLL"));
 
         if (localStorage.getItem("LoadOnStartup") === "True") {
             loadOnStartup = true;
@@ -125,17 +125,17 @@ function loadSettingsPage() {
             lastDirOnStartup = true;
         }
 
-        $("#chkLoadOnStartup").prop("checked", loadOnStartup).checkboxradio("refresh");
-        $("#chkLastDirOnStartup").prop("checked", lastDirOnStartup).checkboxradio("refresh");
+        $("#loadOnStartup").prop("checked", loadOnStartup).checkboxradio("refresh");
+        $("#lastDirOnStartup").prop("checked", lastDirOnStartup).checkboxradio("refresh");
         $("#LoggedOut").hide();
         $("#LoggedIn").show();
         $("#LoggedInButtons").show();
     }
     else {
-        $("#txtUserName").val("");
-        $("#txtPassword").val("");
-        $("#chkLoadOnStartup").prop("checked", false).checkboxradio("refresh");
-        $("#chkLastDirOnStartup").prop("checked", false).checkboxradio("refresh");
+        $("#userName").val("");
+        $("#password").val("");
+        $("#loadOnStartup").prop("checked", false).checkboxradio("refresh");
+        $("#lastDirOnStartup").prop("checked", false).checkboxradio("refresh");
     }
 }
 
@@ -154,10 +154,10 @@ function Save_OnClick() {
 
         $.mobile.loading("show", { theme: "c", text: "Saving ...", textVisible: true, textonly: true });
 
-        if ($("#chkLoadOnStartup").prop("checked")) {
+        if ($("#loadOnStartup").prop("checked")) {
             loadOnStartup = "True";
         }
-        if ($("#chkLastDirOnStartup").prop("checked")) {
+        if ($("#lastDirOnStartup").prop("checked")) {
             lastDirOnStartup = "True";
         }
 
@@ -165,8 +165,8 @@ function Save_OnClick() {
         localStorage.setItem("LastDirOnStartup", lastDirOnStartup);
     }
     else {
-        userName = $("#txtUserName").val();
-        password = $("#txtPassword").val();
+        userName = $("#userName").val();
+        password = $("#password").val();
 
         if (!userName) {
             displayMessage("User name cannot be blank", "Settings");
@@ -196,8 +196,8 @@ function Logout_OnClick() {
     localStorage.removeItem("CurrentNode");
     sessionStorage.removeItem("CurrentNode")
 
-    $("#txtUserName").val("")
-    $("#txtPassword").val("")
+    $("#userName").val("")
+    $("#password").val("")
     $("#LoggedIn").hide();
     $("#LoggedInButtons").hide();
     $("#LoggedOut").show();

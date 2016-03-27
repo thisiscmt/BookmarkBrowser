@@ -1,7 +1,5 @@
 ﻿// Misc
 function loadBookmarks(userName, password, action) {
-    // The 'cache-control' header is needed to deal with a caching bug in Safari on iOS 6.
-    // See http://stackoverflow.com/questions/12506897/is-safari-on-ios-6-caching-ajax-results
     $.ajax({
         type: "GET",
         url: "api/bookmark?username=" + encodeURIComponent(userName) + "&password=" + encodeURIComponent(password),
@@ -21,10 +19,10 @@ function loadBookmarks(userName, password, action) {
                 localStorage.setItem("UserName", userName);
                 localStorage.setItem("Password", password);
 
-                if ($("#chkLoadOnStartup").prop("checked")) {
+                if ($("#loadOnStartup").prop("checked")) {
                     loadOnStartup = "True";
                 }
-                if ($("#chkLastDirOnStartup").prop("checked")) {
+                if ($("#lastDirOnStartup").prop("checked")) {
                     lastDirOnStartup = "True";
                 }
 
@@ -33,22 +31,7 @@ function loadBookmarks(userName, password, action) {
             }
         },
         error: function (error) {
-            var msg;
-
-            if (error.statusText) {
-                msg = error.statusText;
-            }
-            else {
-                try {
-                    var resp = JSON.parse(error.responseText);
-                    msg = resp.Message;
-                }
-                catch (e) {
-                    msg = "Server error occurred";
-                }
-            }
-
-            displayMessage(msg, "Settings");
+            displayMessage(getErrorMessage(error), "Settings");
         }
     });
 }
@@ -63,6 +46,46 @@ function ajaxCompleted(e, xhr, settings) {
 
         $.mobile.loading("hide");
     }
+}
+
+function getErrorMessage(error) {
+    var msg = "";
+
+    if (error) {
+        if (error.responseText && error.responseText != "") {
+            try {
+                var response = JSON.parse(error.responseText);
+
+                if (response.Message) {
+                    if (response.ExceptionMessage != "") {
+                        msg = response.ExceptionMessage;
+                    }
+                    else {
+                        msg = response.Message;
+                    }
+                }
+                else {
+                    msg = response;
+                }
+            }
+            catch (e) {
+                msg = error.responseText;
+            }
+        }
+        else if (error.statusText && error.statusText != "") {
+            msg = error.statusText;
+        }
+        else {
+            if (error.message) {
+                msg = error.message;
+            }
+            else {
+                msg = error;
+            }
+        }
+    }
+
+    return msg;
 }
 
 function displayMessage(msg, page) {
