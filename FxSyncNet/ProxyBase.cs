@@ -87,6 +87,7 @@ namespace FxSyncNet
                 requestMessage.Headers.Authorization = authenticationHeader;
 
             HttpResponseMessage response = httpClient.SendAsync(requestMessage).Result;
+
             if(response.IsSuccessStatusCode)
             {
                 if(responseType != null)
@@ -103,6 +104,10 @@ namespace FxSyncNet
             {
                 if (response.StatusCode == HttpStatusCode.GatewayTimeout)
                     throw new ServiceNotAvailableException("The service is not responding and seems to be down");
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    throw new ServiceNotAvailableException("The account could not be found");
+                }
                 else if(response.StatusCode == HttpStatusCode.BadRequest)
                 {
                     string data = response.Content.ReadAsStringAsync().Result;

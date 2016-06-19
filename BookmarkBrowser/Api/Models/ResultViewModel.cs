@@ -9,6 +9,7 @@ namespace BookmarkBrowser.Api.Models
     {
         public ResultViewModel()
         {
+            this.Content = string.Empty;
         }
 
         public ResultViewModel(string content)

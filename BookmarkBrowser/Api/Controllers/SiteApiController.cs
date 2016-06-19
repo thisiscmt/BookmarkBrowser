@@ -4,27 +4,32 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Text;
+using System.Web;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using FxSyncNet;
 using BookmarkBrowser.Api.Models;
 using BookmarkBrowser.Entities;
-using FxSyncNet;
+using BookmarkBrowser.Api.Attributes;
 
 namespace BookmarkBrowser.Api.Controllers
 {
     public class SiteApiController : ApiController
     {
         // GET api/test
-        [HttpGet]
-        public ResultViewModel ApiTest()
-        {
-            ResultViewModel result = new ResultViewModel();
-            result.Content = "Welcome to the bookmark browser API";
+        //[HttpGet]
+        //public ResultViewModel ApiTest()
+        //{
+        //    ResultViewModel result = new ResultViewModel();
+        //    result.Content = "Welcome to the bookmark browser API";
 
-            return result;
-        }
+        //    return result;
+        //}
 
         // GET api/{collection}
         [HttpGet]
+        [Route("api/{collection}")]
         public ResultViewModel GetData(string collection)
         {
             ResultViewModel result = new ResultViewModel();
@@ -88,14 +93,95 @@ namespace BookmarkBrowser.Api.Controllers
             return result;
         }
 
-        // POST api/{collection}/create
-        [HttpPost]
-        public ResultViewModel AddData(string collection, [FromBody]string value)
+        // POST api/{collection}
+        //[HttpPost]
+        //public ResultViewModel AddData(string collection, [FromBody]string data)
+        //{
+        //    ResultViewModel result = new ResultViewModel();
+        //    result.Content = "Under development";
+            
+        //    return result;
+        //}
+
+        // GET api/{collection}/backup
+        [HttpGet]
+        [AddDataAuthorize]
+        [Route("api/{collection}/backup")]
+        public ResultViewModel GetBackup()
         {
             ResultViewModel result = new ResultViewModel();
-            result.Content = "Under development";
-            
+            var parms = Request.RequestUri.ParseQueryString();
+            string dirPath = HttpContext.Current.Request.MapPath("/") + "Backup";
+            List<System.IO.FileInfo> files;
+            System.IO.DirectoryInfo dir;
+
+            try
+            {
+                if (System.IO.Directory.Exists(dirPath))
+                {
+                    dir = new System.IO.DirectoryInfo(dirPath);
+                    files = dir.EnumerateFiles("Bookmarks_" + parms["username"] + ".json", System.IO.SearchOption.TopDirectoryOnly).ToList();
+
+                    if (files != null && files.Count > 0)
+                    {
+                        result.Content = System.IO.File.ReadAllText(files.First().FullName, Encoding.UTF8);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateResponse(
+                    HttpStatusCode.InternalServerError, 
+                    ex.Message));
+            }
+
             return result;
-        }    
+        }
+
+        // POST api/{collection}/backup
+        [HttpPost]
+        [Route("api/{collection}/backup")]
+        [AddDataAuthorize]
+        public ResultViewModel AddBackup(string collection, [FromBody]JToken data)
+        {
+            ResultViewModel result = new ResultViewModel();
+            var parms = Request.RequestUri.ParseQueryString();
+            string filePath = HttpContext.Current.Request.MapPath("/") + "Backup\\Bookmarks_" + parms["username"] + ".json";
+            string dirPath;
+
+            try
+            {
+                if (data == null)
+                {
+                    throw new HttpResponseException(Request.CreateResponse(
+                        HttpStatusCode.BadRequest, 
+                        "No data provided to save"));
+                }
+
+                //if (this.Request.Headers.Authorization == null || this.Request.Headers.Authorization.Parameter != "Bookmark Browser data backup API")
+                //{
+                //    throw new HttpResponseException(Request.CreateResponse(
+                //        HttpStatusCode.Unauthorized, 
+                //        "The request is not authorized"));
+                //}
+
+                dirPath = System.IO.Path.GetDirectoryName(filePath);
+
+                if (!System.IO.Directory.Exists(dirPath))
+                {
+                    System.IO.Directory.CreateDirectory(dirPath);
+                }
+
+                System.IO.File.WriteAllText(filePath, data.ToString(), Encoding.UTF8);
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateResponse(
+                    HttpStatusCode.InternalServerError, 
+                    ex.Message));
+            }
+
+            return null;
+        }
     }
 }

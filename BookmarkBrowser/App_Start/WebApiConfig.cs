@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookmarkBrowser.Api.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
@@ -25,10 +26,12 @@ namespace BookmarkBrowser
             );
 
             config.Routes.MapHttpRoute(
-                name: "MainApiCreate",
-                routeTemplate: "api/{collection}/create",
+                name: "MainApiBackup",
+                routeTemplate: "api/{collection}/backup",
                 defaults: new { controller = "SiteAPI" }
             );
+
+            config.Filters.Add(new AddDataAuthorizeAttribute());
         }
     }
 }

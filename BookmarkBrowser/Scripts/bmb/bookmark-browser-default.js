@@ -223,3 +223,23 @@ function Refresh_OnClick() {
 
     return false;
 }
+
+function Backup_OnClick() {
+    var bookmarkData = localStorage.getItem("CurrentBookmarks");
+
+    if (bookmarkData) {
+        $.ajax({
+            type: "POST",
+            url: "api/backup",
+            contentType: "application/json; charset=utf-8",
+            data: bookmarkData,
+            headers: {"cache-control":"no-cache"},
+            success: function (data) {
+                displayMessage("Data backed up successfully", "Settings");
+            },
+            error: function (error) {
+                displayMessage(getErrorMessage(error), "Settings");
+            }
+        });
+    }
+}

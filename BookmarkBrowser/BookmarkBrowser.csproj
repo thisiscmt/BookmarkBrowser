@@ -257,6 +257,7 @@
     <Content Include="Scripts\sourceMap.map" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\Attributes\AddDataAuthorizeAttribute.cs" />
     <Compile Include="Api\Controllers\SiteApiController.cs" />
     <Compile Include="Api\Models\ResultViewModel.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
