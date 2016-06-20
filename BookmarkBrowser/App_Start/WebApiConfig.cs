@@ -31,7 +31,7 @@ namespace BookmarkBrowser
                 defaults: new { controller = "SiteAPI" }
             );
 
-            config.Filters.Add(new AddDataAuthorizeAttribute());
+            config.Filters.Add(new BackupManagementAuthorizeAttribute());
         }
     }
 }

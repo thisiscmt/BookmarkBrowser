@@ -183,17 +183,16 @@
                     </div>
                 </div>
 
-                <div id="LoggedInButtons" class="alignCenter hideMe">
-                    <input id="Logout" type="button" value="Logout" data-mini="true" onclick="return Logout_OnClick();" />
-                    <br />
-                    <input id="Refresh" type="button" value="Refresh" data-mini="true" onclick="return Refresh_OnClick();" />
-                    <br />
-                    <input id="Backup" type="button" value="Backup" data-mini="true" onclick="return Backup_OnClick();" />
+                <div class="alignCenter">
+                    <input id="Save" type="submit" value="Save" data-mini="true" data-inline="true" onclick="return Save_OnClick();" />
+                    <input id="Refresh" class="loggedInButton" type="button" value="Refresh" data-mini="true" data-inline="true" onclick="return Refresh_OnClick();" />
+                    <input id="Logout" class="loggedInButton" type="button" value="Logout" data-mini="true" data-inline="true" onclick="return Logout_OnClick();" />
                     <br />
                 </div>
 
-                <div id="CommonButtons" class="alignCenter">
-                    <input id="Save" type="submit" value="Save" data-mini="true" onclick="return Save_OnClick();" />
+                <div class="loggedInButton alignCenter hideMe">
+                    <input id="Backup" type="button" value="Backup" data-mini="true" data-inline="true" onclick="return Backup_OnClick();" />
+                    <input id="Restore" type="button" value="Restore" data-mini="true" data-inline="true" onclick="return Restore_OnClick();" />
                 </div>
             </form>
         </div>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -8,7 +9,7 @@ using System.Web.Http;
 
 namespace BookmarkBrowser.Api.Attributes
 {
-    public class AddDataAuthorizeAttribute : AuthorizeAttribute
+    public class BackupManagementAuthorizeAttribute : AuthorizeAttribute
     {
         #region Overrides
 
@@ -23,25 +24,31 @@ namespace BookmarkBrowser.Api.Attributes
 
         private bool AuthorizeRequest(System.Web.Http.Controllers.HttpActionContext actionContext)
         {
-            FxSyncNet.SyncClient syncClient;
+            FxSyncNet.SyncClient syncClient = new FxSyncNet.SyncClient();
             var parms = actionContext.Request.RequestUri.ParseQueryString();
+            bool retVal = false;
 
             try
             {
-                if (parms["username"] == null || parms["password"] == null)
+                if (parms["username"] != null && parms["password"] != null && ValidUser(parms["username"].ToString()))
                 {
-                    return false;
+                    syncClient.SignIn(parms["username"], parms["password"]);
+                    retVal = true;
                 }
-
-                syncClient = new FxSyncNet.SyncClient();
-                syncClient.SignIn(parms["username"], parms["password"]);
             }
             catch
             {
-                return false;
             }
             
-            return true;
+            return retVal;
+        }
+
+        private bool ValidUser(string userName)
+        {
+            string filePath = HttpContext.Current.Request.MapPath("/") + "users.txt";
+            string users = File.ReadAllText(filePath);
+
+            return users.IndexOf(userName, StringComparison.InvariantCultureIgnoreCase) > -1;
         }
 
         #endregion

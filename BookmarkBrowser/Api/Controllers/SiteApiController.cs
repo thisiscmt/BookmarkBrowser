@@ -105,7 +105,7 @@ namespace BookmarkBrowser.Api.Controllers
 
         // GET api/{collection}/backup
         [HttpGet]
-        [AddDataAuthorize]
+        [BackupManagementAuthorize]
         [Route("api/{collection}/backup")]
         public ResultViewModel GetBackup()
         {
@@ -117,6 +117,13 @@ namespace BookmarkBrowser.Api.Controllers
 
             try
             {
+                if (parms["username"] == null || parms["password"] == null)
+                {
+                    throw new HttpResponseException(Request.CreateResponse(
+                        HttpStatusCode.BadRequest, 
+                        "You must supply Sync credentials"));
+                }
+
                 if (System.IO.Directory.Exists(dirPath))
                 {
                     dir = new System.IO.DirectoryInfo(dirPath);
@@ -141,30 +148,32 @@ namespace BookmarkBrowser.Api.Controllers
         // POST api/{collection}/backup
         [HttpPost]
         [Route("api/{collection}/backup")]
-        [AddDataAuthorize]
+        [BackupManagementAuthorize]
         public ResultViewModel AddBackup(string collection, [FromBody]JToken data)
         {
             ResultViewModel result = new ResultViewModel();
-            var parms = Request.RequestUri.ParseQueryString();
-            string filePath = HttpContext.Current.Request.MapPath("/") + "Backup\\Bookmarks_" + parms["username"] + ".json";
+            string filePath;
             string dirPath;
 
             try
             {
+                var parms = Request.RequestUri.ParseQueryString();
+
+                if (parms["username"] == null || parms["password"] == null)
+                {
+                    throw new HttpResponseException(Request.CreateResponse(
+                        HttpStatusCode.BadRequest, 
+                        "You must supply Sync credentials"));
+                }
+                
                 if (data == null)
                 {
                     throw new HttpResponseException(Request.CreateResponse(
                         HttpStatusCode.BadRequest, 
-                        "No data provided to save"));
+                        "No data provided to back up"));
                 }
 
-                //if (this.Request.Headers.Authorization == null || this.Request.Headers.Authorization.Parameter != "Bookmark Browser data backup API")
-                //{
-                //    throw new HttpResponseException(Request.CreateResponse(
-                //        HttpStatusCode.Unauthorized, 
-                //        "The request is not authorized"));
-                //}
-
+                filePath = HttpContext.Current.Request.MapPath("/") + "Backup\\Bookmarks_" + parms["username"] + ".json";
                 dirPath = System.IO.Path.GetDirectoryName(filePath);
 
                 if (!System.IO.Directory.Exists(dirPath))

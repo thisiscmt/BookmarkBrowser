@@ -129,7 +129,7 @@ function loadSettingsPage() {
         $("#lastDirOnStartup").prop("checked", lastDirOnStartup).checkboxradio("refresh");
         $("#LoggedOut").hide();
         $("#LoggedIn").show();
-        $("#LoggedInButtons").show();
+        $(".loggedInButton").show();
     }
     else {
         $("#userName").val("");
@@ -199,7 +199,7 @@ function Logout_OnClick() {
     $("#userName").val("")
     $("#password").val("")
     $("#LoggedIn").hide();
-    $("#LoggedInButtons").hide();
+    $(".loggedInButton").hide();
     $("#LoggedOut").show();
 
     var bindingModel = ko.dataFor($("#bookmarkContainer")[0]);
@@ -225,21 +225,30 @@ function Refresh_OnClick() {
 }
 
 function Backup_OnClick() {
+    $.mobile.loading("show", { theme: "c", text: "Backing up ...", textVisible: true });
+
     var bookmarkData = localStorage.getItem("CurrentBookmarks");
+    var userName = localStorage.getItem("UserName");
+    var password = localStorage.getItem("Password");
 
     if (bookmarkData) {
         $.ajax({
             type: "POST",
-            url: "api/backup",
+            url: "api/bookmark/backup?username=" + encodeURIComponent(userName) + "&password=" + encodeURIComponent(password),
             contentType: "application/json; charset=utf-8",
             data: bookmarkData,
             headers: {"cache-control":"no-cache"},
             success: function (data) {
+                $.mobile.loading("hide");
                 displayMessage("Data backed up successfully", "Settings");
             },
             error: function (error) {
+                $.mobile.loading("hide");
                 displayMessage(getErrorMessage(error), "Settings");
             }
         });
     }
+}
+
+function Restore_OnClick() {
 }
