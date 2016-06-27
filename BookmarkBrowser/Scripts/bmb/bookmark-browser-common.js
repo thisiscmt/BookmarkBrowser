@@ -40,7 +40,7 @@ function ajaxCompleted(e, xhr, settings) {
     var action;
 
     if (settings.url.indexOf("api/bookmark") > -1) {
-        if (xhr.status < 400) {
+        if (xhr.status < 400 && (settings.url.indexOf("/backup") === -1 || (settings.url.indexOf("/backup") && settings.type === "GET"))) {
             $("body").pagecontainer("change", "#Bookmarks", { reload: true });
         }
 

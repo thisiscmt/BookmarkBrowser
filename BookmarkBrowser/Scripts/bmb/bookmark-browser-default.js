@@ -226,17 +226,19 @@ function Refresh_OnClick() {
 
 function Backup_OnClick() {
     $.mobile.loading("show", { theme: "c", text: "Backing up ...", textVisible: true });
-
     var bookmarkData = localStorage.getItem("CurrentBookmarks");
-    var userName = localStorage.getItem("UserName");
-    var password = localStorage.getItem("Password");
 
     if (bookmarkData) {
+        var data = {};
+        data.bookmarkData = bookmarkData;
+        data.count = localStorage.getItem("BookmarkCount");
+        data.lastRefresh = localStorage.getItem("LastRefresh");
+
         $.ajax({
             type: "POST",
-            url: "api/bookmark/backup?username=" + encodeURIComponent(userName) + "&password=" + encodeURIComponent(password),
+            url: "api/bookmark/backup?username=" + encodeURIComponent(localStorage.getItem("UserName")) + "&password=" + encodeURIComponent(localStorage.getItem("Password")),
             contentType: "application/json; charset=utf-8",
-            data: bookmarkData,
+            data: JSON.stringify(data),
             headers: {"cache-control":"no-cache"},
             success: function (data) {
                 $.mobile.loading("hide");
@@ -248,7 +250,30 @@ function Backup_OnClick() {
             }
         });
     }
+
+    return false;
 }
 
 function Restore_OnClick() {
+    $.mobile.loading("show", { theme: "c", text: "Backing up ...", textVisible: true });
+
+    $.ajax({
+        type: "GET",
+        url: "api/bookmark/backup?username=" + encodeURIComponent(localStorage.getItem("UserName")) + "&password=" + encodeURIComponent(localStorage.getItem("Password")),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        headers: {"cache-control":"no-cache"},
+        success: function (response) {
+            var data = JSON.parse(response.Content);
+
+            localStorage.setItem("CurrentBookmarks", data.bookmarkData);
+            localStorage.setItem("BookmarkCount", data.count);
+            localStorage.setItem("LastRefresh", data.lastRefresh);
+        },
+        error: function (error) {
+            displayMessage(getErrorMessage(error), "Settings");
+        }
+    });
+
+    return false;
 }

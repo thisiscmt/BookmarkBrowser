@@ -30,9 +30,8 @@ namespace BookmarkBrowser.Api.Attributes
 
             try
             {
-                if (parms["username"] != null && parms["password"] != null && ValidUser(parms["username"].ToString()))
+                if (ValidUser(parms["username"].ToString(), parms["password"].ToString()))
                 {
-                    syncClient.SignIn(parms["username"], parms["password"]);
                     retVal = true;
                 }
             }
@@ -43,12 +42,33 @@ namespace BookmarkBrowser.Api.Attributes
             return retVal;
         }
 
-        private bool ValidUser(string userName)
+        private bool ValidUser(string userName, string password)
         {
             string filePath = HttpContext.Current.Request.MapPath("/") + "users.txt";
-            string users = File.ReadAllText(filePath);
+            string line;
+            string storedPassword;
+            int mark;
+            bool valid = false;
 
-            return users.IndexOf(userName, StringComparison.InvariantCultureIgnoreCase) > -1;
+            using (StreamReader userFile = new StreamReader(filePath))
+            {
+                while (!userFile.EndOfStream)
+                {
+                    line = userFile.ReadLine();
+
+                    if (line.StartsWith(userName))
+                    {
+                        mark = line.IndexOf('\t');
+                        storedPassword = line.Substring(mark, line.Length - mark).Trim();
+                        valid = password.Equals(storedPassword, StringComparison.InvariantCulture);
+
+                        break;
+                    }
+                }
+            }
+
+
+            return valid;
         }
 
         #endregion

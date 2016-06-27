@@ -14,12 +14,6 @@ namespace BookmarkBrowser
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
-                name: "MainApiTest",
-                routeTemplate: "api/test",
-                defaults: new { controller = "SiteAPI" }
-            );
-
-            config.Routes.MapHttpRoute(
                 name: "MainApi",
                 routeTemplate: "api/{collection}",
                 defaults: new { controller = "SiteAPI" }

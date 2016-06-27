@@ -17,22 +17,13 @@ namespace BookmarkBrowser.Api.Controllers
 {
     public class SiteApiController : ApiController
     {
-        // GET api/test
-        //[HttpGet]
-        //public ResultViewModel ApiTest()
-        //{
-        //    ResultViewModel result = new ResultViewModel();
-        //    result.Content = "Welcome to the bookmark browser API";
-
-        //    return result;
-        //}
-
         // GET api/{collection}
         [HttpGet]
         [Route("api/{collection}")]
         public ResultViewModel GetData(string collection)
         {
             ResultViewModel result = new ResultViewModel();
+            Directory mainDir;
             var parms = Request.RequestUri.ParseQueryString();
             int count;
 
@@ -53,7 +44,7 @@ namespace BookmarkBrowser.Api.Controllers
                         syncClient.SignIn(parms["username"], parms["password"]);
 
                         IEnumerable<FxSyncNet.Models.Bookmark> bookmarks = syncClient.GetBookmarks();
-                        Directory mainDir = Utility.BuildBookmarks(bookmarks);
+                        mainDir = Utility.BuildBookmarks(bookmarks);
                         count = bookmarks.Where(x => x.Type == FxSyncNet.Models.BookmarkType.Bookmark).Count();
                         mainDir.Tag = count.ToString();
                         result.Content = JsonConvert.SerializeObject(mainDir);
@@ -111,12 +102,14 @@ namespace BookmarkBrowser.Api.Controllers
         {
             ResultViewModel result = new ResultViewModel();
             var parms = Request.RequestUri.ParseQueryString();
-            string dirPath = HttpContext.Current.Request.MapPath("/") + "Backup";
-            List<System.IO.FileInfo> files;
+            string dirPath;
             System.IO.DirectoryInfo dir;
+            List<System.IO.FileInfo> files;
 
             try
             {
+                dirPath = HttpContext.Current.Request.MapPath("/") + "Backup";
+
                 if (parms["username"] == null || parms["password"] == null)
                 {
                     throw new HttpResponseException(Request.CreateResponse(
