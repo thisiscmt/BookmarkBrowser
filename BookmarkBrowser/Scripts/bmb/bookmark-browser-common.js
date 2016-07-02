@@ -40,7 +40,7 @@ function ajaxCompleted(e, xhr, settings) {
     var action;
 
     if (settings.url.indexOf("api/bookmark") > -1) {
-        if (xhr.status < 400 && (settings.url.indexOf("/backup") === -1 || (settings.url.indexOf("/backup") && settings.type === "GET"))) {
+        if (xhr.status < 400 && (settings.url.indexOf("/backup") === -1 || (settings.url.indexOf("/backup") > -1 && settings.type === "GET"))) {
             $("body").pagecontainer("change", "#Bookmarks", { reload: true });
         }
 
@@ -57,15 +57,15 @@ function getErrorMessage(error) {
                 var response = JSON.parse(error.responseText);
 
                 if (response.Message) {
-                    if (response.ExceptionMessage != "") {
+                    msg = response.Message;
+                }
+                else {
+                    if (response.ExceptionMessage && response.ExceptionMessage != "") {
                         msg = response.ExceptionMessage;
                     }
                     else {
-                        msg = response.Message;
+                        msg = response;
                     }
-                }
-                else {
-                    msg = response;
                 }
             }
             catch (e) {

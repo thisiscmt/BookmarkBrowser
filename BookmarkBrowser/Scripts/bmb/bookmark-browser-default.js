@@ -241,11 +241,9 @@ function Backup_OnClick() {
             data: JSON.stringify(data),
             headers: {"cache-control":"no-cache"},
             success: function (data) {
-                $.mobile.loading("hide");
                 displayMessage("Data backed up successfully", "Settings");
             },
             error: function (error) {
-                $.mobile.loading("hide");
                 displayMessage(getErrorMessage(error), "Settings");
             }
         });
