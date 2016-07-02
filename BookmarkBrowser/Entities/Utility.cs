@@ -101,15 +101,37 @@ namespace BookmarkBrowser.Entities
             return msg;
         }
 
+        public static string EnsureBackslash(string value)
+        {
+            string retVal = value;
+
+            if (value != null)
+            {
+                if (!value.EndsWith("\\"))
+                {
+                    retVal = value + "\\";
+                }
+            }
+
+            return retVal;
+        }
+
         public static void WriteEvent(string desc, DateTime timestamp, string longDesc = "", string source = "", 
                                       string process = "", string tag = "")
         {
             string msg = string.Empty;
             string filePath;
+            string dirPath;
 
             try
             {
-                filePath = HttpContext.Current.Request.MapPath("/") + "Logs\\errors.log";
+                filePath = EnsureBackslash(HttpContext.Current.Request.MapPath("~")) + "Logs\\errors.log";
+                dirPath = Path.GetDirectoryName(filePath);
+
+                if (!System.IO.Directory.Exists(dirPath))
+                {
+                    System.IO.Directory.CreateDirectory(dirPath);
+                }
 
                 using (StreamWriter sr = new StreamWriter(filePath, true, System.Text.Encoding.UTF8)) 
                 {

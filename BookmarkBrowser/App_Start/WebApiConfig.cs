@@ -24,8 +24,6 @@ namespace BookmarkBrowser
                 routeTemplate: "api/{collection}/backup",
                 defaults: new { controller = "SiteAPI" }
             );
-
-            config.Filters.Add(new BackupManagementAuthorizeAttribute());
         }
     }
 }

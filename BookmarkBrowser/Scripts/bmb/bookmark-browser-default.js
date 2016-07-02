@@ -127,9 +127,9 @@ function loadSettingsPage() {
 
         $("#loadOnStartup").prop("checked", loadOnStartup).checkboxradio("refresh");
         $("#lastDirOnStartup").prop("checked", lastDirOnStartup).checkboxradio("refresh");
-        $("#LoggedOut").hide();
-        $("#LoggedIn").show();
-        $(".loggedInButton").show();
+        $("#LoggedOutContainer").hide();
+        $("#LoggedInContainer").show();
+        $(".loggedIn").show();
     }
     else {
         $("#userName").val("");
@@ -193,14 +193,16 @@ function Logout_OnClick() {
     localStorage.removeItem("CurrentBookmarks");
     localStorage.removeItem("BookmarkCount");
     localStorage.removeItem("LastRefresh");
+    localStorage.removeItem("LoadOnStartup");
+    localStorage.removeItem("LastDirOnStartup");
     localStorage.removeItem("CurrentNode");
     sessionStorage.removeItem("CurrentNode")
 
     $("#userName").val("")
     $("#password").val("")
-    $("#LoggedIn").hide();
-    $(".loggedInButton").hide();
-    $("#LoggedOut").show();
+    $(".loggedIn").hide();
+    $("#LoggedInContainer").hide();
+    $("#LoggedOutContainer").show();
 
     var bindingModel = ko.dataFor($("#bookmarkContainer")[0]);
 
@@ -225,7 +227,9 @@ function Refresh_OnClick() {
 }
 
 function Backup_OnClick() {
-    $.mobile.loading("show", { theme: "c", text: "Backing up ...", textVisible: true });
+    $.mobile.loading("show", { theme: "c", text: "Backing up data ...", textVisible: true });
+    var userName = localStorage.getItem("UserName");
+    var password = localStorage.getItem("Password");
     var bookmarkData = localStorage.getItem("CurrentBookmarks");
 
     if (bookmarkData) {
@@ -236,7 +240,7 @@ function Backup_OnClick() {
 
         $.ajax({
             type: "POST",
-            url: "api/bookmark/backup?username=" + encodeURIComponent(localStorage.getItem("UserName")) + "&password=" + encodeURIComponent(localStorage.getItem("Password")),
+            url: "api/bookmark/backup?username=" + encodeURIComponent(userName) + "&password=" + encodeURIComponent(password),
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(data),
             headers: {"cache-control":"no-cache"},
@@ -253,20 +257,39 @@ function Backup_OnClick() {
 }
 
 function Restore_OnClick() {
-    $.mobile.loading("show", { theme: "c", text: "Backing up ...", textVisible: true });
+    var userName = localStorage.getItem("UserName");
+    var password = localStorage.getItem("Password");
+
+    if (!userName || !password) {
+        userName = $("#userName").val();
+        password = $("#password").val();
+
+        if (!userName) {
+            displayMessage("User name cannot be blank", "Settings");
+            return false;
+        }
+        if (!password) {
+            displayMessage("Password cannot be blank", "Settings");
+            return false;
+        }
+    }
+
+    $.mobile.loading("show", { theme: "c", text: "Restoring data ...", textVisible: true });
 
     $.ajax({
         type: "GET",
-        url: "api/bookmark/backup?username=" + encodeURIComponent(localStorage.getItem("UserName")) + "&password=" + encodeURIComponent(localStorage.getItem("Password")),
+        url: "api/bookmark/backup?username=" + encodeURIComponent(userName) + "&password=" + encodeURIComponent(password),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         headers: {"cache-control":"no-cache"},
         success: function (response) {
             var data = JSON.parse(response.Content);
-
             localStorage.setItem("CurrentBookmarks", data.bookmarkData);
             localStorage.setItem("BookmarkCount", data.count);
             localStorage.setItem("LastRefresh", data.lastRefresh);
+
+            localStorage.setItem("UserName", userName);
+            localStorage.setItem("Password", password);
         },
         error: function (error) {
             displayMessage(getErrorMessage(error), "Settings");

@@ -25,8 +25,7 @@
                 </div>
 
                 <div class="alignCenter smallText bottomPadding15">
-                    This site can provide access your Sync bookmarks from a mobile device that isn't currently
-                    supported by Firefox.<br /><br />
+                    This site provides access to your Sync bookmarks from a mobile device.<br /><br />
                     Click Settings to set your Sync username and password. Once the information is
                     saved, you can refresh the bookmark data at any time from the settings page.
                 </div>
@@ -129,7 +128,7 @@
             </div>
 
             <form id="settingsForm" method="post" data-ajax="false">
-                <div id="LoggedOut">
+                <div id="LoggedOutContainer">
                     <div class="bottomPadding15">
                         <label for="userName">User name</label>
                         <input id="userName" type="email" autocorrect="off" autocapitalize="none" data-prevent-focus-zoom="true" data-mini="true" />
@@ -141,7 +140,7 @@
                     </div>
                 </div>
 
-                <div id="LoggedIn" class="hideMe smallText">
+                <div id="LoggedInContainer" class="hideMe smallText">
                     <table class="statsTable">
                         <tr>
                             <td class="labelColumn">
@@ -185,12 +184,12 @@
 
                 <div class="alignCenter">
                     <input id="Save" type="submit" value="Save" data-mini="true" data-inline="true" onclick="return Save_OnClick();" />
-                    <input id="Refresh" class="loggedInButton" type="button" value="Refresh" data-mini="true" data-inline="true" onclick="return Refresh_OnClick();" />
-                    <input id="Logout" class="loggedInButton" type="button" value="Logout" data-mini="true" data-inline="true" onclick="return Logout_OnClick();" />
-                    <span class="loggedInButton alignCenter hideMe">
+                    <span class="loggedIn hideMe">
+                        <input id="Refresh" type="button" value="Refresh" data-mini="true" data-inline="true" onclick="return Refresh_OnClick();" />
+                        <input id="Logout" type="button" value="Logout" data-mini="true" data-inline="true" onclick="return Logout_OnClick();" />
                         <input id="Backup" type="button" value="Backup" data-mini="true" data-inline="true" onclick="return Backup_OnClick();" />
-                        <input id="Restore" type="button" value="Restore" data-mini="true" data-inline="true" onclick="return Restore_OnClick();" />
                     </span>
+                    <input id="Restore" type="button" value="Restore" data-mini="true" data-inline="true" onclick="return Restore_OnClick();" />
                 </div>
             </form>
         </div>

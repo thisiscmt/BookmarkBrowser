@@ -17,6 +17,8 @@ namespace BookmarkBrowser.Api.Controllers
 {
     public class SiteApiController : ApiController
     {
+        #region Public methods
+
         // GET api/{collection}
         [HttpGet]
         [Route("api/{collection}")]
@@ -96,36 +98,36 @@ namespace BookmarkBrowser.Api.Controllers
 
         // GET api/{collection}/backup
         [HttpGet]
-        [BackupManagementAuthorize]
         [Route("api/{collection}/backup")]
         public ResultViewModel GetBackup()
         {
             ResultViewModel result = new ResultViewModel();
             var parms = Request.RequestUri.ParseQueryString();
-            string dirPath;
-            System.IO.DirectoryInfo dir;
-            List<System.IO.FileInfo> files;
+            string filePath;
+
+            if (parms["username"] == null || parms["password"] == null)
+            {
+                throw new HttpResponseException(Request.CreateResponse(
+                    HttpStatusCode.BadRequest, 
+                    "You must supply Sync credentials"));
+            }
+
+            if (!ValidUser(parms["username"], parms["password"]))
+            {
+                // A 400 is returned rather than a 401 to simplify the processing of this type of error. 
+                // Otherwise the browser will show a login prompt, which isn't what we want in this case
+                throw new HttpResponseException(Request.CreateResponse(
+                    HttpStatusCode.BadRequest, 
+                    "You must supply valid Sync credentials"));
+            }
 
             try
             {
-                dirPath = HttpContext.Current.Request.MapPath("/") + "Backup";
+                filePath = Utility.EnsureBackslash(HttpContext.Current.Request.MapPath("~")) + "Backup\\Bookmarks_" + parms["username"] + ".json";
 
-                if (parms["username"] == null || parms["password"] == null)
+                if (System.IO.File.Exists(filePath))
                 {
-                    throw new HttpResponseException(Request.CreateResponse(
-                        HttpStatusCode.BadRequest, 
-                        "You must supply Sync credentials"));
-                }
-
-                if (System.IO.Directory.Exists(dirPath))
-                {
-                    dir = new System.IO.DirectoryInfo(dirPath);
-                    files = dir.EnumerateFiles("Bookmarks_" + parms["username"] + ".json", System.IO.SearchOption.TopDirectoryOnly).ToList();
-
-                    if (files != null && files.Count > 0)
-                    {
-                        result.Content = System.IO.File.ReadAllText(files.First().FullName, Encoding.UTF8);
-                    }
+                    result.Content = System.IO.File.ReadAllText(filePath, Encoding.UTF8);
                 }
             }
             catch (Exception ex)
@@ -141,15 +143,12 @@ namespace BookmarkBrowser.Api.Controllers
         // POST api/{collection}/backup
         [HttpPost]
         [Route("api/{collection}/backup")]
-        [BackupManagementAuthorize]
         public ResultViewModel AddBackup(string collection, [FromBody]JToken data)
         {
             ResultViewModel result = new ResultViewModel();
             string filePath;
             string dirPath;
 
-            try
-            {
                 var parms = Request.RequestUri.ParseQueryString();
 
                 if (parms["username"] == null || parms["password"] == null)
@@ -158,7 +157,14 @@ namespace BookmarkBrowser.Api.Controllers
                         HttpStatusCode.BadRequest, 
                         "You must supply Sync credentials"));
                 }
-                
+
+                if (!ValidUser(parms["username"], parms["password"]))
+                {
+                    throw new HttpResponseException(Request.CreateResponse(
+                        HttpStatusCode.BadRequest, 
+                        "You must supply valid Sync credentials"));
+                }
+
                 if (data == null)
                 {
                     throw new HttpResponseException(Request.CreateResponse(
@@ -166,7 +172,9 @@ namespace BookmarkBrowser.Api.Controllers
                         "No data provided to back up"));
                 }
 
-                filePath = HttpContext.Current.Request.MapPath("/") + "Backup\\Bookmarks_" + parms["username"] + ".json";
+            try
+            {
+                filePath = Utility.EnsureBackslash(HttpContext.Current.Request.MapPath("~")) + "Backup\\Bookmarks_" + parms["username"] + ".json";
                 dirPath = System.IO.Path.GetDirectoryName(filePath);
 
                 if (!System.IO.Directory.Exists(dirPath))
@@ -185,5 +193,39 @@ namespace BookmarkBrowser.Api.Controllers
 
             return null;
         }
+
+        #endregion
+
+        #region Private methods
+
+        private bool ValidUser(string userName, string password)
+        {
+            string filePath = Utility.EnsureBackslash(HttpContext.Current.Request.MapPath("~")) + "users.txt";
+            string line;
+            string storedPassword;
+            int mark;
+            bool valid = false;
+
+            using (System.IO.StreamReader userFile = new System.IO.StreamReader(filePath))
+            {
+                while (!userFile.EndOfStream)
+                {
+                    line = userFile.ReadLine();
+
+                    if (line.StartsWith(userName))
+                    {
+                        mark = line.IndexOf('\t');
+                        storedPassword = line.Substring(mark, line.Length - mark).Trim();
+                        valid = password.Equals(storedPassword, StringComparison.InvariantCulture);
+
+                        break;
+                    }
+                }
+            }
+
+            return valid;
+        }
+
+        #endregion
     }
 }

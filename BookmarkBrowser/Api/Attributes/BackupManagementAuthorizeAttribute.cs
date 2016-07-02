@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookmarkBrowser.Entities;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -44,7 +45,7 @@ namespace BookmarkBrowser.Api.Attributes
 
         private bool ValidUser(string userName, string password)
         {
-            string filePath = HttpContext.Current.Request.MapPath("/") + "users.txt";
+            string filePath = Utility.EnsureBackslash(HttpContext.Current.Request.MapPath("~")) + "users.txt";
             string line;
             string storedPassword;
             int mark;
