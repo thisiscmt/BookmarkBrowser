@@ -132,6 +132,8 @@ namespace BookmarkBrowser.Api.Controllers
             }
             catch (Exception ex)
             {
+                Utility.WriteEvent(ex.Message, DateTime.Now, ex.ToString(), "SiteApiController", "GetBackup");
+
                 throw new HttpResponseException(Request.CreateResponse(
                     HttpStatusCode.InternalServerError, 
                     ex.Message));
@@ -186,6 +188,8 @@ namespace BookmarkBrowser.Api.Controllers
             }
             catch (Exception ex)
             {
+                Utility.WriteEvent(ex.Message, DateTime.Now, ex.ToString(), "SiteApiController", "AddBackup");
+
                 throw new HttpResponseException(Request.CreateResponse(
                     HttpStatusCode.InternalServerError, 
                     ex.Message));
@@ -200,27 +204,34 @@ namespace BookmarkBrowser.Api.Controllers
 
         private bool ValidUser(string userName, string password)
         {
-            string filePath = Utility.EnsureBackslash(HttpContext.Current.Request.MapPath("~")) + "users.txt";
+            string filePath = Utility.EnsureBackslash(HttpContext.Current.Request.MapPath("~")) + "users.dat";
             string line;
             string storedPassword;
             int mark;
             bool valid = false;
 
-            using (System.IO.StreamReader userFile = new System.IO.StreamReader(filePath))
+            try
             {
-                while (!userFile.EndOfStream)
+                using (System.IO.StreamReader userFile = new System.IO.StreamReader(filePath))
                 {
-                    line = userFile.ReadLine();
-
-                    if (line.StartsWith(userName))
+                    while (!userFile.EndOfStream)
                     {
-                        mark = line.IndexOf('\t');
-                        storedPassword = line.Substring(mark, line.Length - mark).Trim();
-                        valid = password.Equals(storedPassword, StringComparison.InvariantCulture);
+                        line = userFile.ReadLine();
 
-                        break;
+                        if (line.StartsWith(userName))
+                        {
+                            mark = line.IndexOf('\t');
+                            storedPassword = line.Substring(mark, line.Length - mark).Trim();
+                            valid = password.Equals(storedPassword, StringComparison.InvariantCulture);
+
+                            break;
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Utility.WriteEvent(ex.Message, DateTime.Now, ex.ToString(), "SiteApiController", "ValidUser");
             }
 
             return valid;

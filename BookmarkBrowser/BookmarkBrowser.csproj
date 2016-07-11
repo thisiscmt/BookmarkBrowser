@@ -241,7 +241,6 @@
     <Content Include="Styles\jquery.mobile.icons.min.css" />
     <Content Include="Styles\Site.css" />
     <Content Include="Global.asax" />
-    <Content Include="users.txt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -256,6 +255,7 @@
     <None Include="package.json" />
     <None Include="Properties\PublishProfiles\BMB_WD.pubxml" />
     <Content Include="Scripts\sourceMap.map" />
+    <Content Include="users.dat" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\Attributes\BackupManagementAuthorizeAttribute.cs" />
