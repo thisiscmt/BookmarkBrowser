@@ -17,6 +17,8 @@ namespace FxSyncNet
 
         private StorageClient storageClient;
 
+        private LoginResponse unverifiedLogin;
+
         public SyncClient()
         {
         }
@@ -28,9 +30,32 @@ namespace FxSyncNet
             SignOut();
 
             Credentials credentials = new Credentials(email, password);
-
             AccountClient account = new AccountClient();
-            LoginResponse response = account.Login(credentials, true).Result;
+            LoginResponse response;
+            
+            if (this.unverifiedLogin == null)
+            {
+                response = account.Login(credentials, true).Result;
+
+                if (!response.Verified)
+                {
+                    this.unverifiedLogin = response;
+
+                    
+                    return;
+                }
+            }
+            else
+            {
+                if (this.unverifiedLogin.Verified)
+                {
+                    response = this.unverifiedLogin;
+                }
+                else
+                {
+                    throw new AuthenticationException("Unverified account");
+                }
+            }
 
             KeysResponse keysResponse = account.Keys(response.KeyFetchToken).Result;
 
@@ -74,6 +99,18 @@ namespace FxSyncNet
             isSignedIn = false;
             collectionKeys = null;
             storageClient = null;
+        }
+
+        public void VerifyLogin(string verificationCode)
+        {
+            if (this.unverifiedLogin == null)
+            {
+                throw new InvalidOperationException("Please attempt to sign in first");
+            }
+            
+            AccountClient account = new AccountClient();
+            account.Verify(this.unverifiedLogin.Uid, verificationCode);
+            this.unverifiedLogin.Verified = true;
         }
 
         public IEnumerable<Bookmark> GetBookmarks()

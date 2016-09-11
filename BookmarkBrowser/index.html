@@ -172,6 +172,11 @@
                 </div>
 
                 <div id="CommonSettings" class="alignCenter">
+                    <div id="validationLinkInput" class="bottomPadding15">
+                        <label for="validationLink">Validation link</label>
+                        <input id="validationLink" type="text" autocorrect="off" autocapitalize="none" data-prevent-focus-zoom="true" data-mini="true" />
+                    </div>
+
                     <div class="bottomPadding15">
                         <input id="loadOnStartup" data-mini="true" type="checkbox" name="LoadOnStartup" />
                         <label for="loadOnStartup">Refresh bookmark data on startup</label>
@@ -183,12 +188,23 @@
                 </div>
 
                 <div class="alignCenter">
-                    <input id="Save" type="submit" value="Save" data-mini="true" data-inline="true" onclick="return Save_OnClick();" />
                     <span class="loggedIn hideMe">
+                        <input id="Save" type="submit" value="Save" data-mini="true" data-inline="true" onclick="return Save_OnClick();" />
+                    </span>
+
+                    <span>
+                        <input id="Login" type="submit" value="Login" data-mini="true" data-inline="true" onclick="return Login_OnClick();" />
+                    </span>
+
+                    <span id="refreshButton" class="hideMe">
                         <input id="Refresh" type="button" value="Refresh" data-mini="true" data-inline="true" onclick="return Refresh_OnClick();" />
+                    </span>
+
+                    <span class="loggedIn hideMe">
                         <input id="Logout" type="button" value="Logout" data-mini="true" data-inline="true" onclick="return Logout_OnClick();" />
                         <input id="Backup" type="button" value="Backup" data-mini="true" data-inline="true" onclick="return Backup_OnClick();" />
                     </span>
+
                     <input id="Restore" type="button" value="Restore" data-mini="true" data-inline="true" onclick="return Restore_OnClick();" />
                 </div>
             </form>

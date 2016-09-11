@@ -91,6 +91,7 @@
     <Compile Include="Hawk.cs" />
     <Compile Include="HawkCredential.cs" />
     <Compile Include="HKDF.cs" />
+    <Compile Include="Models\VerificationRequest.cs" />
     <Compile Include="Util\JwtCryptoHelper.cs" />
     <Compile Include="Models\Visit.cs" />
     <Compile Include="Pbkdf2.cs" />

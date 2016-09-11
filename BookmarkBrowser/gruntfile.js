@@ -6,11 +6,7 @@ module.exports = function (grunt) {
         // Concat the specified files into mb-core.js
         concat: {
             bmb_core : {
-                src: [
-                    'scripts/bmb/bookmark-browser-common.js',
-                    'scripts/bmb/bookmark-browser-default.js',
-                    'scripts/view-models/bookmarks-view-model.js',
-                ],
+                src: ['scripts/bmb/**/*.js'],
                 dest: 'scripts/bmb-core.js'
             }
         },
@@ -48,5 +44,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-cache-breaker');
 
-    grunt.registerTask('default', ['concat:bmb_core', 'uglify:bmb_core', 'cachebreaker:bmb_core']);
+    var target = grunt.option('target') || 'debug';
+
+    if (target === "debug") {
+        grunt.registerTask('default', ['concat:bmb_core', 'uglify:bmb_core']);
+    }
+    else {
+        grunt.registerTask('default', ['concat:bmb_core', 'uglify:bmb_core', 'cachebreaker:bmb_core']);
+    }
 }

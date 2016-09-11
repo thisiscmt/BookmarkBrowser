@@ -12,12 +12,72 @@ using FxSyncNet;
 using BookmarkBrowser.Api.Models;
 using BookmarkBrowser.Entities;
 using BookmarkBrowser.Api.Attributes;
+using System.Collections.Specialized;
 
 namespace BookmarkBrowser.Api.Controllers
 {
     public class SiteApiController : ApiController
     {
         #region Public methods
+
+        // POST api/login
+        [HttpPost]
+        [Route("api/login")]
+        public ResultViewModel Login([FromBody]JToken userName, [FromBody]JToken password)
+        {
+            FxSyncNet.SyncClient syncClient = new FxSyncNet.SyncClient();
+
+            try
+            {
+                syncClient.SignIn(userName["userName"].ToString(), password["password"].ToString());
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateResponse(
+                    HttpStatusCode.BadRequest,
+                    Utility.GetExceptionMessage(ex)));
+            }
+
+            return new ResultViewModel();
+        }
+
+        // POST api/verify
+        [HttpPost]
+        [Route("api/verify")]
+        public ResultViewModel Verify([FromBody]JToken verificationLink)
+        {
+            if (verificationLink == null)
+            {
+                throw new HttpResponseException(Request.CreateResponse(
+                    HttpStatusCode.BadRequest, 
+                    "Missing verification link"));
+            }
+
+            Uri link = new Uri(verificationLink["verificationLink"].ToString());
+            NameValueCollection queryParams = HttpUtility.ParseQueryString(link.Query);
+
+            if (queryParams["code"] == null)
+            {
+                throw new HttpResponseException(Request.CreateResponse(
+                    HttpStatusCode.BadRequest, 
+                    "Invalid verification link"));
+            }
+
+            FxSyncNet.SyncClient syncClient = new FxSyncNet.SyncClient();
+
+            try
+            {
+                syncClient.VerifyLogin(queryParams["code"]);
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateResponse(
+                    HttpStatusCode.BadRequest, 
+                    Utility.GetExceptionMessage(ex)));
+            }
+
+            return new ResultViewModel();
+        }
 
         // GET api/{collection}
         [HttpGet]
@@ -85,16 +145,6 @@ namespace BookmarkBrowser.Api.Controllers
             
             return result;
         }
-
-        // POST api/{collection}
-        //[HttpPost]
-        //public ResultViewModel AddData(string collection, [FromBody]string data)
-        //{
-        //    ResultViewModel result = new ResultViewModel();
-        //    result.Content = "Under development";
-            
-        //    return result;
-        //}
 
         // GET api/{collection}/backup
         [HttpGet]
@@ -197,6 +247,16 @@ namespace BookmarkBrowser.Api.Controllers
 
             return null;
         }
+
+        // POST api/{collection}
+        //[HttpPost]
+        //public ResultViewModel AddData(string collection, [FromBody]string data)
+        //{
+        //    ResultViewModel result = new ResultViewModel();
+        //    result.Content = "Under development";
+            
+        //    return result;
+        //}
 
         #endregion
 

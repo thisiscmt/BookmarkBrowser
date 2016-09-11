@@ -136,6 +136,7 @@
     <None Include="Scripts\lib\modernizr.custom.2.7.1-min.js" />
     <None Include="Scripts\_references.js" />
     <None Include="Scripts\view-models\bookmarks-view-model.js" />
+    <Content Include="Scripts\bmb\bookmark-browser-api.js" />
     <Content Include="Styles\images\ajax-loader.gif" />
     <Content Include="Styles\images\icons-png\action-black.png" />
     <Content Include="Styles\images\icons-png\action-white.png" />
@@ -319,7 +320,13 @@
   </Target>
   <PropertyGroup>
     <PostBuildEvent>cd "C:\Dev\BookmarkBrowser\BookmarkBrowser"
-grunt</PostBuildEvent>
+
+if $(ConfigurationName) == Debug (
+    grunt --target=debug
+)
+else if $(ConfigurationName) == Release (
+    grunt --target=release
+)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

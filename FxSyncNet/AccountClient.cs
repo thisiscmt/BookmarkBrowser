@@ -26,6 +26,11 @@ namespace FxSyncNet
             return Post<LoginRequest, LoginResponse>("account/login" + (keys ? "?keys=true" : ""), new LoginRequest(credentials));
         }
 
+        public Task<Object> Verify(string userId, string verificationCode)
+        {
+            return Post<VerificationRequest, Object>("recovery_email/verify_code", new VerificationRequest(userId, verificationCode));
+        }
+
         public Task<DevicesResponse> Devices(string sessionToken)
         {
             return Get<DevicesResponse>("account/devices", sessionToken, "sessionToken", 2 * 32);

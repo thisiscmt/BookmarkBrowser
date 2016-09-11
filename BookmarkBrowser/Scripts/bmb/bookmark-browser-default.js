@@ -139,48 +139,8 @@ function loadSettingsPage() {
     }
 }
 
-function Save_OnClick() {
-    var userName;
-    var password;
-    var loadOnStartup = "False";
-    var lastDirOnStartup = "False";
+function Login_OnClick() {
 
-    // If bookmark data exists we are merely saving options, otherwise the user is doing an initial login
-    if (localStorage.getItem("CurrentBookmarks")) {
-        var saveTimer = setTimeout(function () {
-            $.mobile.loading("hide");
-            clearTimeout(saveTimer);
-        }, 1000);
-
-        $.mobile.loading("show", { theme: "c", text: "Saving ...", textVisible: true, textonly: true });
-
-        if ($("#loadOnStartup").prop("checked")) {
-            loadOnStartup = "True";
-        }
-        if ($("#lastDirOnStartup").prop("checked")) {
-            lastDirOnStartup = "True";
-        }
-
-        localStorage.setItem("LoadOnStartup", loadOnStartup);
-        localStorage.setItem("LastDirOnStartup", lastDirOnStartup);
-    }
-    else {
-        userName = $("#userName").val();
-        password = $("#password").val();
-
-        if (!userName) {
-            displayMessage("User name cannot be blank", "Settings");
-            return false;
-        }
-        if (!password) {
-            displayMessage("Password cannot be blank", "Settings");
-            return false;
-        }
-
-        clearMessagePanel("Settings");
-        $.mobile.loading("show", { theme: "c", text: "Loading ...", textVisible: true });
-        loadBookmarks(userName, password, "Login");
-    }
 
     return false;
 }
@@ -216,85 +176,142 @@ function Logout_OnClick() {
     return false;
 }
 
-function Refresh_OnClick() {
-    $.mobile.loading("show", { theme: "c", text: "Loading ...", textVisible: true });
+    function Save_OnClick() {
+        var userName;
+        var password;
+        var loadOnStartup = "False";
+        var lastDirOnStartup = "False";
 
-    var userName = localStorage.getItem("UserName");
-    var password = localStorage.getItem("Password");
-    loadBookmarks(userName, password, "Refresh");
+        // If bookmark data exists we are merely saving options, otherwise the user is doing an initial login
+        if (localStorage.getItem("CurrentBookmarks")) {
+            var saveTimer = setTimeout(function () {
+                $.mobile.loading("hide");
+                clearTimeout(saveTimer);
+            }, 1000);
 
-    return false;
-}
+            $.mobile.loading("show", { theme: "c", text: "Saving ...", textVisible: true, textonly: true });
 
-function Backup_OnClick() {
-    $.mobile.loading("show", { theme: "c", text: "Backing up data ...", textVisible: true });
-    var userName = localStorage.getItem("UserName");
-    var password = localStorage.getItem("Password");
-    var bookmarkData = localStorage.getItem("CurrentBookmarks");
+            if ($("#loadOnStartup").prop("checked")) {
+                loadOnStartup = "True";
+            }
+            if ($("#lastDirOnStartup").prop("checked")) {
+                lastDirOnStartup = "True";
+            }
 
-    if (bookmarkData) {
-        var data = {};
-        data.bookmarkData = bookmarkData;
-        data.count = localStorage.getItem("BookmarkCount");
-        data.lastRefresh = localStorage.getItem("LastRefresh");
+            localStorage.setItem("LoadOnStartup", loadOnStartup);
+            localStorage.setItem("LastDirOnStartup", lastDirOnStartup);
+        }
+        else {
+            userName = $("#userName").val();
+            password = $("#password").val();
+
+            if (!userName) {
+                displayMessage("User name cannot be blank", "Settings");
+                return false;
+            }
+            if (!password) {
+                displayMessage("Password cannot be blank", "Settings");
+                return false;
+            }
+
+            clearMessagePanel("Settings");
+            $.mobile.loading("show", { theme: "c", text: "Loading ...", textVisible: true });
+            loadBookmarks(userName, password, "Login");
+        }
+
+        return false;
+    }
+
+    function Refresh_OnClick() {
+        $.mobile.loading("show", { theme: "c", text: "Loading ...", textVisible: true });
+
+        var userName = localStorage.getItem("UserName");
+        var password = localStorage.getItem("Password");
+        var validationLink = $("#validationLink").val();
+
+        if (validationLink && validationLink !== "") {
+            verifyLogin(validationLink).then(function(data, status, jqXHR) {
+                // TODO
+            }, function(data, status, jqXHR) {
+                displayMessage(getErrorMessage(data), "Settings");
+            });
+        }
+        else {
+            loadBookmarks(userName, password, "Refresh");
+        }
+
+        return false;
+    }
+
+    function Backup_OnClick() {
+        $.mobile.loading("show", { theme: "c", text: "Backing up data ...", textVisible: true });
+        var userName = localStorage.getItem("UserName");
+        var password = localStorage.getItem("Password");
+        var bookmarkData = localStorage.getItem("CurrentBookmarks");
+
+        if (bookmarkData) {
+            var data = {};
+            data.bookmarkData = bookmarkData;
+            data.count = localStorage.getItem("BookmarkCount");
+            data.lastRefresh = localStorage.getItem("LastRefresh");
+
+            $.ajax({
+                type: "POST",
+                url: "api/bookmark/backup?username=" + encodeURIComponent(userName) + "&password=" + encodeURIComponent(password),
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(data),
+                headers: {"cache-control":"no-cache"},
+                success: function (data) {
+                    displayMessage("Data backed up successfully", "Settings");
+                },
+                error: function (error) {
+                    displayMessage(getErrorMessage(error), "Settings");
+                }
+            });
+        }
+
+        return false;
+    }
+
+    function Restore_OnClick() {
+        var userName = localStorage.getItem("UserName");
+        var password = localStorage.getItem("Password");
+
+        if (!userName || !password) {
+            userName = $("#userName").val();
+            password = $("#password").val();
+
+            if (!userName) {
+                displayMessage("User name cannot be blank", "Settings");
+                return false;
+            }
+            if (!password) {
+                displayMessage("Password cannot be blank", "Settings");
+                return false;
+            }
+        }
+
+        $.mobile.loading("show", { theme: "c", text: "Restoring data ...", textVisible: true });
 
         $.ajax({
-            type: "POST",
+            type: "GET",
             url: "api/bookmark/backup?username=" + encodeURIComponent(userName) + "&password=" + encodeURIComponent(password),
             contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(data),
+            dataType: "json",
             headers: {"cache-control":"no-cache"},
-            success: function (data) {
-                displayMessage("Data backed up successfully", "Settings");
+            success: function (response) {
+                var data = JSON.parse(response.Content);
+                localStorage.setItem("CurrentBookmarks", data.bookmarkData);
+                localStorage.setItem("BookmarkCount", data.count);
+                localStorage.setItem("LastRefresh", data.lastRefresh);
+
+                localStorage.setItem("UserName", userName);
+                localStorage.setItem("Password", password);
             },
             error: function (error) {
                 displayMessage(getErrorMessage(error), "Settings");
             }
         });
+
+        return false;
     }
-
-    return false;
-}
-
-function Restore_OnClick() {
-    var userName = localStorage.getItem("UserName");
-    var password = localStorage.getItem("Password");
-
-    if (!userName || !password) {
-        userName = $("#userName").val();
-        password = $("#password").val();
-
-        if (!userName) {
-            displayMessage("User name cannot be blank", "Settings");
-            return false;
-        }
-        if (!password) {
-            displayMessage("Password cannot be blank", "Settings");
-            return false;
-        }
-    }
-
-    $.mobile.loading("show", { theme: "c", text: "Restoring data ...", textVisible: true });
-
-    $.ajax({
-        type: "GET",
-        url: "api/bookmark/backup?username=" + encodeURIComponent(userName) + "&password=" + encodeURIComponent(password),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        headers: {"cache-control":"no-cache"},
-        success: function (response) {
-            var data = JSON.parse(response.Content);
-            localStorage.setItem("CurrentBookmarks", data.bookmarkData);
-            localStorage.setItem("BookmarkCount", data.count);
-            localStorage.setItem("LastRefresh", data.lastRefresh);
-
-            localStorage.setItem("UserName", userName);
-            localStorage.setItem("Password", password);
-        },
-        error: function (error) {
-            displayMessage(getErrorMessage(error), "Settings");
-        }
-    });
-
-    return false;
-}
