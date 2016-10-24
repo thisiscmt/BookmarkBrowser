@@ -11,7 +11,6 @@ using Newtonsoft.Json.Linq;
 using FxSyncNet;
 using BookmarkBrowser.Api.Models;
 using BookmarkBrowser.Entities;
-using BookmarkBrowser.Api.Attributes;
 using System.Collections.Specialized;
 
 namespace BookmarkBrowser.Api.Controllers
@@ -23,13 +22,21 @@ namespace BookmarkBrowser.Api.Controllers
         // POST api/login
         [HttpPost]
         [Route("api/login")]
-        public ResultViewModel Login([FromBody]JToken userName, [FromBody]JToken password)
+        public ResultViewModel Login(BookmarkBrowser.Api.Models.Credentials creds)
         {
+            if (creds == null)
+            {
+                throw new HttpResponseException(Request.CreateResponse(
+                    HttpStatusCode.BadRequest,
+                    "Missing required parameters"));
+            }
+
             FxSyncNet.SyncClient syncClient = new FxSyncNet.SyncClient();
+            FxSyncNet.Models.LoginResponse response;
 
             try
             {
-                syncClient.SignIn(userName["userName"].ToString(), password["password"].ToString());
+                response = syncClient.Login(creds.Username, creds.Password);
             }
             catch (Exception ex)
             {
@@ -38,25 +45,25 @@ namespace BookmarkBrowser.Api.Controllers
                     Utility.GetExceptionMessage(ex)));
             }
 
-            return new ResultViewModel();
+            return new ResultViewModel() { Content = JsonConvert.SerializeObject(response) };
         }
 
         // POST api/verify
         [HttpPost]
         [Route("api/verify")]
-        public ResultViewModel Verify([FromBody]JToken verificationLink)
+        public ResultViewModel Verify(LoginVerification verification)
         {
-            if (verificationLink == null)
+            if (verification == null)
             {
                 throw new HttpResponseException(Request.CreateResponse(
-                    HttpStatusCode.BadRequest, 
-                    "Missing verification link"));
+                    HttpStatusCode.BadRequest,
+                    "Missing required parameters"));
             }
 
-            Uri link = new Uri(verificationLink["verificationLink"].ToString());
-            NameValueCollection queryParams = HttpUtility.ParseQueryString(link.Query);
+            Uri link = new Uri(verification.VerificationLink);
+            NameValueCollection linkQueryParams = HttpUtility.ParseQueryString(link.Query);
 
-            if (queryParams["code"] == null)
+            if (linkQueryParams["code"] == null)
             {
                 throw new HttpResponseException(Request.CreateResponse(
                     HttpStatusCode.BadRequest, 
@@ -67,7 +74,7 @@ namespace BookmarkBrowser.Api.Controllers
 
             try
             {
-                syncClient.VerifyLogin(queryParams["code"]);
+                syncClient.VerifyLogin(verification.UID, linkQueryParams["code"]);
             }
             catch (Exception ex)
             {
@@ -86,14 +93,22 @@ namespace BookmarkBrowser.Api.Controllers
         {
             ResultViewModel result = new ResultViewModel();
             Directory mainDir;
+
             var parms = Request.RequestUri.ParseQueryString();
             int count;
 
             if (parms["username"] == null || parms["password"] == null)
             {
                 throw new HttpResponseException(Request.CreateResponse(
-                    HttpStatusCode.BadRequest, 
+                    HttpStatusCode.BadRequest,
                     "You must supply Sync credentials"));
+            }
+
+            if (parms["keyFetchToken"] == null || parms["sessionToken"] == null)
+            {
+                throw new HttpResponseException(Request.CreateResponse(
+                    HttpStatusCode.BadRequest,
+                    "You must supply the proper Sync tokens"));
             }
 
             FxSyncNet.SyncClient syncClient = new FxSyncNet.SyncClient();
@@ -103,7 +118,10 @@ namespace BookmarkBrowser.Api.Controllers
                 case "bookmark":
                     try
                     {
-                        syncClient.SignIn(parms["username"], parms["password"]);
+                        syncClient.OpenSyncAccount(parms["userName"], 
+                                                   parms["password"], 
+                                                   parms["keyFetchToken"], 
+                                                   parms["sessionToken"]);
 
                         IEnumerable<FxSyncNet.Models.Bookmark> bookmarks = syncClient.GetBookmarks();
                         mainDir = Utility.BuildBookmarks(bookmarks);
@@ -247,16 +265,6 @@ namespace BookmarkBrowser.Api.Controllers
 
             return null;
         }
-
-        // POST api/{collection}
-        //[HttpPost]
-        //public ResultViewModel AddData(string collection, [FromBody]string data)
-        //{
-        //    ResultViewModel result = new ResultViewModel();
-        //    result.Content = "Under development";
-            
-        //    return result;
-        //}
 
         #endregion
 

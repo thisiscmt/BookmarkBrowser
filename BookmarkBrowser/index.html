@@ -26,8 +26,8 @@
 
                 <div class="alignCenter smallText bottomPadding15">
                     This site provides access to your Sync bookmarks from a mobile device.<br /><br />
-                    Click Settings to set your Sync username and password. Once the information is
-                    saved, you can refresh the bookmark data at any time from the settings page.
+                    Click Auth to set your Sync username and password. Once the information is
+                    saved, you can refresh the bookmark data at any time from the authentication page.
                 </div>
             </div>
         </div>
@@ -43,6 +43,9 @@
                     </li>
                     <li>
                         <a href="#Settings" data-role="button" data-icon="gear">Settings</a>
+                    </li>
+                    <li>
+                        <a href="#Auth" data-role="button" data-icon="check">Auth</a>
                     </li>
                 </ul>
             </div>
@@ -112,14 +115,17 @@
                     <li>
                         <a href="#Settings" data-role="button" data-icon="gear">Settings</a>
                     </li>
+                    <li>
+                        <a href="#Auth" data-role="button" data-icon="check">Auth</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
 
-    <div id="Settings" data-role="page" data-title="Settings" data-theme="c" class="mobilePage">
+    <div id="Auth" data-role="page" data-title="Authentication" data-theme="c" class="mobilePage">
         <div data-role="header">
-            <h5>Settings</h5>
+            <h5>Authentication</h5>
         </div>
 
         <div data-role="content" class="smallText">
@@ -127,10 +133,10 @@
                 <span class="errorNotification"></span>
             </div>
 
-            <form id="settingsForm" method="post" data-ajax="false">
+            <form id="authForm" method="post" data-ajax="false">
                 <div id="LoggedOutContainer">
                     <div class="bottomPadding15">
-                        <label for="userName">User name</label>
+                        <label for="userName">Username</label>
                         <input id="userName" type="email" autocorrect="off" autocapitalize="none" data-prevent-focus-zoom="true" data-mini="true" />
                     </div>
 
@@ -171,40 +177,16 @@
                     </table>
                 </div>
 
-                <div id="CommonSettings" class="alignCenter">
-                    <div id="validationLinkInput" class="bottomPadding15">
-                        <label for="validationLink">Validation link</label>
-                        <input id="validationLink" type="text" autocorrect="off" autocapitalize="none" data-prevent-focus-zoom="true" data-mini="true" />
-                    </div>
-
-                    <div class="bottomPadding15">
-                        <input id="loadOnStartup" data-mini="true" type="checkbox" name="LoadOnStartup" />
-                        <label for="loadOnStartup">Refresh bookmark data on startup</label>
-                    </div>
-                    <div class="bottomPadding15">
-                        <input id="lastDirOnStartup" data-mini="true" type="checkbox" name="LastDirOnStartup" />
-                        <label for="lastDirOnStartup">Go to last known directory at startup</label>
-                    </div>
+                <div id="verificationLinkInput" class="bottomPadding15 hideMe">
+                    <label for="verificationLink">Verification link</label>
+                    <input id="verificationLink" type="text" autocorrect="off" autocapitalize="none" data-prevent-focus-zoom="true" data-mini="true" />
                 </div>
 
                 <div class="alignCenter">
-                    <span class="loggedIn hideMe">
-                        <input id="Save" type="submit" value="Save" data-mini="true" data-inline="true" onclick="return Save_OnClick();" />
-                    </span>
-
-                    <span>
-                        <input id="Login" type="submit" value="Login" data-mini="true" data-inline="true" onclick="return Login_OnClick();" />
-                    </span>
-
-                    <span id="refreshButton" class="hideMe">
-                        <input id="Refresh" type="button" value="Refresh" data-mini="true" data-inline="true" onclick="return Refresh_OnClick();" />
-                    </span>
-
-                    <span class="loggedIn hideMe">
-                        <input id="Logout" type="button" value="Logout" data-mini="true" data-inline="true" onclick="return Logout_OnClick();" />
-                        <input id="Backup" type="button" value="Backup" data-mini="true" data-inline="true" onclick="return Backup_OnClick();" />
-                    </span>
-
+                    <input id="Login" type="submit" value="Login" data-mini="true" data-inline="true" onclick="return Login_OnClick();" />
+                    <input id="Verify" class="hideMe" type="button" value="Verify" data-mini="true" data-inline="true" onclick="return VerifyLogin_OnClick();" />
+                    <input id="Logout" class="hideMe" type="button" value="Logout" data-mini="true" data-inline="true" onclick="return Logout_OnClick();" />
+                    <input id="Backup" class="hideMe" type="button" value="Backup" data-mini="true" data-inline="true" onclick="return Backup_OnClick();" />
                     <input id="Restore" type="button" value="Restore" data-mini="true" data-inline="true" onclick="return Restore_OnClick();" />
                 </div>
             </form>
@@ -222,10 +204,61 @@
                     <li>
                         <a href="#Settings" data-role="button" data-icon="gear">Settings</a>
                     </li>
+                    <li>
+                        <a href="#Auth" data-role="button" data-icon="check">Auth</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
+
+    <div id="Settings" data-role="page" data-title="Settings" data-theme="c" class="mobilePage">
+        <div data-role="header">
+            <h5>Settings</h5>
+        </div>
+
+        <div data-role="content" class="smallText">
+            <div class="msgPanel">
+                <span class="errorNotification"></span>
+            </div>
+
+            <form id="settingsForm" method="post" data-ajax="false">
+                <div class="alignCenter">
+                    <div class="bottomPadding15">
+                        <input id="loadOnStartup" data-mini="true" type="checkbox" name="LoadOnStartup" />
+                        <label for="loadOnStartup">Refresh bookmark data on startup</label>
+                    </div>
+                    <div class="bottomPadding15">
+                        <input id="lastDirOnStartup" data-mini="true" type="checkbox" name="LastDirOnStartup" />
+                        <label for="lastDirOnStartup">Go to last known directory at startup</label>
+                    </div>
+                </div>
+                <div class="alignCenter">
+                    <input id="Save" type="submit" value="Save" data-mini="true" data-inline="true" onclick="return Save_OnClick();" />
+                </div>
+            </form>
+            <div data-role="footer">
+                <div data-role="navbar">
+                    <ul class="footerList">
+                        <li>
+                            <a href="#Home" data-role="button" data-icon="home">Home</a>
+                        </li>
+                        <li>
+                            <a href="#Bookmarks" data-role="button" data-icon="star">Bookmarks</a>
+                        </li>
+                        <li>
+                            <a href="#Settings" data-role="button" data-icon="gear">Settings</a>
+                        </li>
+                        <li>
+                            <a href="#Auth" data-role="button" data-icon="check">Auth</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div stlye="min-height:25px"></div>
 
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.1/jquery.mobile.min.js"></script>
@@ -235,65 +268,69 @@
     <script type="text/javascript" src="scripts/bmb-core.min.js?rel=1.1.0"></script>
 
     <script type="text/javascript">
-        $(document).ready(function () {
-            if (Modernizr.localstorage) {
-                $("#Bookmarks").on("pagebeforeshow", Bookmarks_PageBeforeShow);
-                $("#Bookmarks").on("pagechangefailed", Bookmarks_PageChangeFailed);
-                $("#Settings").on("pagebeforeshow", Settings_PageBeforeShow);
-                $("#Settings").on("pagechangefailed", Settings_PageChangeFailed);
-                $(document).ajaxComplete(ajaxCompleted);
+    $(document).ready(function () {
+        if (Modernizr.localstorage) {
+            $("#Bookmarks").on("pagebeforeshow", Bookmarks_PageBeforeShow);
+            $("#Bookmarks").on("pagechangefailed", Bookmarks_PageChangeFailed);
+            $("#Settings").on("pagebeforeshow", Settings_PageBeforeShow);
+            $("#Settings").on("pagechangefailed", Settings_PageChangeFailed);
+            $("#Auth").on("pagebeforeshow", Auth_PageBeforeShow);
+            $(document).ajaxComplete(bmbAPI.ajaxCompleted);
 
-                $("#backButton").attr("data-nodepath", "Root");
-                var url = $.mobile.path.parseUrl(window.location);
-                var loadOnStartup = localStorage.getItem("LoadOnStartup");
-                var lastDirOnStartup = localStorage.getItem("LastDirOnStartup");
-                var hasLoaded = sessionStorage.getItem("HasLoaded");
+            $("#backButton").attr("data-nodepath", "Root");
+            var url = $.mobile.path.parseUrl(window.location);
+            var loadOnStartup = localStorage.getItem("LoadOnStartup");
+            var lastDirOnStartup = localStorage.getItem("LastDirOnStartup");
+            var hasLoaded = sessionStorage.getItem("HasLoaded");
 
-                switch (url.hash) {
-                    case "#Bookmarks":
-                        if (!localStorage.getItem("CurrentBookmarks")) {
-                            displayMessage("Go to the Settings page to enter your Sync credentials", "Bookmarks");
-                            $("#bookmarkContainer").hide();
-                            return;
-                        }
+            switch (url.hash) {
+                case "#Bookmarks":
+                    if (!localStorage.getItem("CurrentBookmarks")) {
+                        bmbCommon.displayMessage("Go to the Auth page to enter your Sync credentials", "Bookmarks");
+                        $("#bookmarkContainer").hide();
+                        return;
+                    }
 
-                        $(document).attr("title", "Bookmarks");
-                        break;
-                    case "#Settings":
-                        $(document).attr("title", "Settings");
-                        break;
-                    default:
-                        // If this is the initial visit to the site and the 'Load On Startup' option
-                        // is set, fetch the latest bookmark data
-                        if (loadOnStartup === "True" && hasLoaded != "True" && localStorage.getItem("UserName")) {
-                            $.mobile.loading("show", { theme: "c", text: "Loading ...", textVisible: true });
+                    $(document).attr("title", "Bookmarks");
+                    break;
+                case "#Settings":
+                    $(document).attr("title", "Settings");
+                    break;
+                case "#Auth":
+                    $(document).attr("title", "Authentication");
+                    break;
+                default:
+                    // If this is the initial visit to the site and the 'Load On Startup' option
+                    // is set, fetch the latest bookmark data
+                    if (loadOnStartup === "True" && hasLoaded != "True" && localStorage.getItem("UserName")) {
+                        $.mobile.loading("show", { theme: "c", text: "Loading ...", textVisible: true });
 
-                            var userName = localStorage.getItem("UserName");
-                            var password = localStorage.getItem("Password");
-                            loadBookmarks(userName, password, "Init");
-                        }
+                        var userName = localStorage.getItem("UserName");
+                        var password = localStorage.getItem("Password");
+                        bmbAPI.loadBookmarks(userName, password, "Init");
+                    }
 
-                        break;
-                }
+                    break;
             }
-            else {
-                displayMessage("Your browser doesn't support certain features required for this site", "Home");
-                $("#homePageContent").hide();
-                $("#homePageFooter").hide();
-                $("#Bookmarks").hide();
-                $("#Settings").hide();
+        }
+        else {
+            bmbCommon.displayMessage("Your browser doesn't support certain features required for this site", "Home");
+            $("#homePageContent").hide();
+            $("#homePageFooter").hide();
+            $("#Bookmarks").hide();
+            $("#Settings").hide();
 
-                return;
-            }
+            return;
+        }
 
-            // Setting this flag to True prevents the refresh from happening later in the user's session
-            sessionStorage.setItem("HasLoaded", "True");
+        // Setting this flag to True prevents the refresh from happening later in the user's session
+        sessionStorage.setItem("HasLoaded", "True");
 
-            $.ajaxSetup({
-                // Disable caching of AJAX responses
-                cache: false
-            });
+        $.ajaxSetup({
+            // Disable caching of AJAX responses
+            cache: false
         });
+    });
     </script>
 </body>
 </html>

@@ -11,55 +11,49 @@ namespace FxSyncNet
 {
     public class SyncClient
     {
-        private bool isSignedIn;
+        #region Private members
 
-        private SyncKeys collectionKeys;
+        private bool _isSignedIn;
 
-        private StorageClient storageClient;
+        private SyncKeys _collectionKeys;
 
-        private LoginResponse unverifiedLogin;
+        private StorageClient _storageClient;
+
+        #endregion
+
+        #region Constructors
 
         public SyncClient()
         {
         }
 
-        public bool IsSignedIn { get { return isSignedIn; } }
+        #endregion
 
-        public void SignIn(string email, string password)
+        #region Public methods
+
+        public LoginResponse Login(string email, string password)
         {
-            SignOut();
+            CloseSyncAccount();
 
             Credentials credentials = new Credentials(email, password);
             AccountClient account = new AccountClient();
-            LoginResponse response;
-            
-            if (this.unverifiedLogin == null)
-            {
-                response = account.Login(credentials, true).Result;
 
-                if (!response.Verified)
-                {
-                    this.unverifiedLogin = response;
+            return account.Login(credentials, true).Result;
+        }
 
-                    
-                    return;
-                }
-            }
-            else
-            {
-                if (this.unverifiedLogin.Verified)
-                {
-                    response = this.unverifiedLogin;
-                }
-                else
-                {
-                    throw new AuthenticationException("Unverified account");
-                }
-            }
+        public void VerifyLogin(string uid, string verificationCode)
+        {
+            AccountClient account = new AccountClient();
+            account.Verify(uid, verificationCode);
+        }
 
-            KeysResponse keysResponse = account.Keys(response.KeyFetchToken).Result;
+        public void OpenSyncAccount(string email, string password, string keyFetchToken, string sessionToken)
+        {
+            AccountClient account = new AccountClient();
+            Credentials credentials = new Credentials(email, password);
+            KeysResponse keysResponse = account.Keys(keyFetchToken).Result;
 
-            string key = BinaryHelper.ToHexString(Credentials.DeriveHawkCredentials(response.KeyFetchToken, "keyFetchToken"));
+            string key = BinaryHelper.ToHexString(Credentials.DeriveHawkCredentials(keyFetchToken, "keyFetchToken"));
 
             byte[] wrapKB = Credentials.UnbundleKeyFetchResponse(key, keysResponse.Bundle);
 
@@ -67,7 +61,7 @@ namespace FxSyncNet
 
             TimeSpan duration = new TimeSpan(0, 1, 0, 0);
 
-            CertificateSignResponse certificate = account.CertificateSign(response.SessionToken, rsa, duration).Result;
+            CertificateSignResponse certificate = account.CertificateSign(sessionToken, rsa, duration).Result;
 
             string jwtToken = JwtCryptoHelper.GetJwtToken(rsa);
             string assertion = JwtCryptoHelper.Bundle(jwtToken, certificate.Certificate);
@@ -84,69 +78,65 @@ namespace FxSyncNet
             TokenClient tokenClient = new TokenClient();
             TokenResponse tokenResponse = tokenClient.GetSyncToken(assertion, syncClientState);
 
-            storageClient = new StorageClient(tokenResponse.ApiEndpoint, tokenResponse.Key, tokenResponse.Id);
+            _storageClient = new StorageClient(tokenResponse.ApiEndpoint, tokenResponse.Key, tokenResponse.Id);
 
-            BasicStorageObject cryptoKeys = storageClient.GetStorageObject("crypto/keys").Result;
+            BasicStorageObject cryptoKeys = _storageClient.GetStorageObject("crypto/keys").Result;
 
             SyncKeys syncKeys = Crypto.DeriveKeys(kB);
-            collectionKeys = Crypto.DecryptCollectionKeys(syncKeys, cryptoKeys);
+            _collectionKeys = Crypto.DecryptCollectionKeys(syncKeys, cryptoKeys);
 
-            isSignedIn = true;
+            _isSignedIn = true;
         }
 
-        public void SignOut()
+        public void CloseSyncAccount()
         {
-            isSignedIn = false;
-            collectionKeys = null;
-            storageClient = null;
-        }
-
-        public void VerifyLogin(string verificationCode)
-        {
-            if (this.unverifiedLogin == null)
-            {
-                throw new InvalidOperationException("Please attempt to sign in first");
-            }
-            
-            AccountClient account = new AccountClient();
-            account.Verify(this.unverifiedLogin.Uid, verificationCode);
-            this.unverifiedLogin.Verified = true;
+            _isSignedIn = false;
+            _collectionKeys = null;
+            _storageClient = null;
         }
 
         public IEnumerable<Bookmark> GetBookmarks()
         {
-            if (!isSignedIn)
+            if (!_isSignedIn)
                 throw new InvalidOperationException("Please sign in first");
 
-            if (storageClient == null || collectionKeys == null)
+            if (_storageClient == null || _collectionKeys == null)
                 throw new InvalidOperationException("Please make sure you are correctly logged in to the Sync service");
 
-            IEnumerable<BasicStorageObject> collection = storageClient.GetCollection("bookmarks", true).Result;
-            return Crypto.DecryptWbos<Bookmark>(collectionKeys, collection);
+            IEnumerable<BasicStorageObject> collection = _storageClient.GetCollection("bookmarks", true).Result;
+            return Crypto.DecryptWbos<Bookmark>(_collectionKeys, collection);
         }
 
         public async Task<IEnumerable<Client>> GetTabs()
         {
-            if (!isSignedIn)
+            if (!_isSignedIn)
                 throw new InvalidOperationException("Please sign in first.");
 
-            if (storageClient == null || collectionKeys == null)
+            if (_storageClient == null || _collectionKeys == null)
                 throw new InvalidOperationException("Please make sure you are correctly logged in to the sync service.");
 
-            IEnumerable<BasicStorageObject> collection = await storageClient.GetCollection("tabs", true);
-            return Crypto.DecryptWbos<Client>(collectionKeys, collection);
+            IEnumerable<BasicStorageObject> collection = await _storageClient.GetCollection("tabs", true);
+            return Crypto.DecryptWbos<Client>(_collectionKeys, collection);
         }
 
         public async Task<IEnumerable<HistoryRecord>> GetHistory()
         {
-            if (!isSignedIn)
+            if (!_isSignedIn)
                 throw new InvalidOperationException("Please sign in first.");
 
-            if (storageClient == null || collectionKeys == null)
+            if (_storageClient == null || _collectionKeys == null)
                 throw new InvalidOperationException("Please make sure you are correctly logged in to the sync service.");
 
-            IEnumerable<BasicStorageObject> collection = await storageClient.GetCollection("history", true);
-            return Crypto.DecryptWbos<HistoryRecord>(collectionKeys, collection);
+            IEnumerable<BasicStorageObject> collection = await _storageClient.GetCollection("history", true);
+            return Crypto.DecryptWbos<HistoryRecord>(_collectionKeys, collection);
         }
+
+        #endregion
+
+        #region Properties
+
+        public bool IsSignedIn { get { return _isSignedIn; } }
+
+        #endregion
     }
 }

@@ -1,12 +1,12 @@
 ﻿// Bookmarks
 function Bookmarks_PageBeforeShow(event, ui) {
     if (!localStorage.getItem("CurrentBookmarks")) {
-        displayMessage("Go to the Settings page to enter your Sync credentials", "Bookmarks");
+        bmbCommon.displayMessage("Go to the Authentication page to enter your Sync credentials", "Bookmarks");
         $("#bookmarkContainer").hide();
         return;
     }
 
-    clearMessagePanel("Bookmarks");
+    bmbCommon.clearMessagePanel("Bookmarks");
 
     if (!ko.dataFor($("#bookmarkContainer")[0])) {
         applyBindings();
@@ -101,7 +101,7 @@ function getNode(items, nodePath) {
 
 // Settings
 function Settings_PageBeforeShow(event, ui) {
-    clearMessagePanel("Settings");
+    bmbCommon.clearMessagePanel("Settings");
     loadSettingsPage();
 }
 
@@ -109,24 +109,59 @@ function Settings_PageChangeFailed(event, ui) {
 }
 
 function loadSettingsPage() {
-    var userName = localStorage.getItem("UserName");
     var loadOnStartup = false;
     var lastDirOnStartup = false;
+
+    if (localStorage.getItem("LoadOnStartup") === "True") {
+        loadOnStartup = true;
+    }
+
+    if (localStorage.getItem("LastDirOnStartup") === "True") {
+        lastDirOnStartup = true;
+    }
+
+    $("#loadOnStartup").prop("checked", loadOnStartup).checkboxradio("refresh");
+    $("#lastDirOnStartup").prop("checked", lastDirOnStartup).checkboxradio("refresh");
+}
+
+function Save_OnClick() {
+    var loadOnStartup = "False";
+    var lastDirOnStartup = "False";
+
+    var saveTimer = setTimeout(function () {
+        $.mobile.loading("hide");
+        clearTimeout(saveTimer);
+    }, 1000);
+
+    $.mobile.loading("show", { theme: "c", text: "Saving ...", textVisible: true, textonly: true });
+
+    if ($("#loadOnStartup").prop("checked")) {
+        loadOnStartup = "True";
+    }
+
+    if ($("#lastDirOnStartup").prop("checked")) {
+        lastDirOnStartup = "True";
+    }
+
+    localStorage.setItem("LoadOnStartup", loadOnStartup);
+    localStorage.setItem("LastDirOnStartup", lastDirOnStartup);
+
+    return false;
+}
+
+// Auth
+function Auth_PageBeforeShow(event, ui) {
+    bmbCommon.clearMessagePanel("Auth");
+    loadAuthPage();
+}
+
+function loadAuthPage() {
+    var userName = localStorage.getItem("UserName");
 
     if (userName) {
         $("#currentUser").html(userName);
         $("#bookmarkCount").html(localStorage.getItem("BookmarkCount"));
         $("#lastRefresh").html(moment(localStorage.getItem("LastRefresh")).format("LLL"));
-
-        if (localStorage.getItem("LoadOnStartup") === "True") {
-            loadOnStartup = true;
-        }
-        if (localStorage.getItem("LastDirOnStartup") === "True") {
-            lastDirOnStartup = true;
-        }
-
-        $("#loadOnStartup").prop("checked", loadOnStartup).checkboxradio("refresh");
-        $("#lastDirOnStartup").prop("checked", lastDirOnStartup).checkboxradio("refresh");
         $("#LoggedOutContainer").hide();
         $("#LoggedInContainer").show();
         $(".loggedIn").show();
@@ -134,13 +169,25 @@ function loadSettingsPage() {
     else {
         $("#userName").val("");
         $("#password").val("");
-        $("#loadOnStartup").prop("checked", false).checkboxradio("refresh");
-        $("#lastDirOnStartup").prop("checked", false).checkboxradio("refresh");
     }
 }
 
 function Login_OnClick() {
+    var userName = $("#userName").val();
+    var password = $("#password").val();
 
+    if (!userName) {
+        bmbCommon.displayMessage("Username cannot be blank", "Auth");
+        return false;
+    }
+    if (!password) {
+        bmbCommon.displayMessage("Password cannot be blank", "Auth");
+        return false;
+    }
+
+    $.mobile.loading("show", { theme: "c", text: "Authenticating ...", textVisible: true });
+
+    bmbAPI.login(userName, password);
 
     return false;
 }
@@ -153,16 +200,15 @@ function Logout_OnClick() {
     localStorage.removeItem("CurrentBookmarks");
     localStorage.removeItem("BookmarkCount");
     localStorage.removeItem("LastRefresh");
-    localStorage.removeItem("LoadOnStartup");
-    localStorage.removeItem("LastDirOnStartup");
     localStorage.removeItem("CurrentNode");
     sessionStorage.removeItem("CurrentNode")
 
     $("#userName").val("")
     $("#password").val("")
-    $(".loggedIn").hide();
     $("#LoggedInContainer").hide();
     $("#LoggedOutContainer").show();
+    $("#Login").show();
+    $("#Backup").hide();
 
     var bindingModel = ko.dataFor($("#bookmarkContainer")[0]);
 
@@ -171,147 +217,127 @@ function Logout_OnClick() {
     }
 
     $.mobile.loading("hide");
-    $("body").pagecontainer("change", "#Settings", { allowSamePageTransition: true });
+    $("body").pagecontainer("change", "#Auth", { allowSamePageTransition: true });
 
     return false;
 }
 
-    function Save_OnClick() {
-        var userName;
-        var password;
-        var loadOnStartup = "False";
-        var lastDirOnStartup = "False";
+function VerifyLogin_OnClick() {
 
-        // If bookmark data exists we are merely saving options, otherwise the user is doing an initial login
-        if (localStorage.getItem("CurrentBookmarks")) {
-            var saveTimer = setTimeout(function () {
-                $.mobile.loading("hide");
-                clearTimeout(saveTimer);
-            }, 1000);
+    var userName = localStorage.getItem("UserName");
+    var password = localStorage.getItem("Password");
+    var keyFetchToken = localStorage.getItem("KeyFetchToken");
+    var sessionToken = localStorage.getItem("SessionToken");
+    var verificationLink = $("#verificationLink").val();
 
-            $.mobile.loading("show", { theme: "c", text: "Saving ...", textVisible: true, textonly: true });
-
-            if ($("#loadOnStartup").prop("checked")) {
-                loadOnStartup = "True";
-            }
-            if ($("#lastDirOnStartup").prop("checked")) {
-                lastDirOnStartup = "True";
-            }
-
-            localStorage.setItem("LoadOnStartup", loadOnStartup);
-            localStorage.setItem("LastDirOnStartup", lastDirOnStartup);
-        }
-        else {
-            userName = $("#userName").val();
-            password = $("#password").val();
-
-            if (!userName) {
-                displayMessage("User name cannot be blank", "Settings");
-                return false;
-            }
-            if (!password) {
-                displayMessage("Password cannot be blank", "Settings");
-                return false;
-            }
-
-            clearMessagePanel("Settings");
-            $.mobile.loading("show", { theme: "c", text: "Loading ...", textVisible: true });
-            loadBookmarks(userName, password, "Login");
-        }
-
+    if (!verificationLink) {
+        bmbCommon.displayMessage("Verification link cannot be blank", "Auth");
         return false;
     }
 
-    function Refresh_OnClick() {
-        $.mobile.loading("show", { theme: "c", text: "Loading ...", textVisible: true });
+    $.mobile.loading("show", { theme: "c", text: "Loading ...", textVisible: true });
 
-        var userName = localStorage.getItem("UserName");
-        var password = localStorage.getItem("Password");
-        var validationLink = $("#validationLink").val();
+    bmbAPI.verifyLogin(verificationLink).then(function (data, status, jqXHR) {
+        bmbAPI.loadBookmarks(userName, password, "Refresh");
+    }, function (data, status, jqXHR) {
+        bmbCommon.displayMessage(bmbCommon.etErrorMessage(data), "Auth");
+    });
 
-        if (validationLink && validationLink !== "") {
-            verifyLogin(validationLink).then(function(data, status, jqXHR) {
-                // TODO
-            }, function(data, status, jqXHR) {
-                displayMessage(getErrorMessage(data), "Settings");
-            });
-        }
-        else {
-            loadBookmarks(userName, password, "Refresh");
-        }
+    return false;
+}
 
-        return false;
-    }
+//function Refresh_OnClick() {
+//    $.mobile.loading("show", { theme: "c", text: "Loading ...", textVisible: true });
 
-    function Backup_OnClick() {
-        $.mobile.loading("show", { theme: "c", text: "Backing up data ...", textVisible: true });
-        var userName = localStorage.getItem("UserName");
-        var password = localStorage.getItem("Password");
-        var bookmarkData = localStorage.getItem("CurrentBookmarks");
+//    var userName = localStorage.getItem("UserName");
+//    var password = localStorage.getItem("Password");
+//    var keyFetchToken = localStorage.getItem("KeyFetchToken");
+//    var sessionToken = localStorage.getItem("SessionToken");
+//    var verificationLink = $("#verificationLink").val();
 
-        if (bookmarkData) {
-            var data = {};
-            data.bookmarkData = bookmarkData;
-            data.count = localStorage.getItem("BookmarkCount");
-            data.lastRefresh = localStorage.getItem("LastRefresh");
+//    if (verificationLink && verificationLink !== "") {
+//        bmbAPI.verifyLogin(verificationLink).then(function (data, status, jqXHR) {
+//            bmbAPI.loadBookmarks(userName, password, "Refresh");
+//        }, function(data, status, jqXHR) {
+//            bmbCommon.displayMessage(bmbCommon.etErrorMessage(data), "Auth");
+//        });
+//    }
+//    else {
+//        bmbAPI.loadBookmarks(userName, password, "Refresh");
+//    }
 
-            $.ajax({
-                type: "POST",
-                url: "api/bookmark/backup?username=" + encodeURIComponent(userName) + "&password=" + encodeURIComponent(password),
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(data),
-                headers: {"cache-control":"no-cache"},
-                success: function (data) {
-                    displayMessage("Data backed up successfully", "Settings");
-                },
-                error: function (error) {
-                    displayMessage(getErrorMessage(error), "Settings");
-                }
-            });
-        }
+//    return false;
+//}
 
-        return false;
-    }
+function Backup_OnClick() {
+    $.mobile.loading("show", { theme: "c", text: "Backing up data ...", textVisible: true });
+    var userName = localStorage.getItem("UserName");
+    var password = localStorage.getItem("Password");
+    var bookmarkData = localStorage.getItem("CurrentBookmarks");
 
-    function Restore_OnClick() {
-        var userName = localStorage.getItem("UserName");
-        var password = localStorage.getItem("Password");
-
-        if (!userName || !password) {
-            userName = $("#userName").val();
-            password = $("#password").val();
-
-            if (!userName) {
-                displayMessage("User name cannot be blank", "Settings");
-                return false;
-            }
-            if (!password) {
-                displayMessage("Password cannot be blank", "Settings");
-                return false;
-            }
-        }
-
-        $.mobile.loading("show", { theme: "c", text: "Restoring data ...", textVisible: true });
+    if (bookmarkData) {
+        var data = {};
+        data.bookmarkData = bookmarkData;
+        data.count = localStorage.getItem("BookmarkCount");
+        data.lastRefresh = localStorage.getItem("LastRefresh");
 
         $.ajax({
-            type: "GET",
+            type: "POST",
             url: "api/bookmark/backup?username=" + encodeURIComponent(userName) + "&password=" + encodeURIComponent(password),
             contentType: "application/json; charset=utf-8",
-            dataType: "json",
+            data: JSON.stringify(data),
             headers: {"cache-control":"no-cache"},
-            success: function (response) {
-                var data = JSON.parse(response.Content);
-                localStorage.setItem("CurrentBookmarks", data.bookmarkData);
-                localStorage.setItem("BookmarkCount", data.count);
-                localStorage.setItem("LastRefresh", data.lastRefresh);
-
-                localStorage.setItem("UserName", userName);
-                localStorage.setItem("Password", password);
+            success: function (data) {
+                bmbCommon.displayMessage("Data backed up successfully", "Auth");
             },
             error: function (error) {
-                displayMessage(getErrorMessage(error), "Settings");
+                bmbCommon.displayMessage(bmbCommon.getErrorMessage(error), "Auth");
             }
         });
-
-        return false;
     }
+
+    return false;
+}
+
+function Restore_OnClick() {
+    var userName = localStorage.getItem("UserName");
+    var password = localStorage.getItem("Password");
+
+    if (!userName || !password) {
+        userName = $("#userName").val();
+        password = $("#password").val();
+
+        if (!userName) {
+            bmbCommon.displayMessage("User name cannot be blank", "Auth");
+            return false;
+        }
+        if (!password) {
+            bmbCommon.displayMessage("Password cannot be blank", "Auth");
+            return false;
+        }
+    }
+
+    $.mobile.loading("show", { theme: "c", text: "Restoring data ...", textVisible: true });
+
+    $.ajax({
+        type: "GET",
+        url: "api/bookmark/backup?username=" + encodeURIComponent(userName) + "&password=" + encodeURIComponent(password),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        headers: {"cache-control":"no-cache"},
+        success: function (response) {
+            var data = JSON.parse(response.Content);
+            localStorage.setItem("CurrentBookmarks", data.bookmarkData);
+            localStorage.setItem("BookmarkCount", data.count);
+            localStorage.setItem("LastRefresh", data.lastRefresh);
+
+            localStorage.setItem("UserName", userName);
+            localStorage.setItem("Password", password);
+        },
+        error: function (error) {
+            bmbCommon.displayMessage(bmbCommon.getErrorMessage(error), "Auth");
+        }
+    });
+
+    return false;
+}

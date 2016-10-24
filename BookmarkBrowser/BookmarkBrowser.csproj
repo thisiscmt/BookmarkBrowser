@@ -24,6 +24,7 @@
     <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
     <TargetFrameworkProfile />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -261,6 +262,8 @@
   <ItemGroup>
     <Compile Include="Api\Attributes\BackupManagementAuthorizeAttribute.cs" />
     <Compile Include="Api\Controllers\SiteApiController.cs" />
+    <Compile Include="Api\Models\Credentials.cs" />
+    <Compile Include="Api\Models\LoginVerification.cs" />
     <Compile Include="Api\Models\ResultViewModel.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />

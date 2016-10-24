@@ -6,7 +6,7 @@ module.exports = function (grunt) {
         // Concat the specified files into mb-core.js
         concat: {
             bmb_core : {
-                src: ['scripts/bmb/**/*.js'],
+                src: ['scripts/bmb/bookmark-browser-common.js', 'scripts/bmb/*.js', 'scripts/view-models/*.js'],
                 dest: 'scripts/bmb-core.js'
             }
         },
@@ -47,7 +47,9 @@ module.exports = function (grunt) {
     var target = grunt.option('target') || 'debug';
 
     if (target === "debug") {
-        grunt.registerTask('default', ['concat:bmb_core', 'uglify:bmb_core']);
+        // The core script is built un-minified in debug mode, so copy it to the minified name
+        grunt.registerTask('default', ['concat:bmb_core']);
+        grunt.file.copy('scripts/bmb-core.js', 'scripts/bmb-core.min.js');
     }
     else {
         grunt.registerTask('default', ['concat:bmb_core', 'uglify:bmb_core', 'cachebreaker:bmb_core']);
