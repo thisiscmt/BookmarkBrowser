@@ -183,11 +183,24 @@
                 </div>
 
                 <div class="alignCenter">
-                    <input id="Login" type="submit" value="Login" data-mini="true" data-inline="true" onclick="return Login_OnClick();" />
-                    <input id="Verify" class="hideMe" type="button" value="Verify" data-mini="true" data-inline="true" onclick="return VerifyLogin_OnClick();" />
-                    <input id="Logout" class="hideMe" type="button" value="Logout" data-mini="true" data-inline="true" onclick="return Logout_OnClick();" />
-                    <input id="Backup" class="hideMe" type="button" value="Backup" data-mini="true" data-inline="true" onclick="return Backup_OnClick();" />
-                    <input id="Restore" type="button" value="Restore" data-mini="true" data-inline="true" onclick="return Restore_OnClick();" />
+                    <span id="Login">
+                        <input type="button" value="Login" data-mini="true" data-inline="true" onclick="return Login_OnClick();" />
+                    </span>
+                    <span id="Refresh" class="hideMe">
+                        <input type="button" value="Refresh" data-mini="true" data-inline="true" onclick="return Refresh_OnClick();" />
+                    </span>
+                    <span id="Verify" class="hideMe">
+                        <input type="button" value="Verify" data-mini="true" data-inline="true" onclick="return VerifyLogin_OnClick();" />
+                    </span>
+                    <span id="Logout" class="hideMe">
+                        <input type="button" value="Logout" data-mini="true" data-inline="true" onclick="return Logout_OnClick();" />
+                    </span>
+                    <span id="Backup" class="hideMe">
+                        <input type="button" value="Backup" data-mini="true" data-inline="true" onclick="return Backup_OnClick();" />
+                    </span>
+                    <span id="Restore">
+                        <input type="button" value="Restore" data-mini="true" data-inline="true" onclick="return Restore_OnClick();" />
+                    </span>
                 </div>
             </form>
         </div>
@@ -224,17 +237,13 @@
 
             <form id="settingsForm" method="post" data-ajax="false">
                 <div class="alignCenter">
-                    <div class="bottomPadding15">
-                        <input id="loadOnStartup" data-mini="true" type="checkbox" name="LoadOnStartup" />
-                        <label for="loadOnStartup">Refresh bookmark data on startup</label>
-                    </div>
-                    <div class="bottomPadding15">
+                    <div>
                         <input id="lastDirOnStartup" data-mini="true" type="checkbox" name="LastDirOnStartup" />
                         <label for="lastDirOnStartup">Go to last known directory at startup</label>
                     </div>
                 </div>
                 <div class="alignCenter">
-                    <input id="Save" type="submit" value="Save" data-mini="true" data-inline="true" onclick="return Save_OnClick();" />
+                    <input id="Save" type="button" value="Save" data-mini="true" data-inline="true" onclick="return Save_OnClick();" />
                 </div>
             </form>
             <div data-role="footer">
@@ -279,7 +288,6 @@
 
             $("#backButton").attr("data-nodepath", "Root");
             var url = $.mobile.path.parseUrl(window.location);
-            var loadOnStartup = localStorage.getItem("LoadOnStartup");
             var lastDirOnStartup = localStorage.getItem("LastDirOnStartup");
             var hasLoaded = sessionStorage.getItem("HasLoaded");
 
@@ -300,16 +308,6 @@
                     $(document).attr("title", "Authentication");
                     break;
                 default:
-                    // If this is the initial visit to the site and the 'Load On Startup' option
-                    // is set, fetch the latest bookmark data
-                    if (loadOnStartup === "True" && hasLoaded != "True" && localStorage.getItem("UserName")) {
-                        $.mobile.loading("show", { theme: "c", text: "Loading ...", textVisible: true });
-
-                        var userName = localStorage.getItem("UserName");
-                        var password = localStorage.getItem("Password");
-                        bmbAPI.loadBookmarks(userName, password, "Init");
-                    }
-
                     break;
             }
         }

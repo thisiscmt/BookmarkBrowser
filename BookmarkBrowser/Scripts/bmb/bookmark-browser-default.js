@@ -109,23 +109,16 @@ function Settings_PageChangeFailed(event, ui) {
 }
 
 function loadSettingsPage() {
-    var loadOnStartup = false;
     var lastDirOnStartup = false;
-
-    if (localStorage.getItem("LoadOnStartup") === "True") {
-        loadOnStartup = true;
-    }
 
     if (localStorage.getItem("LastDirOnStartup") === "True") {
         lastDirOnStartup = true;
     }
 
-    $("#loadOnStartup").prop("checked", loadOnStartup).checkboxradio("refresh");
     $("#lastDirOnStartup").prop("checked", lastDirOnStartup).checkboxradio("refresh");
 }
 
 function Save_OnClick() {
-    var loadOnStartup = "False";
     var lastDirOnStartup = "False";
 
     var saveTimer = setTimeout(function () {
@@ -135,15 +128,10 @@ function Save_OnClick() {
 
     $.mobile.loading("show", { theme: "c", text: "Saving ...", textVisible: true, textonly: true });
 
-    if ($("#loadOnStartup").prop("checked")) {
-        loadOnStartup = "True";
-    }
-
     if ($("#lastDirOnStartup").prop("checked")) {
         lastDirOnStartup = "True";
     }
 
-    localStorage.setItem("LoadOnStartup", loadOnStartup);
     localStorage.setItem("LastDirOnStartup", lastDirOnStartup);
 
     return false;
@@ -156,15 +144,19 @@ function Auth_PageBeforeShow(event, ui) {
 }
 
 function loadAuthPage() {
-    var userName = localStorage.getItem("UserName");
+    var bookmarks = localStorage.getItem("CurrentBookmarks");
 
-    if (userName) {
-        $("#currentUser").html(userName);
+    if (bookmarks) {
+        $("#currentUser").html(localStorage.getItem("UserName"));
         $("#bookmarkCount").html(localStorage.getItem("BookmarkCount"));
         $("#lastRefresh").html(moment(localStorage.getItem("LastRefresh")).format("LLL"));
         $("#LoggedOutContainer").hide();
         $("#LoggedInContainer").show();
-        $(".loggedIn").show();
+        $("#verificationLinkInput").hide();
+        $("#Login").hide();
+        $("#Refresh").show();
+        $("#Logout").show();
+        $("#Backup").show();
     }
     else {
         $("#userName").val("");
@@ -173,23 +165,7 @@ function loadAuthPage() {
 }
 
 function Login_OnClick() {
-    var userName = $("#userName").val();
-    var password = $("#password").val();
-
-    if (!userName) {
-        bmbCommon.displayMessage("Username cannot be blank", "Auth");
-        return false;
-    }
-    if (!password) {
-        bmbCommon.displayMessage("Password cannot be blank", "Auth");
-        return false;
-    }
-
-    $.mobile.loading("show", { theme: "c", text: "Authenticating ...", textVisible: true });
-
-    bmbAPI.login(userName, password);
-
-    return false;
+    return Refresh_OnClick($("#userName").val(), $("#password").val());
 }
 
 function Logout_OnClick() {
@@ -207,8 +183,14 @@ function Logout_OnClick() {
     $("#password").val("")
     $("#LoggedInContainer").hide();
     $("#LoggedOutContainer").show();
+    $("#verificationLinkInput").hide();
+    $("#verificationLink").val("");
     $("#Login").show();
+    $("#Refresh").hide();
+    $("#Verify").hide();
+    $("#Logout").hide();
     $("#Backup").hide();
+    bmbCommon.clearMessagePanel("Auth");
 
     var bindingModel = ko.dataFor($("#bookmarkContainer")[0]);
 
@@ -222,52 +204,64 @@ function Logout_OnClick() {
     return false;
 }
 
-function VerifyLogin_OnClick() {
+function Refresh_OnClick(userNameParam, passwordParam) {
+    var userName;
+    var password;
 
+    if (userNameParam) {
+        userName = userNameParam;
+    }
+    else {
+        userName = localStorage.getItem("UserName");
+    }
+
+    if (passwordParam) {
+        password = passwordParam;
+    }
+    else {
+        password = localStorage.getItem("Password");
+    }
+
+    if (!userName || userName === "") {
+        bmbCommon.displayMessage("Username cannot be blank", "Auth");
+        return false;
+    }
+
+    if (!password || password === "") {
+        bmbCommon.displayMessage("Password cannot be blank", "Auth");
+        return false;
+    }
+
+    bmbCommon.clearMessagePanel("Auth");
+    $.mobile.loading("show", { theme: "c", text: "Authenticating ...", textVisible: true });
+    bmbAPI.login(userName, password);
+
+    return false;
+}
+
+function VerifyLogin_OnClick() {
     var userName = localStorage.getItem("UserName");
     var password = localStorage.getItem("Password");
     var keyFetchToken = localStorage.getItem("KeyFetchToken");
     var sessionToken = localStorage.getItem("SessionToken");
     var verificationLink = $("#verificationLink").val();
 
-    if (!verificationLink) {
+    if (!verificationLink || verificationLink === "") {
         bmbCommon.displayMessage("Verification link cannot be blank", "Auth");
         return false;
     }
 
+    bmbCommon.clearMessagePanel("Auth");
     $.mobile.loading("show", { theme: "c", text: "Loading ...", textVisible: true });
 
     bmbAPI.verifyLogin(verificationLink).then(function (data, status, jqXHR) {
-        bmbAPI.loadBookmarks(userName, password, "Refresh");
+        bmbAPI.loadBookmarks(userName, password);
     }, function (data, status, jqXHR) {
-        bmbCommon.displayMessage(bmbCommon.etErrorMessage(data), "Auth");
+        bmbCommon.displayMessage(bmbCommon.getErrorMessage(data), "Auth");
     });
 
     return false;
 }
-
-//function Refresh_OnClick() {
-//    $.mobile.loading("show", { theme: "c", text: "Loading ...", textVisible: true });
-
-//    var userName = localStorage.getItem("UserName");
-//    var password = localStorage.getItem("Password");
-//    var keyFetchToken = localStorage.getItem("KeyFetchToken");
-//    var sessionToken = localStorage.getItem("SessionToken");
-//    var verificationLink = $("#verificationLink").val();
-
-//    if (verificationLink && verificationLink !== "") {
-//        bmbAPI.verifyLogin(verificationLink).then(function (data, status, jqXHR) {
-//            bmbAPI.loadBookmarks(userName, password, "Refresh");
-//        }, function(data, status, jqXHR) {
-//            bmbCommon.displayMessage(bmbCommon.etErrorMessage(data), "Auth");
-//        });
-//    }
-//    else {
-//        bmbAPI.loadBookmarks(userName, password, "Refresh");
-//    }
-
-//    return false;
-//}
 
 function Backup_OnClick() {
     $.mobile.loading("show", { theme: "c", text: "Backing up data ...", textVisible: true });

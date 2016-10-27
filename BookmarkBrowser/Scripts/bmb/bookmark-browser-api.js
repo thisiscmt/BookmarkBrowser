@@ -21,6 +21,7 @@
 
                 $("#verificationLinkInput").show();
                 $("#Verify").show();
+                $("#Logout").show();
             },
             error: function (error) {
                 bmbCommon.displayMessage(bmbCommon.getErrorMessage(error), "Auth");
@@ -38,9 +39,13 @@
             data: JSON.stringify(data),
             headers: { "cache-control": "no-cache" },
             success: function (data) {
-                $("#verificationLinkInput").hide();
+                $("#verificationLink").val("");
+                $("#Login").hide();
+                $("#Refresh").show();
                 $("#Verify").hide();
+                $("#Logout").show();
                 $("#Backup").show();
+
                 localStorage.removeItem("UID");
             },
             error: function (error) {
@@ -49,7 +54,7 @@
         });
     }
 
-    function loadBookmarks(userName, password, action) {
+    function loadBookmarks(userName, password) {
         var keyFetchToken = localStorage.getItem("KeyFetchToken");
         var sessionToken = localStorage.getItem("SessionToken");
         var url = "api/bookmark?username=" + encodeURIComponent(userName) + "&password=" + encodeURIComponent(password);
@@ -75,8 +80,6 @@
     }
 
     function ajaxCompleted(e, xhr, settings) {
-        var action;
-
         if (settings.url.indexOf("api/bookmark") > -1) {
             if (xhr.status < 400 && (settings.url.indexOf("/backup") === -1 || (settings.url.indexOf("/backup") > -1 && settings.type === "GET"))) {
                 $("body").pagecontainer("change", "#Bookmarks", { reload: true });
@@ -84,7 +87,7 @@
 
             $.mobile.loading("hide");
         }
-        else if (settings.url.indexOf("api/login") > -1) {  // || settings.url.indexOf("api/verify") > -1) {
+        else if (settings.url.indexOf("api/login") > -1) {
             $.mobile.loading("hide");
         }
     }

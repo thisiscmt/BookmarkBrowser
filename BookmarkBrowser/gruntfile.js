@@ -47,7 +47,6 @@ module.exports = function (grunt) {
     var target = grunt.option('target') || 'debug';
 
     if (target === "debug") {
-        // The core script is built un-minified in debug mode, so copy it to the minified name
         grunt.registerTask('default', ['concat:bmb_core']);
         grunt.file.copy('scripts/bmb-core.js', 'scripts/bmb-core.min.js');
     }
