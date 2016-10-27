@@ -6,7 +6,6 @@ The app has the following features:
 * Uses the Sync 1.5 API
 * Stores your Sync credentials in the browser's local storage to make refreshing the data easier
 * Stores all data in local storage for faster navigation through your bookmark hierarchy
-* Can refresh bookmark data upon startup
 * Can navigate to the last viewed directory upon startup
 
 It uses the following libraries:
