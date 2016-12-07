@@ -11,17 +11,24 @@
             success: function (data) {
                 localStorage.setItem("UserName", userName);
                 localStorage.setItem("Password", password);
-                $("#userName").val("");
-                $("#password").val("");
 
                 var loginResponse = JSON.parse(data.Content);
                 localStorage.setItem("UID", loginResponse.Uid);
                 localStorage.setItem("KeyFetchToken", loginResponse.KeyFetchToken);
                 localStorage.setItem("SessionToken", loginResponse.SessionToken);
 
-                $("#verificationLinkInput").show();
-                $("#Verify").show();
-                $("#Logout").show();
+                if (loginResponse.Verified) {
+                    $.mobile.loading("show", { theme: "c", text: "Loading ...", textVisible: true });
+                    loadBookmarks(userName, password);
+                }
+                else {
+                    $("#userName").val("");
+                    $("#password").val("");
+                    $("#verificationLinkInput").show();
+                    $("#Verify").show();
+                    $("#Logout").show();
+                    $.mobile.loading("hide");
+                }
             },
             error: function (error) {
                 bmbCommon.displayMessage(bmbCommon.getErrorMessage(error), "Auth");
@@ -39,6 +46,8 @@
             data: JSON.stringify(data),
             headers: { "cache-control": "no-cache" },
             success: function (data) {
+                $("#userName").val("");
+                $("#password").val("");
                 $("#verificationLink").val("");
                 $("#Login").hide();
                 $("#Refresh").show();
@@ -88,7 +97,7 @@
             $.mobile.loading("hide");
         }
         else if (settings.url.indexOf("api/login") > -1) {
-            $.mobile.loading("hide");
+            //$.mobile.loading("hide");
         }
     }
 

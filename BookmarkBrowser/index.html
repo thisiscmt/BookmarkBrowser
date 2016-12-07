@@ -128,7 +128,7 @@
             <h5>Authentication</h5>
         </div>
 
-        <div data-role="content" class="smallText">
+        <div data-role="content">
             <div class="msgPanel">
                 <span class="errorNotification"></span>
             </div>
@@ -142,12 +142,12 @@
 
                     <div class="bottomPadding15">
                         <label for="password">Password</label>
-                        <input id="password" type="password" data-prevent-focus-zoom="true" data-mini="true" />
+                        <input id="password" type="password" autocorrect="off" data-prevent-focus-zoom="true" data-mini="true" />
                     </div>
                 </div>
 
-                <div id="LoggedInContainer" class="hideMe smallText">
-                    <table class="statsTable">
+                <div id="LoggedInContainer" class="hideMe">
+                    <table class="statsTable smallText">
                         <tr>
                             <td class="labelColumn">
                                 <span>Current user:</span>
@@ -182,7 +182,7 @@
                     <input id="verificationLink" type="text" autocorrect="off" autocapitalize="none" data-prevent-focus-zoom="true" data-mini="true" />
                 </div>
 
-                <div class="alignCenter">
+                <div class="alignCenter smallText">
                     <span id="Login">
                         <input type="button" value="Login" data-mini="true" data-inline="true" onclick="return Login_OnClick();" />
                     </span>
@@ -230,20 +230,22 @@
             <h5>Settings</h5>
         </div>
 
-        <div data-role="content" class="smallText">
+        <div data-role="content">
             <div class="msgPanel">
                 <span class="errorNotification"></span>
             </div>
 
-            <form id="settingsForm" method="post" data-ajax="false">
+            <form method="post" data-ajax="false">
                 <div class="alignCenter">
                     <div>
                         <input id="lastDirOnStartup" data-mini="true" type="checkbox" name="LastDirOnStartup" />
                         <label for="lastDirOnStartup">Go to last known directory at startup</label>
                     </div>
                 </div>
-                <div class="alignCenter">
-                    <input id="Save" type="button" value="Save" data-mini="true" data-inline="true" onclick="return Save_OnClick();" />
+                <div class="alignCenter smallText bottomMargin5">
+                    <span>
+                        <input type="button" value="Save" data-mini="true" data-inline="true" onclick="return Save_OnClick();" />
+                    </span>
                 </div>
             </form>
             <div data-role="footer">
@@ -267,7 +269,7 @@
         </div>
     </div>
 
-    <div stlye="min-height:25px"></div>
+    <div style="min-height:25px"></div>
 
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.1/jquery.mobile.min.js"></script>
