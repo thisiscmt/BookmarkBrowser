@@ -28,8 +28,8 @@ module.exports = function (grunt) {
         cachebreaker: {
             bmb_core: {
                 options: {
-                    match: ['scripts/bmb-core.min.js'],
-                    replacement: function (){
+                    match: ['bmb-core.min.js'],
+                    replacement: function () {
                         return pkgJson.version;
                     }
                 },

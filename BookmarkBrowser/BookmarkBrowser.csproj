@@ -122,22 +122,20 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="dev\jquery-1.10.2.js" />
-    <None Include="dev\jquery.mobile-1.4.1.js" />
-    <None Include="dev\knockout-3.0.0-min.js" />
-    <None Include="dev\moment.min.js" />
     <Content Include="Errors\Error.aspx" />
     <None Include="gruntfile.js" />
     <Content Include="Images\bookmark.png" />
     <Content Include="Images\folder.png" />
     <Content Include="index.html" />
     <Content Include="Scripts\bmb-core.min.js" />
+    <None Include="Properties\PublishProfiles\BookmarkBrowser - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\BookmarkBrowser - Web Deploy.pubxml" />
     <None Include="Scripts\bmb\bookmark-browser-common.js" />
     <None Include="Scripts\bmb\bookmark-browser-default.js" />
     <None Include="Scripts\lib\modernizr.custom.2.7.1-min.js" />
     <None Include="Scripts\_references.js" />
     <None Include="Scripts\view-models\bookmarks-view-model.js" />
-    <Content Include="Scripts\bmb\bookmark-browser-api.js" />
+    <None Include="Scripts\bmb\bookmark-browser-api.js" />
     <Content Include="Styles\images\ajax-loader.gif" />
     <Content Include="Styles\images\icons-png\action-black.png" />
     <Content Include="Styles\images\icons-png\action-white.png" />
@@ -243,21 +241,21 @@
     <Content Include="Styles\jquery.mobile.icons.min.css" />
     <Content Include="Styles\Site.css" />
     <Content Include="Global.asax" />
-    <Content Include="Web.config">
+    <None Include="Web.config">
       <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Web.Debug.config">
+    </None>
+    <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
+    </None>
+    <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
-    </Content>
+    </None>
     <None Include="packages.config" />
     <None Include="package.json" />
     <None Include="Properties\PublishProfiles\BMB_WD.pubxml" />
     <Content Include="Scripts\sourceMap.map" />
-    <Content Include="users.dat" />
+    <None Include="users.dat" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\Attributes\BackupManagementAuthorizeAttribute.cs" />
@@ -327,7 +325,7 @@
 if $(ConfigurationName) == Debug (
     grunt --target=debug
 )
-else if $(ConfigurationName) == Release (
+else (
     grunt --target=release
 )</PostBuildEvent>
   </PropertyGroup>
