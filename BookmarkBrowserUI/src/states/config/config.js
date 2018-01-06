@@ -1,5 +1,6 @@
 ﻿angular.module('bookmarkBrowser.states.config', [
     'ui.router',
+    'ngFileUpload',
 
     'bookmarkBrowser.config',
     'bookmarkBrowser.services.sharedService'
@@ -13,9 +14,12 @@
             }
         }
     });
-}).controller('ConfigController', function ConfigController($scope, $stateParams, ApplicationConfiguration, sharedService) {
+}).controller('ConfigController', function ConfigController($scope, $stateParams, ApplicationConfiguration, sharedService, fileUpload) {
+    $scope.isMobile = sharedService.isMobile.any();
+
+
+
+
+
     sharedService.setTitle('Configuration');
-
-
-
 });
