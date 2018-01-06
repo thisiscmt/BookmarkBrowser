@@ -9,8 +9,8 @@
     'bookmarkBrowser.services.sharedService',
     'bookmarkBrowser.states.home',
     'bookmarkBrowser.states.bookmarks',
-    'bookmarkBrowser.states.settings',
-    'bookmarkBrowser.states.auth',
+    'bookmarkBrowser.states.preferences',
+    'bookmarkBrowser.states.config',
     'bookmarkBrowser.states.error'
 ]).config(function ($stateProvider, $urlRouterProvider, $locationProvider, $localStorageProvider) {
     $localStorageProvider.setKeyPrefix("bmb");

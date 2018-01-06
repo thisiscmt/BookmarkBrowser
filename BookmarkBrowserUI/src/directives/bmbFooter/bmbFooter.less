@@ -2,40 +2,47 @@
     margin-top: 20px;
 
     .footer-list {
+        border: 0;
         list-style: none;
         margin: 0;
         padding: 0;
-        position: relative;
-        display: block;
-        border: 0;
-        max-width: 100%;
 
         li {
-            background-color: #5e87b0;
-            border: 1px solid #456f9a;
             float: left;
-            padding-top: 10px;
-            padding-bottom: 10px;
-            text-align: center;
             width: 25%;
         }
     }
 
     a:link,
     a:visited,
-    a:focus,
-    a:hover,
-    a:active
+    a:focus
     {
-        border-color: #1f3a56;
-        color: #ffffff;
+        background: #396B9E;
+        border-color: #1F3A56;
+        border-width: 1px;
+        border-radius: 2px;
+        border-style: solid;
+        color: #FFFFFF;
+        cursor: pointer;
+        display: block;
         font-size: 13px;
         font-weight: bold;
-        text-shadow: 0 1px 0 #005599;
+        max-width: 100%;
+        overflow: hidden;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        position: relative;
+        text-align: center;
         text-decoration: none;
-
+        text-overflow: ellipsis;
+        text-shadow: 0 1px 0 #444444;
+        white-space: nowrap;
     }
 
+    a:hover
+    {
+        background: #417BB5;
+    }
 
 
 }

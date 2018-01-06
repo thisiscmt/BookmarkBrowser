@@ -66,16 +66,16 @@
     <Content Include="src\index.html" />
     <Content Include="src\services\bookmarkService\bookmarkService.js" />
     <Content Include="src\services\sharedService\sharedService.js" />
-    <Content Include="src\states\auth\auth.js" />
-    <Content Include="src\states\auth\auth.tpl.html" />
     <Content Include="src\states\bookmarks\bookmarks.js" />
     <Content Include="src\states\bookmarks\bookmarks.tpl.html" />
+    <Content Include="src\states\config\config.js" />
+    <Content Include="src\states\config\config.tpl.html" />
     <Content Include="src\states\error\error.js" />
     <Content Include="src\states\error\error.tpl.html" />
     <Content Include="src\states\home\home.js" />
     <Content Include="src\states\home\home.tpl.html" />
-    <Content Include="src\states\settings\settings.js" />
-    <Content Include="src\states\settings\settings.tpl.html" />
+    <Content Include="src\states\preferences\preferences.js" />
+    <Content Include="src\states\preferences\preferences.tpl.html" />
     <None Include="src\styles\index.less" />
     <Content Include="Web.config" />
   </ItemGroup>
