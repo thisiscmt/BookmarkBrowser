@@ -1,0 +1,19 @@
+﻿<div class="bmb-header">
+	<div class="row">
+        <div class="col-xs-12">
+            <h5 class="title">
+                <a ng-click="goBack()" ng-if="currentState === 'bookmarks'">
+                    <span class="btn btn-default btn-sm left">Back</span>
+				</a>
+                {{ currentDirectory }}
+                <a ng-click="goToTop()" ng-if="currentState === 'bookmarks'">
+                    <span class="btn btn-default btn-sm right">Top</span>
+				</a>
+			</h5>
+
+            <div class="msg-panel" ng-if="hasMessage">
+				{{ message }}
+            </div>
+		</div>
+	</div>
+</div>
