@@ -13,7 +13,7 @@
             }
         }
     });
-}).controller('ErrorController', function ErrorController($scope, $stateParams, ApplicationConfiguration, sharedService) {
+}).controller('ErrorController', function ErrorController($scope, $stateParams, applicationConfiguration, sharedService) {
     sharedService.setTitle('Error');
 
 });

@@ -1,4 +1,7 @@
-﻿// General
+﻿@import "../directives/bmbHeader/bmbHeader.less";
+@import "../directives/bmbFooter/bmbFooter.less";
+
+// General
 *
 {
     font-family:Arial, Helvetica, sans-serif;
@@ -10,6 +13,10 @@ body {
     .container-fluid {
         padding: 0;
     }
+}
+
+label {
+    font-weight: normal;
 }
 
 .left {
@@ -42,12 +49,79 @@ body {
     text-align: center;
 }
 
-@import "../directives/bmbHeader/bmbHeader.less";
-@import "../directives/bmbFooter/bmbFooter.less";
+.button {
+    background: #396B9E;
+    border-color: #1F3A56;
+    border-width: 1px;
+    border-radius: 4px;
+    border-style: solid;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 5px 10px 5px 10px;
+    text-align: center;
+    text-overflow: ellipsis;
+    text-shadow: 0 1px 0 #444444;
+    white-space: nowrap;
+}
 
-// Home page
+.text-input {
+    border-radius: 5px;
+    padding: 4px 8px 4px 8px;
+    width: 250px;
+}
 
+.form-field {
+    margin-bottom: 15px;
+}
 
+// Config
+.config-container {
+    text-align: center;
+
+    .section {
+        margin-bottom: 15px;
+    }
+
+    .stats
+    {
+        margin: 0px auto;
+    }
+
+    td.label-column
+    {
+        padding-right: 5px;
+        padding-bottom: 10px;
+        text-align: right;
+    }
+
+    td.field-column
+    {
+        padding-left: 5px;
+        padding-bottom: 10px;
+        text-align: left;
+    }
+
+    .upload-select {
+        cursor: pointer;
+    }
+
+    .upload-button {
+        margin-left: 5px;
+
+        button {
+            border-radius: 4px;
+        }
+    }
+
+    .form-field label {
+        width: 100px;
+    }
+
+    .selected-file {
+        margin-top: 10px;
+    }
+}
 
 
 

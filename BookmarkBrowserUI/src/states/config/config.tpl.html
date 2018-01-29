@@ -1,11 +1,59 @@
-﻿<div class="row">
+﻿<div id="ConfigContainer" class="row config-container">
     <div class="col-xs-12 col-lg-12">
-        <div ng-if="!isMobile">
-            Show file upload UI
+        <div class="section">
+            <div class="form-field">
+                <label for="UserName">Username:</label>
+                <input id="UserName" class="text-input" type="email" autocomplete="username email" autocorrect="off" ng-model="userName" />
+            </div>
+
+            <div class="form-field">
+                <label for="Password">Password:</label>
+                <input id="Password" class="text-input" type="password" ng-change="passwordChange()" autocomplete=current-password autocorrect="off" ng-model="password" />
+            </div>
+        </div>
+
+        <div ng-if="hasBookmarkData">
+            <table class="stats smallText">
+                <tr>
+                    <td class="label-column">
+                        <span>Bookmarks:</span>
+                    </td>
+                    <td class="field-column">
+                        <span>{{ bookmarkCount | number }}</span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="label-column">
+                        <span>Timestamp:</span>
+                    </td>
+                    <td class="field-column">
+                        <span>{{ uploadTimestamp | date : 'MMMM dd, yyyy h:mm a' : '0' }}</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section" ng-show="!isMobile">
+            <div>
+                <a class="upload-select"
+                    name="uploadFile"
+                    ngf-select
+                    ngf-pattern="'.json'"
+                    ngf-max-size="5MB"
+                    ngf-change="updateSelectedFile($files, $file, $newFiles, $duplicateFiles, $invalidFiles, $event)">Select file</a>
+
+                <span class="upload-button">
+                    <button type="submit" ng-click="uploadBookmarkData()" ng-disabled="!uploadFile">Upload</button>
+                </span>
+            </div>
+            <div class="selected-file" ng-show="uploadFileName">
+                {{ uploadFileName }}
+            </div>
         </div>
 
         <div>
-            Show download data UI
+            <button class="button" ng-click="downloadBookmarkData()">Refresh</button>
         </div>
     </div>
 </div>

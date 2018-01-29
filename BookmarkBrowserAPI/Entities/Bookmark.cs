@@ -1,21 +1,48 @@
-﻿namespace BookmarkBrowser.Entities
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
+
+namespace BookmarkBrowser.Entities
 {
-    public class Bookmark: BookmarkItem
+    public class Bookmark
     {
-        public Bookmark(string name, string location)
+        public Bookmark()
         {
-            Name = name;
-            Location = location;
-            base.ItemType = BookmarkItem.ItemTypes.Bookmark;
         }
 
-        public override BookmarkItem.ItemTypes ItemType
-        {
-            get { return base.ItemType; }
+        [JsonProperty("guid")]
+        public string GUID { get; set; }
 
-            // Do nothing, since the type of this item should not be changed 
-            // once it is created
-            set { }
-        }
+        [JsonProperty("title")]
+        public string Title { get; set; }
+
+        [JsonProperty("index")]
+        public int Index { get; set; }
+
+        [JsonProperty("dateAdded")]
+        public long DateAdded { get; set; }
+
+        [JsonProperty("lastModified")]
+        public long LastModified { get; set; }
+
+        [JsonProperty("id")]
+        public int ID { get; set; }
+
+        [JsonProperty("type")]
+        public string Type { get; set; }
+
+        [JsonProperty("root")]
+        public string Root { get; set; }
+
+        [JsonProperty("children")]
+        public List<Bookmark> Children { get; set; }
+
+        [JsonProperty("uri")]
+        public string URI { get; set; }
+
+        [JsonProperty("iconuri")]
+        public string IconURI { get; set; }
+
+        [JsonProperty("path")]
+        public string Path { get; set; }
     }
 }

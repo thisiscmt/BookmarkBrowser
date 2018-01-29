@@ -3,7 +3,8 @@
     'ngFileUpload',
 
     'bookmarkBrowser.config',
-    'bookmarkBrowser.services.sharedService'
+    'bookmarkBrowser.services.sharedService',
+    'bookmarkBrowser.services.configService'
 ]).config(function ($stateProvider) {
     $stateProvider.state('config', {
         url: '/config',
@@ -14,12 +15,101 @@
             }
         }
     });
-}).controller('ConfigController', function ConfigController($scope, $stateParams, ApplicationConfiguration, sharedService, fileUpload) {
+}).controller('ConfigController', function ConfigController($scope, $stateParams, Upload, applicationConfiguration, sharedService, configService) {
     $scope.isMobile = sharedService.isMobile.any();
+    $scope.userName = configService.getConfigValue("UserName");
+    $scope.password = configService.getConfigValue("Password") ? "********" : "";
+    $scope.passwordChanged = false;
+    $scope.hasBookmarkData = false;
+    $scope.bookmarkCount = null;
+    $scope.uploadTimestamp = null;
+    $scope.uploadFile = null;
+    $scope.uploadFileName = "";
 
+    $scope.passwordChange = function passwordChange() {
+        $scope.passwordChanged = true;
+    };
 
+    $scope.updateSelectedFile = function updateSelectedFile($files, $file, $newFiles, $duplicateFiles, $invalidFiles, $event) {
+        if ($file) {
+            $scope.uploadFile = $file;
+            $scope.uploadFileName = $file.name;
+        }
+        else {
+            $scope.uploadFile = null;
+            $scope.uploadFileName = "";
+        }
+    };
 
+    $scope.uploadBookmarkData = function uploadBookmarkData() {
+        var reader = new FileReader();
+        var authHeader;
+        var data = {};
 
+        if ($scope.userName && $scope.password) {
+            reader.onload = function (event) {
+                authHeader = "Basic " + btoa($scope.userName + ":" + ($scope.passwordChanged ? $scope.password : configService.getConfigValue("Password")));
+                configService.uploadBookmarkData(event.target.result, authHeader).then(function () {
+                    configService.setConfigValue("UserName", $scope.userName);
+
+                    if ($scope.passwordChanged) {
+                        configService.setConfigValue("Password", $scope.password);
+                    }
+
+                    $scope.uploadFile = null;
+                    $scope.uploadFileName = "";
+                }).catch(function (error) {
+                    // TODO: write error message to the header
+
+                    console.log("Error: %o", error);
+                });
+            };
+
+            reader.readAsText($scope.uploadFile);
+        }
+        else {
+            // TODO: write error message to the header
+        }
+    };
+
+    $scope.downloadBookmarkData = function downloadBookmarkData() {
+        var authHeader;
+        var response;
+
+        if ($scope.userName && $scope.password) {
+            authHeader = "Basic " + btoa($scope.userName + ":" + ($scope.passwordChanged ? $scope.password : configService.getConfigValue("Password")));
+
+            configService.downloadBookmarkData(authHeader).then(function (data) {
+                configService.setConfigValue("UserName", $scope.userName);
+
+                if ($scope.passwordChanged) {
+                    configService.setConfigValue("Password", $scope.password);
+                }
+
+                response = JSON.parse(data.responseData);
+                configService.setConfigValue("BookmarkData", response.bookmarkData);
+                configService.setConfigValue("BookmarkCount", response.count);
+                configService.setConfigValue("UploadTimestamp", response.uploadTimestamp);
+
+                $scope.bookmarkCount = response.count;
+                $scope.uploadTimestamp = response.uploadTimestamp;
+                $scope.hasBookmarkData = true;
+            }).catch(function (error) {
+                // TODO: write error message to the header
+
+                console.log("Error: %o", error);
+            });
+        }
+        else {
+            // TODO: write error message to the header
+        }
+    };
 
     sharedService.setTitle('Configuration');
+
+    if (configService.getConfigValue("BookmarkData")) {
+        $scope.bookmarkCount = configService.getConfigValue("BookmarkCount");
+        $scope.uploadTimestamp = configService.getConfigValue("UploadTimestamp");
+        $scope.hasBookmarkData = true;
+    }
 });

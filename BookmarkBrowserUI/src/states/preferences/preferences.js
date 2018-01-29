@@ -13,9 +13,8 @@
             }
         }
     });
-}).controller('PreferencesController', function PreferencesController($scope, $stateParams, ApplicationConfiguration, sharedService) {
+}).controller('PreferencesController', function PreferencesController($scope, $stateParams, applicationConfiguration, sharedService) {
     sharedService.setTitle("Preferences");
-
 
 
 });

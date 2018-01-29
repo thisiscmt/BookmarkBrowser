@@ -13,7 +13,7 @@
             }
         }
     });
-}).controller('HomeController', function HomeController($scope, $stateParams, ApplicationConfiguration, sharedService) {
+}).controller('HomeController', function HomeController($scope, $stateParams, applicationConfiguration, sharedService) {
     sharedService.setTitle("Home");
 
 

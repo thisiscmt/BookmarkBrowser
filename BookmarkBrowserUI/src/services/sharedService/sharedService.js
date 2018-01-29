@@ -4,19 +4,19 @@
 
     var _isMobile = {
         Android: function () {
-            return navigator.userAgent.match(/Android/i);
+            return !!navigator.userAgent.match(/Android/i);
         },
         BlackBerry: function () {
-            return navigator.userAgent.match(/BlackBerry/i);
+            return !!navigator.userAgent.match(/BlackBerry/i);
         },
         iOS: function () {
-            return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+            return !!navigator.userAgent.match(/iPhone|iPad|iPod/i);
         },
         Opera: function () {
-            return navigator.userAgent.match(/Opera Mini/i);
+            return !!navigator.userAgent.match(/Opera Mini/i);
         },
         Windows: function () {
-            return navigator.userAgent.match(/IEMobile/i);
+            return !!navigator.userAgent.match(/IEMobile/i);
         },
         any: function () {
             return (_isMobile.Android() || _isMobile.BlackBerry() || _isMobile.iOS() || _isMobile.Opera() || _isMobile.Windows());
@@ -47,9 +47,9 @@
     //};
 
     return {
+        isMobile        : _isMobile,
         setTitle        : _setTitle,
-        getTitle        : _getTitle,
-        isMobile        : _isMobile
+        getTitle        : _getTitle
         //scrollToTop   : _scrollToTop
     };
 });

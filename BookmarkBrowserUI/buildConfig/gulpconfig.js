@@ -23,7 +23,8 @@ module.exports.vendorScripts = [
     'node_modules/@uirouter/angularjs/release/angular-ui-router.js',
     'node_modules/angular-bootstrap/ui-bootstrap-tpls.js',
     'node_modules/lodash/lodash.js',
-    'node_modules/ngstorage/ngStorage.js'
+    'node_modules/ngstorage/ngStorage.js',
+    'node_modules/ng-file-upload/dist/ng-file-upload.js'
 ];
 
 module.exports.vendorCSS = [

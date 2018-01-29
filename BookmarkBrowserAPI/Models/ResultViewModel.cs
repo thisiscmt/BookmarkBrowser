@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -9,14 +10,15 @@ namespace BookmarkBrowser.API.Models
     {
         public ResultViewModel()
         {
-            this.Data = null;
+            this.ResponseData = null;
         }
 
         public ResultViewModel(string data)
         {
-            this.Data = data;
+            this.ResponseData = data;
         }
 
-        public string Data { get; set; }
+        [JsonProperty("responseData")]
+        public string ResponseData { get; set; }
     }
 }

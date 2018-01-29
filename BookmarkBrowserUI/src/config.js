@@ -1,3 +1,3 @@
-angular.module('bookmarkBrowser.config', []).constant('ApplicationConfiguration', {
-    apiURL: 'http://localhost:8080/',
+angular.module('bookmarkBrowser.config', []).constant('applicationConfiguration', {
+    apiURL: 'http://localhost:49323',
 });

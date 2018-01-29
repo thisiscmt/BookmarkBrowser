@@ -65,6 +65,7 @@
   <ItemGroup>
     <Content Include="src\index.html" />
     <Content Include="src\services\bookmarkService\bookmarkService.js" />
+    <Content Include="src\services\configService\configService.js" />
     <Content Include="src\services\sharedService\sharedService.js" />
     <Content Include="src\states\bookmarks\bookmarks.js" />
     <Content Include="src\states\bookmarks\bookmarks.tpl.html" />

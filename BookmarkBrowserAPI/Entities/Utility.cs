@@ -9,26 +9,6 @@ namespace BookmarkBrowser.API.Entities
     public class Utility
     {
         #region Public methods
-
-        public static string GetExceptionMessage(Exception ex)
-        {
-            string msg = string.Empty;
-
-            if (ex != null)
-            {
-                if (ex.InnerException != null)
-                {
-                    msg = ex.InnerException.Message;
-                }
-                else
-                {
-                    msg = ex.Message;
-                }
-            }
-
-            return msg;
-        }
-
         public static string EnsureBackslash(string value)
         {
             string retVal = value;
@@ -121,7 +101,6 @@ namespace BookmarkBrowser.API.Entities
                 //WriteOSEventLog("Application", msg, "", EventLogEntryType.Error);
             }
         }
-
         #endregion
     }
 }
