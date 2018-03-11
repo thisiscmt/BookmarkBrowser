@@ -48,6 +48,7 @@
     <Content Include="packages.config" />
     <Content Include="package.json" />
     <Content Include="src\config.js" />
+    <Content Include="src\directives\bmbBookmark\bmbBookmark.js" />
     <Content Include="src\directives\bmbFooter\bmbFooter.js" />
     <Content Include="src\directives\bmbFooter\bmbFooter.tpl.html" />
     <Content Include="src\directives\bmbHeader\bmbHeader.js" />
@@ -55,6 +56,7 @@
     <Content Include="src\directives\bmbHeader\bmbHeader.tpl.html" />
     <Content Include="src\directives\bmbFooter\bmbFooter.less" />
     <Content Include="src\directives\bmbHeader\bmbHeader.less" />
+    <Content Include="src\directives\bmbBookmark\bmbBookmark.tpl.html" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -64,7 +66,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="src\index.html" />
-    <Content Include="src\services\bookmarkService\bookmarkService.js" />
     <Content Include="src\services\configService\configService.js" />
     <Content Include="src\services\sharedService\sharedService.js" />
     <Content Include="src\states\bookmarks\bookmarks.js" />
@@ -83,7 +84,9 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="src\images\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

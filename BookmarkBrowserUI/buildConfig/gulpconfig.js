@@ -2,6 +2,7 @@ module.exports.sourceGlobs = {
     scripts    : ['src/**/*.js', 'src/config.js'],
     templates  : ['src/**/*.tpl.html'],
     styles     : ['src/styles/index.less'],
+    images     : ['src/images/**/*'],
     index      : ['src/index.html']
 };
 
@@ -32,7 +33,7 @@ module.exports.vendorCSS = [
 ];
 
 module.exports.buildDirectory = 'build';
-module.exports.buildAssetsDirectory = 'build/assets';
+module.exports.buildImagesDirectory = 'build/images';
 module.exports.releaseDirectory = 'release';
 
 module.exports.versionFiles = [

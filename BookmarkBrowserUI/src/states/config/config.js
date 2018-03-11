@@ -13,12 +13,15 @@
                 controller: 'ConfigController',
                 templateUrl: 'states/config/config.tpl.html'
             }
+        },
+        data: {
+            title: "Configuration"
         }
     });
 }).controller('ConfigController', function ConfigController($scope, $stateParams, Upload, applicationConfiguration, sharedService, configService) {
     $scope.isMobile = sharedService.isMobile.any();
-    $scope.userName = configService.getConfigValue("UserName");
-    $scope.password = configService.getConfigValue("Password") ? "********" : "";
+    $scope.userName = sharedService.getApplicationData("UserName");
+    $scope.password = sharedService.getApplicationData("Password") ? "********" : "";
     $scope.passwordChanged = false;
     $scope.hasBookmarkData = false;
     $scope.bookmarkCount = null;
@@ -43,17 +46,20 @@
 
     $scope.uploadBookmarkData = function uploadBookmarkData() {
         var reader = new FileReader();
+        var password;
         var authHeader;
         var data = {};
 
         if ($scope.userName && $scope.password) {
             reader.onload = function (event) {
-                authHeader = "Basic " + btoa($scope.userName + ":" + ($scope.passwordChanged ? $scope.password : configService.getConfigValue("Password")));
+                password = $scope.passwordChanged ? $scope.password : sharedService.getApplicationData("Password");
+                authHeader = "Basic " + btoa($scope.userName + ":" + password);
+
                 configService.uploadBookmarkData(event.target.result, authHeader).then(function () {
-                    configService.setConfigValue("UserName", $scope.userName);
+                    sharedService.setApplicationData("UserName", $scope.userName);
 
                     if ($scope.passwordChanged) {
-                        configService.setConfigValue("Password", $scope.password);
+                        sharedService.setApplicationData("Password", $scope.password);
                     }
 
                     $scope.uploadFile = null;
@@ -73,23 +79,25 @@
     };
 
     $scope.downloadBookmarkData = function downloadBookmarkData() {
+        var password;
         var authHeader;
         var response;
 
         if ($scope.userName && $scope.password) {
-            authHeader = "Basic " + btoa($scope.userName + ":" + ($scope.passwordChanged ? $scope.password : configService.getConfigValue("Password")));
+            password = $scope.passwordChanged ? $scope.password : sharedService.getApplicationData("Password");
+            authHeader = "Basic " + btoa($scope.userName + ":" + password);
 
             configService.downloadBookmarkData(authHeader).then(function (data) {
-                configService.setConfigValue("UserName", $scope.userName);
+                sharedService.setApplicationData("UserName", $scope.userName);
 
                 if ($scope.passwordChanged) {
-                    configService.setConfigValue("Password", $scope.password);
+                    sharedService.setApplicationData("Password", $scope.password);
                 }
 
                 response = JSON.parse(data.responseData);
-                configService.setConfigValue("BookmarkData", response.bookmarkData);
-                configService.setConfigValue("BookmarkCount", response.count);
-                configService.setConfigValue("UploadTimestamp", response.uploadTimestamp);
+                sharedService.setApplicationData("BookmarkData", response.bookmarkData);
+                sharedService.setApplicationData("BookmarkCount", response.count);
+                sharedService.setApplicationData("UploadTimestamp", response.uploadTimestamp);
 
                 $scope.bookmarkCount = response.count;
                 $scope.uploadTimestamp = response.uploadTimestamp;
@@ -107,9 +115,9 @@
 
     sharedService.setTitle('Configuration');
 
-    if (configService.getConfigValue("BookmarkData")) {
-        $scope.bookmarkCount = configService.getConfigValue("BookmarkCount");
-        $scope.uploadTimestamp = configService.getConfigValue("UploadTimestamp");
+    if (sharedService.getApplicationData("BookmarkData")) {
+        $scope.bookmarkCount = sharedService.getApplicationData("BookmarkCount");
+        $scope.uploadTimestamp = sharedService.getApplicationData("UploadTimestamp");
         $scope.hasBookmarkData = true;
     }
 });

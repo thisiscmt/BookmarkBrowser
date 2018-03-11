@@ -1,18 +1,13 @@
 ﻿<div class="bmb-header">
 	<div class="row">
-        <div class="col-xs-12">
-            <h5 class="title">
-                <a ng-click="goBack()" ng-if="currentState === 'bookmarks'">
-                    <span class="btn btn-default btn-sm left">Back</span>
-				</a>
-                {{ currentDirectory }}
-                <a ng-click="goToTop()" ng-if="currentState === 'bookmarks'">
-                    <span class="btn btn-default btn-sm right">Top</span>
-				</a>
-			</h5>
-
+        <div class="col-xs-12 col-lg-12">
+            <div class="header-container">
+                <a id="BackButton" class="nav-button" href ng-click="goBack()" ng-if="currentPage === 'Bookmarks'">Back</a>
+                <h5 class="header-text">{{ headerText }}</h5>
+                <a id="GoToTopButton" class="nav-button" href ng-click="goToTop()" ng-if="currentPage === 'Bookmarks'">Top</a>
+            </div>
             <div class="msg-panel" ng-if="hasMessage">
-				{{ message }}
+                {{ message }}
             </div>
 		</div>
 	</div>

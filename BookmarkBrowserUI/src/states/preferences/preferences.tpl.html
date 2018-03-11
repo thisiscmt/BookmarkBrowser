@@ -1,5 +1,16 @@
-﻿<div class="row">
+﻿<div class="row content-container preferences-container">
     <div class="col-xs-12 col-lg-12">
-        This is the preferences page
+        <div class="section">
+            <div class="form-field">
+                <label for="LastKnownDirectoryOnStartup">
+                    <input id="LastKnownDirectoryOnStartup" type="checkbox" ng-checked="lastKnownDirectoryOnStartup" ng-model="lastKnownDirectoryOnStartup" />
+                    Go to last directory upon startup
+                </label>
+            </div>
+        </div>
+
+        <div>
+            <button class="button" ng-click="savePreferences()">Save</button>
+        </div>
     </div>
 </div>

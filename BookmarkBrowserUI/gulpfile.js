@@ -82,6 +82,11 @@ gulp.task('copy-vendor-styles', function () {
         .pipe(gulp.dest(gulpconfig.buildDirectory));
 });
 
+gulp.task('copy-images', function () {
+    return gulp.src(gulpconfig.sourceGlobs.images)
+        .pipe(gulp.dest(gulpconfig.buildImagesDirectory));
+});
+
 gulp.task('copy-templates', function () {
     var templateCacheOptions = {
         module: 'bookmarkBrowser.templates',
@@ -109,6 +114,7 @@ gulp.task('build', [
     'copy-styles',
     'copy-vendor-scripts',
     'copy-vendor-styles',
+    'copy-images',
     'copy-templates',
     'update-index'
 ], function (cb) {

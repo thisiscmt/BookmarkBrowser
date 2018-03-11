@@ -11,6 +11,9 @@
                 controller: 'ErrorController',
                 templateUrl: 'states/error/error.tpl.html'
             }
+        },
+        data: {
+            title: "Error"
         }
     });
 }).controller('ErrorController', function ErrorController($scope, $stateParams, applicationConfiguration, sharedService) {

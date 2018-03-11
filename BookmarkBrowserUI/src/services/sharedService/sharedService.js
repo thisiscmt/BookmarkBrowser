@@ -1,6 +1,10 @@
 ﻿angular.module('bookmarkBrowser.services.sharedService', [
-]).service('sharedService', function () {
-    var _pageTitle = '';
+    'ngStorage'
+]).service('sharedService', function ($localStorage, $sessionStorage) {
+    var _pageTitle = "";
+    var _currentPage = "";
+    var _currentDirectory = "Root";
+    var _displayMessage = "";
 
     var _isMobile = {
         Android: function () {
@@ -23,33 +27,79 @@
         }
     };
 
-    var _setTitle = function (title) {
+    var _setTitle = function _setTitle(title) {
         _pageTitle = title;
     };
 
-    var _getTitle = function () {
+    var _getTitle = function _getTitle() {
         return _pageTitle;
     };
 
-    //var _scrollToTop = function _scrollToTop(duration, top) {
-    //    var finalDuration = 800;
-    //    var finalTop = 0;
+    var _setCurrentPage = function _setCurrentPage(page) {
+        _currentPage = page;
+    };
 
-    //    if (duration) {
-    //        finalDuration = duration;
-    //    }
+    var _getCurrentPage = function _getCurrentPage() {
+        return _currentPage;
+    };
 
-    //    if (top) {
-    //        finalTop = top;
-    //    }
+    var _setDisplayMessage = function _setDisplayMessage(msg) {
+        _displayMessage = msg;
+    };
 
-    //    $('html, body').animate({ scrollTop: finalTop }, finalDuration);
-    //};
+    var _getDisplayMessage = function _getDisplayMessage() {
+        return _displayMessage;
+    };
+
+    var _setApplicationData = function _setApplicationData(key, value) {
+        $localStorage[key] = value;
+    };
+
+    var _getApplicationData = function _getApplicationData(key) {
+        return $localStorage[key];
+    };
+
+    var _removeApplicationData = function _getApplicationData(key) {
+        delete $localStorage[key];
+    };
+
+    var _setSessionData = function _setSessionData(key, value) {
+        $sessionStorage[key] = value;
+    };
+
+    var _getSessionData = function _getSessionData(key) {
+        return $sessionStorage[key];
+    };
+
+    var _removeSessionData = function _getSessionData(key) {
+        delete $sessionStorage[key];
+    };
+
+    var _getDirectoryFromPath = function _getDirectoryFromPath(path) {
+        var index = path.lastIndexOf("\\");
+
+        if (index > -1) {
+            return path.substr(index + 1);
+        }
+        else {
+            return path;
+        }
+    };
 
     return {
-        isMobile        : _isMobile,
-        setTitle        : _setTitle,
-        getTitle        : _getTitle
-        //scrollToTop   : _scrollToTop
+        isMobile              : _isMobile,
+        setCurrentPage        : _setCurrentPage,
+        getCurrentPage        : _getCurrentPage,
+        setTitle              : _setTitle,
+        getTitle              : _getTitle,
+        setDisplayMessage     : _setDisplayMessage,
+        getDisplayMessage     : _getDisplayMessage,
+        setApplicationData    : _setApplicationData,
+        getApplicationData    : _getApplicationData,
+        removeApplicationData : _removeApplicationData,
+        setSessionData        : _setSessionData,
+        getSessionData        : _getSessionData,
+        removeSessionData     : _removeSessionData,
+        getDirectoryFromPath  : _getDirectoryFromPath
     };
 });

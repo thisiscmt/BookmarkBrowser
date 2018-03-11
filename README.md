@@ -9,9 +9,9 @@ Version 2.0 has the following features:
 
 It uses the following libraries:
 * [AngularJS](http://angularjs.org)
-* [Angular UI-Router](https://github.com/angular-ui/ui-router)
+* [ui-router](https://github.com/angular-ui/ui-router)
 * [ng-file-upload](https://github.com/danialfarid/ng-file-upload)
-* [ng-storage](https://github.com/gsklee/ngStorage)
+* [ngStorage](https://github.com/gsklee/ngStorage)
 * [Gulp](https://gulpjs.com)
 
 

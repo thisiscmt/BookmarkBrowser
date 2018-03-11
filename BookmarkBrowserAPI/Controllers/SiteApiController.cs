@@ -66,6 +66,7 @@ namespace BookmarkBrowser.API.Controllers
         public ResultViewModel GetBookmarkData()
         {
             Bookmark rootBookmark;
+            Bookmark swap;
             Credentials creds = GetAutenticationCredentials();
             ResultViewModel result;
             JObject storedBookmarkData;
@@ -75,15 +76,15 @@ namespace BookmarkBrowser.API.Controllers
 
             if (creds != null)
             {
+                if (!ValidUser(creds.Username, creds.Password))
+                {
+                    throw new HttpResponseException(Request.CreateResponse(
+                        HttpStatusCode.Unauthorized,
+                        "Authentication failed"));
+                }
+
                 try
                 {
-                    if (!ValidUser(creds.Username, creds.Password))
-                    {
-                        throw new HttpResponseException(Request.CreateResponse(
-                            HttpStatusCode.Unauthorized,
-                            "Authentication failed"));
-                    }
-
                     bookmarkData = File.ReadAllText(filePath, Encoding.UTF8);
                     storedBookmarkData = JObject.Parse(bookmarkData);
                     rootBookmark = JsonConvert.DeserializeObject<Bookmark>(storedBookmarkData.Property("bookmarkData").Value.ToString());
@@ -97,6 +98,11 @@ namespace BookmarkBrowser.API.Controllers
                             rootBookmark.Children.RemoveAt(i);
                         }
                     }
+
+                    // Put the bookmark toolbar element first since that is what will logically be the first set of bookmarks
+                    swap = rootBookmark.Children[0];
+                    rootBookmark.Children[0] = rootBookmark.Children[1];
+                    rootBookmark.Children[1] = swap;
 
                     // We set certain metadata on each directory to make navigation easier on the client, plus we get 
                     // a count of actual bookmarks
@@ -138,12 +144,18 @@ namespace BookmarkBrowser.API.Controllers
                     if (item.Type == "text/x-moz-place-container")
                     {
                         item.Path = bookmark.Path + "\\" + item.Title;
+                        item.Type = "Directory";
                         newItem = item;
                         SetMetadata(ref newItem, ref bookmarkCount);
                     }
                     else if (item.Type == "text/x-moz-place")
                     {
+                        item.Type = "Bookmark";
                         bookmarkCount++;
+                    }
+                    else if (item.Type == "text/x-moz-place-separator")
+                    {
+                        item.Type = "Separator";
                     }
                 }
             }

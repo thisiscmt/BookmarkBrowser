@@ -1,5 +1,17 @@
 ﻿<div class="row">
     <div class="col-xs-12 col-lg-12">
-        This is the bookmarks page
+        <div class="bookmark-container">
+            <ul>
+                <li class="top-level-header" ng-if="topLevel">Bookmarks Toolbar</li>
+                <li class="bookmark" ng-repeat="bookmark in bookmarkToolbar" ng-if="bookmark.type !== 'Separator'">
+                    <bmb-bookmark bookmark="bookmark"></bmb-bookmark>
+                </li>
+
+                <li class="top-level-header"ng-if="topLevel">Bookmarks Menu</li>
+                <li class="bookmark" ng-repeat="bookmark in bookmarkMenu" ng-if="bookmark.type !== 'Separator'">
+                    <bmb-bookmark bookmark="bookmark"></bmb-bookmark>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>

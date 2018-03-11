@@ -4,7 +4,7 @@
 // General
 *
 {
-    font-family:Arial, Helvetica, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
@@ -12,6 +12,22 @@ body {
 
     .container-fluid {
         padding: 0;
+
+        .row {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .col-xs-12, .col-lg-12 {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+}
+
+.app-content-container {
+    .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+        margin-top: 0;
     }
 }
 
@@ -28,16 +44,18 @@ label {
 }
 
 .small-text {
-    font-size:0.8em;
+    font-size: 0.8em;
 }
 
 .large-text {
-    font-size:1.2em;
+    font-size: 1.2em;
 }
 
 .msg-panel {
     color: red;
-    margin-bottom: 5px;
+    font-size: 12px;
+    margin-bottom: 0;
+    margin-top: 8px;
     text-align: center;
 }
 
@@ -75,10 +93,131 @@ label {
     margin-bottom: 15px;
 }
 
+.content-container {
+    margin-bottom: 15px;
+    margin-top: 15px;
+    text-align: center;
+}
+
+// Home
+.home-container {
+    .content {
+        margin-top: 15px;
+    }
+}
+
+// Bookmarks
+.bookmark-container {
+    .top-level-header {
+        background-color: #fadb4e;
+        border-color: #f7c942;
+        border-top-color:#999;
+        border-top-style: solid;
+        border-top-width: 1px;
+        font-weight: bold;
+        padding: 7px 14px;
+        text-shadow: rgb(255, 255, 255) 0px 1px 0px;
+    }
+
+    ul {
+        list-style-image: none;
+        list-style-position: outside;
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    li.bookmark {
+        background-attachment: scroll;
+        background-clip: border-box;
+        background-color: rgb(243, 243, 243);
+        background-image: none;
+        background-origin: padding-box;
+        background-position: 0% 0%;
+        background-position-x: 0%;
+        background-position-y: 0%;
+        background-repeat: repeat;
+        background-size: auto auto;
+        border-bottom-color: rgb(153, 153, 153);
+        border-bottom-style: solid;
+        border-bottom-width: 0px;
+        border-left-color: rgb(153, 153, 153);
+        border-left-style: solid;
+        border-left-width: 0px;
+        border-right-color: rgb(153, 153, 153);
+        border-right-style: solid;
+        border-right-width: 0px;
+        border-top-color: rgb(153, 153, 153);
+        border-top-style: solid;
+        border-top-width: 1px;
+        color: rgb(51, 51, 51);
+    }
+
+    .bookmark-block {
+        display: flex;
+    }
+
+    .image-block
+    {
+        line-height: normal;
+        padding: 12px 10px 12px 10px;
+    }
+
+    .link-block
+    {
+        line-height: normal;
+        min-width: 0;
+        width: 100%;
+    }
+
+    .directory-block {
+        font-size: 13px;
+        font-weight: bold;
+        padding: 13px 0 0 0;
+    }
+
+    .name-block {
+        font-size: 13px;
+        font-weight: bold;
+        padding-top: 7px;
+        padding-bottom: 1px;
+    }
+
+    .location-block
+    {
+        font-size: 12px;
+        font-weight: normal;
+        overflow: hidden;
+        padding-top: 1px;
+        padding-bottom: 7px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    img.bookmark-image {
+        padding-top: 1px;
+    }
+
+    a.no-underline:link,
+    a.no-nderline:visited,
+    a.no-nderline:focus,
+    a.no-nderline:hover,
+    a.no-nderline:active
+    {
+        text-decoration:none;
+    }
+}
+
+// Preferences
+.preferences-container {
+    input[type=checkbox] {
+        margin: 0;
+    }
+}
+
+
 // Config
 .config-container {
-    text-align: center;
-
     .section {
         margin-bottom: 15px;
     }
@@ -122,7 +261,3 @@ label {
         margin-top: 10px;
     }
 }
-
-
-
-

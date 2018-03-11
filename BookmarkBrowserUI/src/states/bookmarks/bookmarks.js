@@ -2,7 +2,8 @@
     'ui.router',
 
     'bookmarkBrowser.config',
-    'bookmarkBrowser.services.sharedService'
+    'bookmarkBrowser.services.sharedService',
+    'bookmarkBrowser.directives.bmbBookmark'
 ]).config(function ($stateProvider) {
     $stateProvider.state('bookmarks', {
         url: '/bookmarks',
@@ -11,83 +12,127 @@
                 controller: 'BookmarksController',
                 templateUrl: 'states/bookmarks/bookmarks.tpl.html'
             }
+        },
+        data: {
+            title: "Bookmarks"
         }
     });
 }).controller('BookmarksController', function BookmarksController($scope, $stateParams, applicationConfiguration, sharedService) {
+    $scope.bookmarkToolbar = [];
+    $scope.bookmarkMenu = [];
+    $scope.topLevel = false;
 
-    //function doNavigation(sender) {
-    //    var nodePath;
-    //    var newHeader;
-    //    var newPath;
+    var init = function () {
+        var currentBookmarks = sharedService.getApplicationData("BookmarkData");
+        var showLastDir = sharedService.getApplicationData("LastKnownDirectoryOnStartup");
+        var currentDirectory = sharedService.getSessionData("CurrentDirectory");
 
-    //    if (sender.id === "backButton") {
-    //        nodePath = $(sender).attr("data-nodepath").split("\\");
-    //        nodePath.pop();
+        if (currentBookmarks) {
+            if (showLastDir) {
+                if (currentDirectory) {
+                    setBookmarks(getNode(currentBookmarks, currentDirectory.split("\\")));
+                }
+                else {
+                    currentDirectory = sharedService.getApplicationData("CurrentDirectory");
 
-    //        if (nodePath.length === 0) {
-    //            return;
-    //        }
+                    if (currentDirectory) {
+                        setBookmarks(getNode(currentBookmarks, currentDirectory.split("\\")));
+                    }
+                    else {
+                        setBookmarks();
+                    }
+                }
+            }
+            else {
+                if (currentDirectory) {
+                    setBookmarks(getNode(currentBookmarks, currentDirectory.split("\\")));
+                }
+                else {
+                    setBookmarks();
+                }
+            }
+        }
+        else {
+            sharedService.setDisplayMessage("Go to the Config page to refresh your bookmark data");
+        }
+    };
 
-    //        if (nodePath.length === 2) {
-    //            newPath = "Root";
-    //            newHeader = "Bookmarks";
-    //        }
-    //        else {
-    //            newPath = nodePath.join("\\");
-    //            nodePath.shift();
-    //            newHeader = nodePath[nodePath.length - 1];
-    //        }
+    var setBookmarks = function setBookmarks(node) {
+        var currentBookmarks;
 
-    //        $("#backButton").attr("data-nodepath", newPath);
-    //    }
-    //    else if (sender.id === "topButton") {
-    //        if ($("#backButton").attr("data-nodepath") === "Root") {
-    //            return;
-    //        }
+        if (node) {
+            $scope.bookmarkToolbar = node.children;
+            $scope.bookmarkMenu = [];
+            sharedService.setSessionData("CurrentNode", node);
+            sharedService.setSessionData("CurrentDirectory", node.path);
+            sharedService.setApplicationData("CurrentDirectory", node.path);
 
-    //        newHeader = "Bookmarks";
-    //        $("#backButton").attr("data-nodepath", "Root");
-    //    }
-    //    else {
-    //        nodePath = $(sender).attr("data-nodepath").split("\\");
-    //        nodePath.shift();
-    //        newHeader = nodePath[nodePath.length - 1];
-    //        $("#backButton").attr("data-nodepath", $(sender).attr("data-nodepath"));
-    //    }
+            $scope.topLevel = false;
+        }
+        else {
+            // We are back at the topmost level, so show the toolbar and menu bookmarks
+            currentBookmarks = sharedService.getApplicationData("BookmarkData");
 
-    //    var currentBookmarks = JSON.parse(localStorage.getItem("CurrentBookmarks"));
-    //    var curNode = getNode(currentBookmarks.BookmarkItems, nodePath);
-    //    ko.dataFor($("#bookmarkContainer")[0]).setBookmarks(curNode);
-    //    $("#bmHeader").html(newHeader);
-    //    $("body").pagecontainer("change", "#Bookmarks", { transition: "fade", allowSamePageTransition: true });
-    //}
+            $scope.bookmarkToolbar = currentBookmarks.children[0].children;
+            $scope.bookmarkMenu = currentBookmarks.children[1].children;
+            sharedService.removeSessionData("CurrentNode");
+            sharedService.setSessionData("CurrentDirectory", "Root");
+            sharedService.removeApplicationData("CurrentDirectory");
 
-    //function getNode(items, nodePath) {
-    //    var curDir;
-    //    var node = null;
+            $scope.topLevel = true;
+        }
+    };
 
-    //    if (nodePath) {
-    //        curDir = nodePath.shift();
+    var getNode = function getNode(items, path) {
+        var currentDirectory;
+        var bookmark = null;
 
-    //        for (var i = 0; i < items.length; i++) {
-    //            if (items[i].Name === curDir && items[i].ItemType === 0) {
-    //                // We know to stop when we've found the final directory in the node's path
-    //                if (nodePath.length === 0) {
-    //                    node = items[i];
-    //                    break;
-    //                }
-    //                else {
-    //                    node = getNode(items[i].BookmarkItems, nodePath);
-    //                    break;
-    //                }
-    //            }
-    //        }
-    //    }
+        if (path) {
+            currentDirectory = path.shift();
 
-    //    return node;
-    //}
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].title === currentDirectory && items[i].type === "Directory") {
+                    // We know to stop when we've found the final directory in the node's path
+                    if (path.length === 0) {
+                        bookmark = items[i];
+                        break;
+                    }
+                    else {
+                        bookmark = getNode(items[i].children, path);
+                        break;
+                    }
+                }
+            }
+        }
 
+        return bookmark;
+    };
 
+    $scope.$on("BMB_GoBack", function (event, args) {
+        var path = args.bookmark.path.split("\\");
+        var currentBookmarks = sharedService.getApplicationData("BookmarkData");
+        var bookmark;
+
+        if (path.length <= 3) {
+            setBookmarks();
+        }
+        else {
+            path.splice(path.length - 1, 1);
+            path.splice(0, 1);
+            bookmark = getNode(currentBookmarks.children, path);
+            setBookmarks(bookmark);
+        }
+    });
+
+    $scope.$on("BMB_GoToTop", function (event, args) {
+        setBookmarks();
+    });
+
+    $scope.$on("BMB_GoToDirectory", function (event, args) {
+        setBookmarks(args.bookmark);
+        event.stopPropagation();
+    });
 
     sharedService.setTitle('Bookmarks');
+    init();
 });
