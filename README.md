@@ -2,11 +2,11 @@ Bookmark Browser
 ===============
 This web application is for accessing Firefox Sync bookmarks from a mobile device. It mimics the functionality of the former Firefox Home iOS app. My 
 inspiration for it was a bug in Firefox Home that caused it to randomly re-arrange my bookmark ordering after I would add a new one from my desktop 
-machine or laptop. Version 1.0 was built on KnockoutJS and used the FxsyncNet wrapper to access Sync storage directly. Version 2.0 is based on AngularJS 
+machine or laptop. Version 1.0 was built on [KnockoutJS](http://knockoutjs.com/) and used the [FxSyncNet](https://github.com/pieterderycke/FxSyncNet) wrapper to access Sync storage directly. Version 2.0 is based on AngularJS 
 and doesn't attempt to connect to any Sync APIs. The issue I kept running into was Mozilla would constantly change the login API such that I couldn't
 authenticate unattended. They say that eventually there will be a nicer way for third-party apps to authenticate a Firefox account so they can access
-Sync data (via OAuth), but I didn't want to wait around. If they eventually offer such a way, I might reconsider using it to access the bookmark  
-collection directly again.
+Sync data (via OAuth), but I didn't want to wait around. If they eventually offer such a way, I might reconsider using it to access the bookmark collection directly again. It would also be nice to
+be able to insert a new bookmark via the app.
 
 Version 2 has the following features:
 * Allows uploading of a bookmark backup file from Firefox (.json) to a server, then downloading to the client
@@ -21,4 +21,4 @@ It uses the following libraries:
 * [Gulp](https://gulpjs.com)
 
 
-For those interested: yes, Mozilla has developed a version of [Firefox for iOS](https://www.mozilla.org/en-US/firefox/ios). Unfortunately, I'm disappointed at how user-unfriendly it is: opening new tabs is cumbersome, as is scrolling through your bookmark hierarchy to find the one you want. It's just not nearly as easy to use as mobile Safari.
+For those interested: yes, Mozilla has developed a version of [Firefox for iOS](https://www.mozilla.org/en-US/firefox/mobile). Unfortunately, I'm disappointed at how user-unfriendly it is: opening new tabs is cumbersome, as is scrolling through your bookmark hierarchy to find the one you want. It's just not nearly as easy to use as mobile Safari.
