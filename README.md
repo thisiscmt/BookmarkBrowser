@@ -1,8 +1,14 @@
 Bookmark Browser
 ===============
-This web application is for accessing Firefox Sync bookmarks from a mobile device. It mimics the functionality of the former Firefox Home iOS app. My inspiration for it was a bug in Firefox Home that caused it to randomly re-arrange my bookmark ordering after I would add a new one from my desktop machine or laptop. Version 1.0 was built on KnockoutJS and curently lives in the BookmarkBrowser subdirectory. The BookmarkBrowserAPI and BookmarkBrowser UI subdirectorires contain version 2.0, which is based on AngularJS and is currently a work in progress.
+This web application is for accessing Firefox Sync bookmarks from a mobile device. It mimics the functionality of the former Firefox Home iOS app. My 
+inspiration for it was a bug in Firefox Home that caused it to randomly re-arrange my bookmark ordering after I would add a new one from my desktop 
+machine or laptop. Version 1.0 was built on KnockoutJS and used the FxsyncNet wrapper to access Sync storage directly. Version 2.0 is based on AngularJS 
+and doesn't attempt to connect to any Sync APIs. The issue I kept running into was Mozilla would constantly change the login API such that I couldn't
+authenticate unattended. They say that eventually there will be a nicer way for third-party apps to authenticate a Firefox account so they can access
+Sync data (via OAuth), but I didn't want to wait around. If they eventually offer such a way, I might reconsider using it to access the bookmark  
+collection directly again.
 
-Version 2.0 has the following features:
+Version 2 has the following features:
 * Allows uploading of a bookmark backup file from Firefox (.json) to a server, then downloading to the client
 * Stores all bookmark data in local storage for faster navigation through your bookmark hierarchy
 * Can navigate to the last viewed directory upon startup

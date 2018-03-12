@@ -52,6 +52,8 @@
     <Content Include="src\directives\bmbFooter\bmbFooter.js" />
     <Content Include="src\directives\bmbFooter\bmbFooter.tpl.html" />
     <Content Include="src\directives\bmbHeader\bmbHeader.js" />
+    <Content Include="src\images\bookmark.png" />
+    <Content Include="src\images\folder.png" />
     <Content Include="src\index.js" />
     <Content Include="src\directives\bmbHeader\bmbHeader.tpl.html" />
     <Content Include="src\directives\bmbFooter\bmbFooter.less" />
@@ -84,9 +86,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="src\images\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
