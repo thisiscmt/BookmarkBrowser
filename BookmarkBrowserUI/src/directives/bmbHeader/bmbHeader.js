@@ -48,7 +48,9 @@
                 }
             });
 
-            $scope.$watch(sharedService.getSessionData("CurrentDirectory"), function (newValue, oldValue) {
+            $scope.$watch(function () {
+                return sharedService.getSessionData("CurrentDirectory");
+            }, function (newValue, oldValue) {
                 if (newValue !== oldValue && newValue) {
                     setHeaderText();
                 }

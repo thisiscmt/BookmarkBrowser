@@ -22,7 +22,7 @@
     $scope.bookmarkMenu = [];
     $scope.topLevel = false;
 
-    var init = function () {
+    var initializePage = function initializePage() {
         var currentBookmarks = sharedService.getApplicationData("BookmarkData");
         var showLastDir = sharedService.getApplicationData("LastKnownDirectoryOnStartup");
         var currentDirectory = sharedService.getSessionData("CurrentDirectory");
@@ -30,13 +30,13 @@
         if (currentBookmarks) {
             if (showLastDir) {
                 if (currentDirectory) {
-                    setBookmarks(getNode(currentBookmarks, currentDirectory.split("\\")));
+                    setBookmarks(getNode(currentBookmarks.children, currentDirectory.split("\\")));
                 }
                 else {
                     currentDirectory = sharedService.getApplicationData("CurrentDirectory");
 
                     if (currentDirectory) {
-                        setBookmarks(getNode(currentBookmarks, currentDirectory.split("\\")));
+                        setBookmarks(getNode(currentBookmarks.children, currentDirectory.split("\\")));
                     }
                     else {
                         setBookmarks();
@@ -45,7 +45,7 @@
             }
             else {
                 if (currentDirectory) {
-                    setBookmarks(getNode(currentBookmarks, currentDirectory.split("\\")));
+                    setBookmarks(getNode(currentBookmarks.children, currentDirectory.split("\\")));
                 }
                 else {
                     setBookmarks();
@@ -84,14 +84,20 @@
     };
 
     var getNode = function getNode(items, path) {
-        var currentDirectory;
+        var directory;
         var bookmark = null;
 
         if (path) {
-            currentDirectory = path.shift();
+            // If the first directory in the path is 'Root', take it out since it doesn't represent a real bookmark and would cause the search 
+            // to fail
+            if (path[0] === "Root") {
+                path.shift();
+            }
+
+            directory = path.shift();
 
             for (var i = 0; i < items.length; i++) {
-                if (items[i].title === currentDirectory && items[i].type === "Directory") {
+                if (items[i].title === directory && items[i].type === "Directory") {
                     // We know to stop when we've found the final directory in the node's path
                     if (path.length === 0) {
                         bookmark = items[i];
@@ -134,5 +140,5 @@
     });
 
     sharedService.setTitle('Bookmarks');
-    init();
+    initializePage();
 });
