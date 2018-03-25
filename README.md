@@ -21,4 +21,4 @@ It uses the following libraries:
 * [Gulp](https://gulpjs.com)
 
 
-For those interested: yes, Mozilla has developed a version of [Firefox for iOS](https://www.mozilla.org/en-US/firefox/mobile). Unfortunately, I'm disappointed at how user-unfriendly it is: opening new tabs is cumbersome, as is scrolling through your bookmark hierarchy to find the one you want. It's just not nearly as easy to use as mobile Safari.
+Postscript: Yes, Mozilla has developed a version of [Firefox for iOS](https://www.mozilla.org/en-US/firefox/mobile). Unfortunately, I'm disappointed at how user-unfriendly it is: opening new tabs is cumbersome, as is scrolling through your bookmark hierarchy to find the one you want. It's just not nearly as easy to use as mobile Safari.

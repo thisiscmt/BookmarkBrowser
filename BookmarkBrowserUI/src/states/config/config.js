@@ -51,6 +51,8 @@
         var data = {};
 
         if ($scope.userName && $scope.password) {
+            sharedService.setDisplayMessage("");
+
             reader.onload = function (event) {
                 password = $scope.passwordChanged ? $scope.password : sharedService.getApplicationData("Password");
                 authHeader = "Basic " + btoa($scope.userName + ":" + password);
@@ -64,17 +66,16 @@
 
                     $scope.uploadFile = null;
                     $scope.uploadFileName = "";
+                    sharedService.setDisplayMessage("Bookmark data uploaded successfully");
                 }).catch(function (error) {
-                    // TODO: write error message to the header
-
-                    console.log("Error: %o", error);
+                    sharedService.setDisplayMessage(sharedService.getErrorMessage(error));
                 });
             };
 
             reader.readAsText($scope.uploadFile);
         }
         else {
-            // TODO: write error message to the header
+            sharedService.setDisplayMessage("You must provide a username and password");
         }
     };
 
@@ -84,6 +85,7 @@
         var response;
 
         if ($scope.userName && $scope.password) {
+            sharedService.setDisplayMessage("");
             password = $scope.passwordChanged ? $scope.password : sharedService.getApplicationData("Password");
             authHeader = "Basic " + btoa($scope.userName + ":" + password);
 
@@ -102,14 +104,13 @@
                 $scope.bookmarkCount = response.count;
                 $scope.uploadTimestamp = response.uploadTimestamp;
                 $scope.hasBookmarkData = true;
+                sharedService.setDisplayMessage("Bookmark data refreshed successfully");
             }).catch(function (error) {
-                // TODO: write error message to the header
-
-                console.log("Error: %o", error);
+                sharedService.setDisplayMessage(sharedService.getErrorMessage(error));
             });
         }
         else {
-            // TODO: write error message to the header
+            sharedService.setDisplayMessage("You must provide a username and password");
         }
     };
 

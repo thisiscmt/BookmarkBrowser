@@ -11,6 +11,7 @@ var connect = require('gulp-connect');
 var newer = require('gulp-newer');
 var environments = require('gulp-environments');
 var gulpIf = require('gulp-if');
+var replace = require('gulp-replace');
 var htmlReplace = require('gulp-html-replace');
 var uncache = require('gulp-uncache');
 var jshint = require('gulp-jshint');
@@ -87,6 +88,11 @@ gulp.task('copy-images', function () {
         .pipe(gulp.dest(gulpconfig.buildImagesDirectory));
 });
 
+gulp.task('copy-config', function () {
+    return gulp.src(gulpconfig.sourceGlobs.config)
+        .pipe(gulp.dest(gulpconfig.buildDirectory));
+});
+
 gulp.task('copy-templates', function () {
     var templateCacheOptions = {
         module: 'bookmarkBrowser.templates',
@@ -115,6 +121,7 @@ gulp.task('build', [
     'copy-vendor-scripts',
     'copy-vendor-styles',
     'copy-images',
+    'copy-config',
     'copy-templates',
     'update-index'
 ], function (cb) {
@@ -147,19 +154,22 @@ gulp.task('serve', ['serve-application'], function (cb) {
 });
 
 // Release
-gulp.task('copy-release-files', function () {
-    var stream = gulp.src(gulpconfig.buildGlobs.all)
-        .pipe(gulp.dest(gulpconfig.releaseDirectory));
+gulp.task('update-config', function () {
+    var stream = gulp.src(gulpconfig.buildGlobs.config)
+      .pipe(replace(/http:\/\/localhost:49323/g, function (match, offset, string) {
+          return "http://bookmarkbrowser.cmtybur.com";
+      }))
+      .pipe(gulp.dest(gulpconfig.buildDirectory));
 
     return stream;
 });
 
-gulp.task('release', function (cb) {
-    reportDelta('clean');
+gulp.task('release', ['update-config'], function (cb) {
+    reportDelta('release');
     cb();
 });
 
-
+// Default
 gulp.task('default', ['build'], function (cb) {
     cb();
 });

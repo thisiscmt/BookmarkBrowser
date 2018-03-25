@@ -1,5 +1,6 @@
 module.exports.sourceGlobs = {
-    scripts    : ['src/**/*.js', 'src/config.js'],
+    scripts    : ['src/**/*.js'],
+    config     : ['src/config.js'],
     templates  : ['src/**/*.tpl.html'],
     styles     : ['src/styles/index.less'],
     images     : ['src/images/**/*'],
@@ -8,6 +9,7 @@ module.exports.sourceGlobs = {
 
 module.exports.buildGlobs = {
     scripts    : ['build/**/*.js'],
+    config     : ['build/config.js'],
     templates  : ['build/**/*.tpl.html'],
     index      : ['build/index.html'],
     all        : ['build/**/*'],
@@ -34,8 +36,3 @@ module.exports.vendorCSS = [
 
 module.exports.buildDirectory = 'build';
 module.exports.buildImagesDirectory = 'build/images';
-module.exports.releaseDirectory = 'release';
-
-module.exports.versionFiles = [
-    './package.json'
-];

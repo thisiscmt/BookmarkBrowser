@@ -47,6 +47,9 @@
     <Content Include="gulpfile.js" />
     <Content Include="packages.config" />
     <Content Include="package.json" />
+    <Content Include="Properties\PublishProfiles\BMB_WD.pubxml.user" />
+    <Content Include="Properties\PublishProfiles\BookmarkBrowser - FTP.pubxml.user" />
+    <Content Include="Properties\PublishProfiles\BookmarkBrowser - Web Deploy.pubxml.user" />
     <Content Include="src\config.js" />
     <Content Include="src\directives\bmbBookmark\bmbBookmark.js" />
     <Content Include="src\directives\bmbFooter\bmbFooter.js" />
@@ -59,6 +62,9 @@
     <Content Include="src\directives\bmbFooter\bmbFooter.less" />
     <Content Include="src\directives\bmbHeader\bmbHeader.less" />
     <Content Include="src\directives\bmbBookmark\bmbBookmark.tpl.html" />
+    <None Include="Properties\PublishProfiles\BMB_WD.pubxml" />
+    <None Include="Properties\PublishProfiles\BookmarkBrowser - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\BookmarkBrowser - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

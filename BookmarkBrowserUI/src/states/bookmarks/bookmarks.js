@@ -17,7 +17,7 @@
             title: "Bookmarks"
         }
     });
-}).controller('BookmarksController', function BookmarksController($scope, $stateParams, applicationConfiguration, sharedService) {
+}).controller('BookmarksController', function BookmarksController($scope, $window, $stateParams, applicationConfiguration, sharedService) {
     $scope.bookmarkToolbar = [];
     $scope.bookmarkMenu = [];
     $scope.topLevel = false;
@@ -59,6 +59,7 @@
 
     var setBookmarks = function setBookmarks(node) {
         var currentBookmarks;
+        var header;
 
         if (node) {
             $scope.bookmarkToolbar = node.children;
@@ -80,6 +81,12 @@
             sharedService.removeApplicationData("CurrentDirectory");
 
             $scope.topLevel = true;
+        }
+
+        elements = $window.document.getElementsByClassName("bmb-header");
+
+        if (elements.length > 0) {
+            elements[0].scrollIntoView();
         }
     };
 

@@ -39,7 +39,7 @@
     //#endregion
 
     return {
-        uploadBookmarkData     : _uploadBookmarkData,
-        downloadBookmarkData   : _downloadBookmarkData
+        uploadBookmarkData: _uploadBookmarkData,
+        downloadBookmarkData: _downloadBookmarkData
     };
 });
