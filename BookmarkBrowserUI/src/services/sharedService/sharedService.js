@@ -117,8 +117,11 @@
                 if (error.message) {
                     msg = error.message;
                 }
-                else {
+                else if (typeof error === "string") {
                     msg = error;
+                }
+                else {
+                    msg = "An unexpected error occurred";
                 }
             }
         }

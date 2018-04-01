@@ -65,6 +65,7 @@
     <None Include="Properties\PublishProfiles\BMB_WD.pubxml" />
     <None Include="Properties\PublishProfiles\BookmarkBrowser - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\BookmarkBrowser - Web Deploy.pubxml" />
+    <Content Include="src\config.js.src" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

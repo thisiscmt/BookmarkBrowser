@@ -17,6 +17,7 @@ var uncache = require('gulp-uncache');
 var jshint = require('gulp-jshint');
 var ignore = require('gulp-ignore');
 var sourcemaps = require('gulp-sourcemaps');
+var rename = require('gulp-rename');
 var _ = require('lodash');
 
 var development = environments.development;
@@ -44,7 +45,21 @@ gulp.task('clean', function (callback) {
 });
 
 // Build
-gulp.task('copy-scripts', function () {
+gulp.task('update-config', function () {
+    return gulp.src(gulpconfig.sourceGlobs.configSource)
+      .pipe(replace(/%%API_URL%%/g, function (match, offset, string) {
+          if (production()) {
+              return gulpconfig.apiURL;
+          }
+          else {
+              return gulpconfig.localConfig.apiURL;
+          }
+      }))
+      .pipe(rename(gulpconfig.sourceGlobs.config))
+      .pipe(gulp.dest(gulpconfig.sourceGlobs.sourceDirectory));
+});
+
+gulp.task('copy-scripts', ['update-config'], function () {
     return gulp.src(gulpconfig.sourceGlobs.scripts)
         .pipe(ngAnnotate())
         .pipe(jshint())
@@ -116,6 +131,7 @@ gulp.task('update-index', function () {
 });
 
 gulp.task('build', [
+    'update-config',
     'copy-scripts',
     'copy-styles',
     'copy-vendor-scripts',
@@ -150,22 +166,6 @@ gulp.task('watch', function () {
 });
 
 gulp.task('serve', ['serve-application'], function (cb) {
-    cb();
-});
-
-// Release
-gulp.task('update-config', function () {
-    var stream = gulp.src(gulpconfig.buildGlobs.config)
-      .pipe(replace(/http:\/\/localhost:49323/g, function (match, offset, string) {
-          return "http://bookmarkbrowser.cmtybur.com";
-      }))
-      .pipe(gulp.dest(gulpconfig.buildDirectory));
-
-    return stream;
-});
-
-gulp.task('release', ['update-config'], function (cb) {
-    reportDelta('release');
     cb();
 });
 

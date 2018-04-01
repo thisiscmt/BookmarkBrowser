@@ -1,15 +1,16 @@
 module.exports.sourceGlobs = {
-    scripts    : ['src/**/*.js'],
-    config     : ['src/config.js'],
-    templates  : ['src/**/*.tpl.html'],
-    styles     : ['src/styles/index.less'],
-    images     : ['src/images/**/*'],
-    index      : ['src/index.html']
+    sourceDirectory : 'src',
+    scripts         : ['src/**/*.js'],
+    configSource    : 'src/config.js.src',
+    config          : 'config.js',
+    templates       : ['src/**/*.tpl.html'],
+    styles          : ['src/styles/index.less'],
+    images          : ['src/images/**/*'],
+    index           : ['src/index.html']
 };
 
 module.exports.buildGlobs = {
     scripts    : ['build/**/*.js'],
-    config     : ['build/config.js'],
     templates  : ['build/**/*.tpl.html'],
     index      : ['build/index.html'],
     all        : ['build/**/*'],
@@ -36,3 +37,8 @@ module.exports.vendorCSS = [
 
 module.exports.buildDirectory = 'build';
 module.exports.buildImagesDirectory = 'build/images';
+module.exports.apiURL = 'http://bmb.cmtybur.com';
+
+module.exports.localConfig = {
+    apiURL: 'http://localhost:49323'
+};

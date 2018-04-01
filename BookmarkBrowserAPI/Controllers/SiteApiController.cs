@@ -22,7 +22,7 @@ namespace BookmarkBrowser.API.Controllers
 
         #region Public methods
         // POST api/bookmark
-        [EnableCors(origins: "http://bookmarkbrowser.cmtybur.com,http://localhost:4001", headers: "*", methods: "*")]
+        [EnableCors(origins: "http://bmb.cmtybur.com,http://bookmarkbrowser.cmtybur.com,https://bookmarkbrowser.cmtybur.com,http://localhost:4001", headers: "*", methods: "*")]
         [HttpPost]
         [Route("api/bookmark")]
         public ResultViewModel SetBookmarkData([FromBody]JToken data)
@@ -60,7 +60,7 @@ namespace BookmarkBrowser.API.Controllers
         }
 
         // GET api/bookmark
-        [EnableCors(origins: "http://bookmarkbrowser.cmtybur.com,http://localhost:4001", headers: "*", methods: "*")]
+        [EnableCors(origins: "http://bmb.cmtybur.com,http://bookmarkbrowser.cmtybur.com,https://bookmarkbrowser.cmtybur.com,http://localhost:4001", headers: "*", methods: "*")]
         [HttpGet]
         [Route("api/bookmark")]
         public ResultViewModel GetBookmarkData()
