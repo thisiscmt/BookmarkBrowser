@@ -21,6 +21,8 @@
 
     $locationProvider.html5Mode(true);
 }).controller('MainController', function MainController($rootScope, $scope, $transitions, sharedService) {
+    $scope.sharedService = sharedService;
+
     $transitions.onSuccess({}, function (transition) {
         sharedService.setCurrentPage(transition.to().data.title);
         sharedService.setDisplayMessage("");

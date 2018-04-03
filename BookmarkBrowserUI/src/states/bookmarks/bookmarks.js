@@ -17,7 +17,7 @@
             title: "Bookmarks"
         }
     });
-}).controller('BookmarksController', function BookmarksController($scope, $window, $stateParams, applicationConfiguration, sharedService) {
+}).controller('BookmarksController', function BookmarksController($scope, $window, $timeout, $stateParams, applicationConfiguration, sharedService) {
     $scope.bookmarkToolbar = [];
     $scope.bookmarkMenu = [];
     $scope.topLevel = false;
@@ -53,7 +53,9 @@
             }
         }
         else {
-            sharedService.setDisplayMessage("Go to the Config page to refresh your bookmark data");
+            $timeout(function () {
+                sharedService.setDisplayMessage("Go to the Config page to refresh your bookmark data");
+            });
         }
     };
 
