@@ -113,19 +113,13 @@
   </ProjectExtensions>
   <!-- Begin target definition for running a Gulp task as part of a build -->
   <PropertyGroup>
-    <CompileDependsOn>
-      $(CompileDependsOn);
+    <BuildDependsOn>
+      $(BuildDependsOn);
       GulpBuild;
-    </CompileDependsOn>
+    </BuildDependsOn>
   </PropertyGroup>
   <Target Name="GulpBuild">
     <Exec Command="npm install" />
     <Exec Command="npm run release" />
-  </Target>
-  <Target Name="CopyAPIAssembly">
-    <ItemGroup>
-      <BMBAPI Include="..\BookmarkBrowserApi\bin\**\*.dll" />
-    </ItemGroup>
-    <Copy SourceFiles="@(BMBAPI)" DestinationFolder="$(TargetDir)\Build\bin" SkipUnchangedFiles="true" />
   </Target>
 </Project>
