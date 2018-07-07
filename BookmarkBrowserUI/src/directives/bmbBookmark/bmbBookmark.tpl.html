@@ -1,0 +1,14 @@
+﻿<div class="bookmark-block">
+    <div class="image-block">
+        <img alt="Item icon" ng-src="{{ bookmark.type === 'Directory' ? directoryImage : bookmarkImage }}" ng-class="{'bookmark-image': bookmark.type === 'Bookmark'}" />
+    </div>
+    <div class="link-block">
+        <a class="no-underline" ng-if="bookmark.type === 'Directory'" href ng-click="goToDirectory(bookmark)">
+            <div class="directory-block">{{ bookmark.title }}</div>
+        </a>
+        <a class="no-underline" ng-if="bookmark.type === 'Bookmark'" ng-href="{{ bookmark.uri }}" target="_blank">
+            <div class="name-block">{{ bookmark.title }}</div>
+            <div class="location-block">{{ bookmark.uri }}</div>
+        </a>
+    </div>
+</div>
