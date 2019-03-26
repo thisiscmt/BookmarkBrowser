@@ -1,0 +1,3 @@
+﻿angular.module('bookmarkBrowser.config', []).constant('applicationConfiguration', {
+    apiURL: '%%API_URL%%'
+});
