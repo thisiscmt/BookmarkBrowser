@@ -22,3 +22,5 @@ It uses the following libraries:
 
 
 Postscript: Yes, Mozilla has developed a version of [Firefox for iOS](https://www.mozilla.org/en-US/firefox/mobile). Unfortunately, I'm disappointed at how user-unfriendly it is: opening new tabs is cumbersome, as is scrolling through your bookmark hierarchy to find the one you want. It's just not nearly as easy to use as mobile Safari.
+
+Postscript 2: The version of Firefox for iOS I had looked at was a very early one, and I'm pleased to say the current iterations are way better. I hear they reworked the UI at one point and fixed a lot of my initial gripes. Will I switch to it as my go-to browser? Eh, no. I'm too attached to the native speed of mobile Safari. But props to Mozilla for making FF much nicer on iOS devices.
