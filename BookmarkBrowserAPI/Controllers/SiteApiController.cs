@@ -22,7 +22,7 @@ namespace BookmarkBrowser.API.Controllers
 
         #region Public methods
         // POST api/bookmark
-        [EnableCors(origins: "http://bmb.cmtybur.com,http://bookmarkbrowser.cmtybur.com,https://bookmarkbrowser.cmtybur.com,http://localhost:4001", headers: "*", methods: "*")]
+        [EnableCors(origins: "http://bmb.cmtybur.com,http://bookmarkbrowser.cmtybur.com,https://bookmarkbrowser.cmtybur.com,http://localhost:4001,http://localhost:3006", headers: "*", methods: "*")]
         [HttpPost]
         [Route("api/bookmark")]
         public ResultViewModel SetBookmarkData([FromBody]JToken data)
@@ -32,35 +32,24 @@ namespace BookmarkBrowser.API.Controllers
 
             if (creds != null)
             {
-                try
+                if (!ValidUser(creds.Username, creds.Password))
                 {
-                    if (!ValidUser(creds.Username, creds.Password))
-                    {
-                        throw new HttpResponseException(Request.CreateResponse(
-                            HttpStatusCode.Unauthorized,
-                            "Authentication failed"));
-                    }
+                    var msg = new HttpResponseMessage(HttpStatusCode.Unauthorized) { ReasonPhrase = "Authentication failed" };
+                    throw new HttpResponseException(msg);
+                }
 
-                    File.WriteAllText(filePath, data.ToString(), Encoding.UTF8);
-                    return new ResultViewModel();
-                }
-                catch (Exception ex)
-                {
-                    throw new HttpResponseException(Request.CreateResponse(
-                        HttpStatusCode.InternalServerError,
-                        ex.Message));
-                }
+                File.WriteAllText(filePath, data.ToString(), Encoding.UTF8);
+                return new ResultViewModel();
             }
             else
             {
-                throw new HttpResponseException(Request.CreateResponse(
-                    HttpStatusCode.BadRequest,
-                    "Missing authentication information"));
+                var msg = new HttpResponseMessage(HttpStatusCode.BadRequest) { ReasonPhrase = "Missing authentication information" };
+                throw new HttpResponseException(msg);
             }
         }
 
         // GET api/bookmark
-        [EnableCors(origins: "http://bmb.cmtybur.com,http://bookmarkbrowser.cmtybur.com,https://bookmarkbrowser.cmtybur.com,http://localhost:4001", headers: "*", methods: "*")]
+        [EnableCors(origins: "http://bmb.cmtybur.com,http://bookmarkbrowser.cmtybur.com,https://bookmarkbrowser.cmtybur.com,http://localhost:4001,http://localhost:3006", headers: "*", methods: "*")]
         [HttpGet]
         [Route("api/bookmark")]
         public ResultViewModel GetBookmarkData()
@@ -78,9 +67,8 @@ namespace BookmarkBrowser.API.Controllers
             {
                 if (!ValidUser(creds.Username, creds.Password))
                 {
-                    throw new HttpResponseException(Request.CreateResponse(
-                        HttpStatusCode.Unauthorized,
-                        "Authentication failed"));
+                    var msg = new HttpResponseMessage(HttpStatusCode.Unauthorized) { ReasonPhrase = "Authentication failed" };
+                    throw new HttpResponseException(msg);
                 }
 
                 try
@@ -111,23 +99,21 @@ namespace BookmarkBrowser.API.Controllers
                     result = new ResultViewModel(JsonConvert.SerializeObject(new {
                         bookmarkData = rootBookmark,
                         count = bookmarkCount,
-                        uploadTimestamp = storedBookmarkData.Property("uploadTimestamp").Value.ToString()
+                        uploadTimestamp = storedBookmarkData.Property("uploadTimestamp").Value
                     }));
 
                     return result;
                 }
                 catch (Exception ex)
                 {
-                    throw new HttpResponseException(Request.CreateResponse(
-                        HttpStatusCode.InternalServerError,
-                        ex.Message));
+                    var msg = new HttpResponseMessage(HttpStatusCode.InternalServerError) { ReasonPhrase = ex.Message };
+                    throw new HttpResponseException(msg);
                 }
             }
             else
             {
-                throw new HttpResponseException(Request.CreateResponse(
-                    HttpStatusCode.BadRequest,
-                    "Missing authentication information"));
+                var msg = new HttpResponseMessage(HttpStatusCode.BadRequest) { ReasonPhrase = "Missing authentication information" };
+                throw new HttpResponseException(msg);
             }
         }
         #endregion
