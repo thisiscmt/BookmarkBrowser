@@ -1,0 +1,123 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  buildConfiguration: 'Release'
+
+jobs:
+  - job: Build_API
+    steps:
+    - task: UseDotNet@2
+      inputs:
+        version: '3.1.x'
+        packageType: sdk
+      displayName: 'Set version of .NET Core'
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'build'
+        arguments: '--configuration $(buildConfiguration)'
+        workingDirectory: $(Build.SourcesDirectory)\bookmark-browser-api
+      displayName: 'Build the project'
+#    - task: DotNetCoreCLI@2
+#      inputs:
+#        command: test
+#        arguments: '--configuration $(buildConfiguration)'
+#        projects: '**/*Tests/*.csproj'
+#      displayName: 'Run unit tests'
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: publish
+        publishWebProjects: True
+        arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(Build.Repository.Name)-$(Build.BuildId).zip'
+        workingDirectory: $(Build.SourcesDirectory)\bookmark-browser-api
+        zipAfterPublish: True
+      displayName: 'Create deployment artifact'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.Repository.Name)-$(Build.BuildId).zip'
+        ArtifactName: bookmark-browser-api
+      displayName: 'Publish artifact'
+
+  - job: Build_UI
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '12.x'
+      displayName: 'Install Node.js'
+    - script: |
+        npm install
+      displayName: 'Install project dependencies'
+    - script: |
+        npm run build
+      displayName: 'Build the project'
+    - script: |
+        npm run test
+      displayName: 'Run unit tests'
+    - task: ArchiveFiles@2
+      inputs:
+        rootFolderOrFile: build
+        includeRootFolder: false
+        archiveType: zip
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.Repository.Name)-$(Build.BuildId).zip'
+      displayName: 'Create deployment artifact'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.Repository.Name)-$(Build.BuildId).zip'
+        ArtifactName: bookmark-browser
+      displayName: 'Publish artifact'
+  - job: Deploy
+    - deployment: 'Deploy'
+      displayName: 'Deploy the web application to prod environment'
+      variables:
+        Parameters.IISDeploymentType: 'IISWebsite'
+        Parameters.ActionIISWebsite: 'CreateOrUpdateWebsite'
+        Parameters.WebsiteName: 'BookmarkBrowser'
+        Parameters.WebsitePhysicalPath: '%SystemDrive%\webs\BookmarkBrowser'
+        Parameters.AddBinding: true
+        Parameters.Protocol: 'http'
+        Parameters.HostName: 'bmb.cmtybur.com'
+#        Parameters.VirtualPathForApplication: '/'
+        Parameters.AppPoolName: 'BookmarkBrowser'
+#        Parameters.VirtualApplication: ''
+        Parameters.Package: '$(Pipeline.Workspace)\*.zip'
+        Parameters.RemoveAdditionalFilesFlag: true
+        Parameters.TakeAppOfflineFlag: true
+        Parameters.XmlTransformation: true
+        Parameters.XmlVariableSubstitution: true
+      environment:
+        name: Prod
+        resourceType: VirtualMachine
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - download: current
+              artifact: drop
+            - task: IISWebAppManagementOnMachineGroup@0
+              displayName: 'IIS Web App Manage'
+              inputs:
+                IISDeploymentType: '$(Parameters.IISDeploymentType)'
+                ActionIISWebsite: '$(Parameters.ActionIISWebsite)'
+                WebsiteName: '$(Parameters.WebsiteName)'
+                WebsitePhysicalPath: '$(Parameters.WebsitePhysicalPath)'
+                AddBinding: $(Parameters.AddBinding)
+                Protocol: $(Parameters.Protocol)
+                HostName: $(Parameters.HostName)
+#                ParentWebsiteNameForVD: '$(Parameters.WebsiteName)'
+#                VirtualPathForVD: '$(Parameters.VirtualPathForApplication)'
+#                ParentWebsiteNameForApplication: '$(Parameters.WebsiteName)'
+#                VirtualPathForApplication: '$(Parameters.VirtualPathForApplication)'
+                AppPoolName: '$(Parameters.AppPoolName)'
+            - task: IISWebAppDeploymentOnMachineGroup@0
+              displayName: 'IIS Web App Deploy'
+              inputs:
+                WebSiteName: '$(Parameters.WebsiteName)'
+#                VirtualApplication: '$(Parameters.VirtualApplication)'
+                Package: '$(Parameters.Package)'
+                RemoveAdditionalFilesFlag: $(Parameters.RemoveAdditionalFilesFlag)
+                TakeAppOfflineFlag: $(Parameters.TakeAppOfflineFlag)
+                XmlTransformation: $(Parameters.XmlTransformation)
+                XmlVariableSubstitution: $(Parameters.XmlVariableSubstitution)
