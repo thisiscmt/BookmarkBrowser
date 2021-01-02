@@ -4,7 +4,7 @@ This web application is for accessing Firefox bookmarks from a mobile device. It
 
 Version 1.0 was built on [KnockoutJS](http://knockoutjs.com/) and used the [FxSyncNet](https://github.com/pieterderycke/FxSyncNet) wrapper to access Sync storage directly, via an ASP.NET back end. Version 2.0 was based on [AngularJS](https://angularjs.org) and didn't attempt to connect to any Sync APIs. The issue I kept running into was Mozilla would constantly change the login API such that I couldn't authenticate and grab bookmark data in the background.
 
-Version 3.0 is basically a tech stack upgrade: the front end is now based on React.js and the back end is based on ASP.NET Core. The current back end allows a backup of your Firefox bookmarks in JSON form to be uploaded to a server, and then provdes a way to download that data to your mobile device. All bookmark data is stored in browser local storage to allow fast and easy navigation through it. The app also has an option to return to the last directory you were at in the bookmark hierarchy the next time you browse to the app.
+Version 3.0 is basically a tech stack upgrade: the front end is now based on [React.js](https://reactjs.org) and the back end is based on [ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core). The current back end allows a backup of your Firefox bookmarks in JSON form to be uploaded to a server, and then provides a way to download that data to your mobile device. All bookmark data is stored in browser local storage to allow fast and easy navigation through it. The app also has an option to return to the last directory you were at in the bookmark hierarchy the next time you browse to the app.
 
 Future state:
 
