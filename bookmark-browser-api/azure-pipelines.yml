@@ -8,10 +8,13 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-#- task: UseDotNet@2
-#  inputs:
-#    version: '3.1.x'
-#    packageType: sdk
+- task: UseDotNet@2
+  inputs:
+    version: '3.1.x'
+    packageType: sdk
+  displayName: 'Set version of .NET Core'
+- script: cd bookmrk-browser-api
+  displayName: 'Switch to the API source directory'
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
