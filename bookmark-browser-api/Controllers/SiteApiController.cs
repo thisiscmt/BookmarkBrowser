@@ -2,6 +2,7 @@
 using System.Text;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Cors;
@@ -9,7 +10,6 @@ using Microsoft.AspNetCore.Hosting;
 
 using BookmarkBrowser.API.Models;
 using BookmarkBrowser.API.Utils;
-using System.Text.Json;
 
 namespace BookmarkBrowser.API.Controllers
 {
