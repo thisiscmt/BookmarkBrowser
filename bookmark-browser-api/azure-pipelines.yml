@@ -13,9 +13,9 @@ steps:
     version: '3.1.x'
     packageType: sdk
   displayName: 'Set version of .NET Core'
-- script: dir
-  displayName: 'Dir listing'
-- script: cd bookmrk-browser-api
+#- script: dir
+#  displayName: 'Dir listing'
+- script: cd '$(Build.ArtifactStagingDirectory)/$(Build.Repository.Name)'
   displayName: 'Switch to the API source directory'
 - task: DotNetCoreCLI@2
   inputs:
