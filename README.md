@@ -8,7 +8,7 @@ Version 3.0 is basically a tech stack upgrade: the front end is now based on [Re
 
 Future state:
 
-Mozilla has said they want to provide a nicer way for third-party apps to authenticate a Firefox account so they can access Sync data, likely via via OAuth. I don't know the current state of play but it would be nice to avoid the extra steps to update the data on your device, as well as have the capability of adding a new bookmark via the app. Both of those features on on the roadmap.
+Mozilla has said they want to provide a nicer way for third-party apps to authenticate a Firefox account so they can access Sync data, likely via via OAuth. I don't know the current state of play but it would be nice to avoid the extra steps to update the data on your device, as well as have the capability of adding a new bookmark via the app. Both of those features are on the roadmap.
 
 Postscript:
 
