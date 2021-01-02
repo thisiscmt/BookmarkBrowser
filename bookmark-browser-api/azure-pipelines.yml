@@ -7,36 +7,36 @@ pool:
 variables:
   buildConfiguration: 'Release'
 
-steps:
-- task: UseDotNet@2
-  inputs:
-    version: '3.1.x'
-    packageType: sdk
-  displayName: 'Set version of .NET Core'
-#- script: dir
-#  displayName: 'Dir listing'
-- script: cd '$(Build.ArtifactStagingDirectory)/$(Build.Repository.Name)'
-  displayName: 'Switch to the API source directory'
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'build'
-    arguments: '--configuration $(buildConfiguration)'
-  displayName: 'Build the project'
-#- task: DotNetCoreCLI@2
-#  inputs:
-#    command: test
-#    arguments: '--configuration $(buildConfiguration)'
-#    projects: '**/*Tests/*.csproj'
-#  displayName: 'Run unit tests'
-- task: DotNetCoreCLI@2
-  inputs:
-    command: publish
-    publishWebProjects: True
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(Build.Repository.Name)-$(Build.BuildId).zip'
-    zipAfterPublish: True
-  displayName: 'Create deployment archive'
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.Repository.Name)-$(Build.BuildId).zip'
-    ArtifactName: bookmark-browser-api
-  displayName: 'Publish artifact: $(Build.Repository.Name)'
+jobs:
+  - job: Build
+    steps:
+    - task: UseDotNet@2
+      inputs:
+        version: '3.1.x'
+        packageType: sdk
+      displayName: 'Set version of .NET Core'
+    - script: cd $(Build.ArtifactStagingDirectory)/bookmark-browser-api
+      displayName: 'Switch to the API source directory'
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'build'
+        arguments: '--configuration $(buildConfiguration)'
+      displayName: 'Build the project'
+#    - task: DotNetCoreCLI@2
+#      inputs:
+#        command: test
+#        arguments: '--configuration $(buildConfiguration)'
+#        projects: '**/*Tests/*.csproj'
+#      displayName: 'Run unit tests'
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: publish
+        publishWebProjects: True
+        arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(Build.Repository.Name)-$(Build.BuildId).zip'
+        zipAfterPublish: True
+      displayName: 'Create deployment archive'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.Repository.Name)-$(Build.BuildId).zip'
+        ArtifactName: bookmark-browser-api
+      displayName: 'Publish artifact: $(Build.Repository.Name)'
