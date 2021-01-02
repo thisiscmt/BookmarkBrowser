@@ -15,8 +15,8 @@ jobs:
         version: '3.1.x'
         packageType: sdk
       displayName: 'Set version of .NET Core'
-    - script: cd $(Build.ArtifactStagingDirectory)/bookmark-browser-api
-      displayName: 'Switch to the API source directory'
+    - script: cd $(Build.ArtifactStagingDirectory)\bookmark-browser-api
+      displayName: 'Switch to the API dir'
     - task: DotNetCoreCLI@2
       inputs:
         command: 'build'
@@ -39,4 +39,4 @@ jobs:
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.Repository.Name)-$(Build.BuildId).zip'
         ArtifactName: bookmark-browser-api
-      displayName: 'Publish artifact: $(Build.Repository.Name)'
+      displayName: 'Publish artifact'
