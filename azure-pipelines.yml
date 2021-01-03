@@ -31,17 +31,17 @@ jobs:
       inputs:
         command: publish
         publishWebProjects: True
-        arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\bookmark-browser-api'
+        arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\bookmark-browser-api-output'
         workingDirectory: $(Build.SourcesDirectory)\bookmark-browser-api
         zipAfterPublish: false
       displayName: 'Create API deployment artifact'
     - task: ArchiveFiles@2
       inputs:
-        rootFolderOrFile: $(Build.ArtifactStagingDirectory)\bookmark-browser-api
+        rootFolderOrFile: '$(Build.ArtifactStagingDirectory)\bookmark-browser-api-output'
         includeRootFolder: false
         archiveType: zip
         archiveFile: '$(Build.ArtifactStagingDirectory)\bookmark-browser-api-$(Build.BuildId).zip'
-      displayName: 'Create UI deployment artifact'
+      displayName: 'Create API artifact'
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)\bookmark-browser-api-$(Build.BuildId).zip'
@@ -71,7 +71,7 @@ jobs:
         includeRootFolder: false
         archiveType: zip
         archiveFile: '$(Build.ArtifactStagingDirectory)\bookmark-browser-$(Build.BuildId).zip'
-      displayName: 'Create UI deployment artifact'
+      displayName: 'Create UI artifact'
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)\bookmark-browser-$(Build.BuildId).zip'
