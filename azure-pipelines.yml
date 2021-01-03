@@ -59,17 +59,18 @@ jobs:
     - Build_UI
     steps:
       - task: CopyFiles@2
+        inputs:
           - sourceFolder: '$(Build.SourcesDirectory)\bookmark-browser\build'
           - contents: '**'
           - targetFolder: '$(Build.ArtifactStagingDirectory)\bookmark-browser-deploy'
         displayName: 'Combine build output'
-        - task: ArchiveFiles@2
-          inputs:
-            rootFolderOrFile: '$(Build.ArtifactStagingDirectory)\bookmark-browser-deploy'
-            includeRootFolder: false
-            archiveType: zip
-            archiveFile: '$(Build.ArtifactStagingDirectory)\bookmark-browser-$(Build.BuildId).zip'
-          displayName: 'Create deployment artifact'
+      - task: ArchiveFiles@2
+        inputs:
+          rootFolderOrFile: '$(Build.ArtifactStagingDirectory)\bookmark-browser-deploy'
+          includeRootFolder: false
+          archiveType: zip
+          archiveFile: '$(Build.ArtifactStagingDirectory)\bookmark-browser-$(Build.BuildId).zip'
+        displayName: 'Create deployment artifact'
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: '$(Build.ArtifactStagingDirectory)\bookmark-browser-$(Build.BuildId).zip'
