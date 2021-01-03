@@ -14,7 +14,7 @@ jobs:
       inputs:
         version: '3.1.x'
         packageType: sdk
-      displayName: 'Set version of .NET Core'
+      displayName: 'Install .NET Core'
     - task: DotNetCoreCLI@2
       inputs:
         command: 'build'
@@ -31,13 +31,13 @@ jobs:
       inputs:
         command: publish
         publishWebProjects: True
-        arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(Build.Repository.Name)-$(Build.BuildId).zip'
+        arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\bookmark-browser-api-$(Build.BuildId).zip'
         workingDirectory: $(Build.SourcesDirectory)\bookmark-browser-api
         zipAfterPublish: True
       displayName: 'Create API deployment artifact'
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.Repository.Name)-$(Build.BuildId).zip'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)\bookmark-browser-api-$(Build.BuildId).zip'
         ArtifactName: bookmark-browser-api
       displayName: 'Publish API artifact'
   - job: Build_UI
@@ -48,22 +48,25 @@ jobs:
       displayName: 'Install Node.js'
     - script: |
         npm install
+      workingDirectory: $(Build.SourcesDirectory)\bookmark-browser
       displayName: 'Install project dependencies'
     - script: |
         npm run build
+      workingDirectory: $(Build.SourcesDirectory)\bookmark-browser
       displayName: 'Build the project'
     - script: |
         npm run test
+      workingDirectory: $(Build.SourcesDirectory)\bookmark-browser
       displayName: 'Run unit tests'
     - task: ArchiveFiles@2
       inputs:
-        rootFolderOrFile: build
+        rootFolderOrFile: bookmark-browser\build
         includeRootFolder: false
         archiveType: zip
-        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.Repository.Name)-$(Build.BuildId).zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)\bookmark-browser-$(Build.BuildId).zip'
       displayName: 'Create UI deployment artifact'
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.Repository.Name)-$(Build.BuildId).zip'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)\bookmark-browser-$(Build.BuildId).zip'
         ArtifactName: bookmark-browser
       displayName: 'Publish UI artifact'
