@@ -31,22 +31,10 @@ jobs:
       inputs:
         command: publish
         publishWebProjects: True
-        arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\bookmark-browser-api-output'
+        arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\bookmark-browser-deploy'
         workingDirectory: $(Build.SourcesDirectory)\bookmark-browser-api
         zipAfterPublish: false
       displayName: 'Publish API build'
-    - task: ArchiveFiles@2
-      inputs:
-        rootFolderOrFile: '$(Build.ArtifactStagingDirectory)\bookmark-browser-api-output\bookmark-browser-api'
-        includeRootFolder: false
-        archiveType: zip
-        archiveFile: '$(Build.ArtifactStagingDirectory)\bookmark-browser-api-$(Build.BuildId).zip'
-      displayName: 'Create API artifact'
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)\bookmark-browser-api-$(Build.BuildId).zip'
-        ArtifactName: bookmark-browser-api
-      displayName: 'Publish API artifact'
   - job: Build_UI
     steps:
     - task: NodeTool@0
@@ -65,15 +53,25 @@ jobs:
         npm run test
       workingDirectory: $(Build.SourcesDirectory)\bookmark-browser
       displayName: 'Run unit tests'
-    - task: ArchiveFiles@2
-      inputs:
-        rootFolderOrFile: '$(Build.SourcesDirectory)\bookmark-browser\build'
-        includeRootFolder: false
-        archiveType: zip
-        archiveFile: '$(Build.ArtifactStagingDirectory)\bookmark-browser-$(Build.BuildId).zip'
-      displayName: 'Create UI artifact'
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)\bookmark-browser-$(Build.BuildId).zip'
-        ArtifactName: bookmark-browser
-      displayName: 'Publish UI artifact'
+  - job: Publish_Artifact
+    dependsOn:
+    - Build_API
+    - Build_UI
+    steps:
+      - task: CopyFiles@2
+          - sourceFolder: '$(Build.SourcesDirectory)\bookmark-browser\build'
+          - contents: '**'
+          - targetFolder: '$(Build.ArtifactStagingDirectory)\bookmark-browser-deploy'
+        displayName: 'Combine build output'
+        - task: ArchiveFiles@2
+          inputs:
+            rootFolderOrFile: '$(Build.ArtifactStagingDirectory)\bookmark-browser-deploy'
+            includeRootFolder: false
+            archiveType: zip
+            archiveFile: '$(Build.ArtifactStagingDirectory)\bookmark-browser-$(Build.BuildId).zip'
+          displayName: 'Create deployment artifact'
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)\bookmark-browser-$(Build.BuildId).zip'
+          ArtifactName: bookmark-browser
+        displayName: 'Publish artifact'
