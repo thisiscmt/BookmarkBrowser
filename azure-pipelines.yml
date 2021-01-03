@@ -31,7 +31,7 @@ jobs:
       inputs:
         command: publish
         publishWebProjects: True
-        arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\bookmark-browser-api-$(Build.BuildId).zip'
+        arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\bookmark-browser-api-$(Build.BuildId)'
         workingDirectory: $(Build.SourcesDirectory)\bookmark-browser-api
         zipAfterPublish: True
       displayName: 'Create API deployment artifact'
