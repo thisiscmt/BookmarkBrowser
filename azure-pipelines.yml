@@ -60,9 +60,9 @@ jobs:
     steps:
       - task: CopyFiles@2
         inputs:
-          - sourceFolder: '$(Build.SourcesDirectory)\bookmark-browser\build'
-          - contents: '**'
-          - targetFolder: '$(Build.ArtifactStagingDirectory)\bookmark-browser-deploy'
+          sourceFolder: '$(Build.SourcesDirectory)\bookmark-browser\build'
+          contents: '**'
+          targetFolder: '$(Build.ArtifactStagingDirectory)\bookmark-browser-deploy'
         displayName: 'Combine build output'
       - task: ArchiveFiles@2
         inputs:
