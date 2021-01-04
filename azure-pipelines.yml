@@ -20,7 +20,7 @@ jobs:
         command: 'build'
         arguments: '--configuration $(buildConfiguration)'
         workingDirectory: $(Build.SourcesDirectory)\bookmark-browser-api
-      displayName: 'Build the project'
+      displayName: 'Build the API'
     #- task: DotNetCoreCLI@2
     #  inputs:
     #    command: test
@@ -42,15 +42,15 @@ jobs:
     - script: |
         npm install
       workingDirectory: $(Build.SourcesDirectory)\bookmark-browser
-      displayName: 'Install project dependencies'
+      displayName: 'Install UI dependencies'
     - script: |
         npm run build
       workingDirectory: $(Build.SourcesDirectory)\bookmark-browser
-      displayName: 'Build the project'
+      displayName: 'Build the UI'
     - script: |
         npm run test
       workingDirectory: $(Build.SourcesDirectory)\bookmark-browser
-      displayName: 'Run unit tests'
+      displayName: 'Run UI unit tests'
     - task: CopyFiles@2
       inputs:
         sourceFolder: '$(Build.ArtifactStagingDirectory)\api-deploy\bookmark-browser-api'
@@ -63,7 +63,7 @@ jobs:
         includeRootFolder: false
         archiveType: zip
         archiveFile: '$(Build.ArtifactStagingDirectory)\bookmark-browser-$(Build.BuildId).zip'
-      displayName: 'Create deployment artifact'
+      displayName: 'Create artifact'
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)\bookmark-browser-$(Build.BuildId).zip'
