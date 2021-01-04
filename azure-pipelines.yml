@@ -8,7 +8,7 @@ variables:
   buildConfiguration: 'Release'
 
 jobs:
-  - job: Build_API
+  - job: Build
     steps:
     - task: UseDotNet@2
       inputs:
@@ -35,10 +35,6 @@ jobs:
         workingDirectory: $(Build.SourcesDirectory)\bookmark-browser-api
         zipAfterPublish: false
       displayName: 'Publish API build'
-  - job: Build_UI
-    dependsOn:
-      - Build_API
-    steps:
     - task: NodeTool@0
       inputs:
         versionSpec: '12.x'
