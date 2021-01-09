@@ -31,7 +31,7 @@ jobs:
       inputs:
         command: publish
         publishWebProjects: True
-        arguments: '--configuration $(BuildConfiguration) --runtime win-x64 --framework netcoreapp3.1 --output $(Build.ArtifactStagingDirectory)\api-deploy' --self-contained true
+        arguments: '--configuration $(BuildConfiguration) --runtime win-x64 --framework netcoreapp3.1 --output $(Build.ArtifactStagingDirectory)\api-deploy --self-contained true'
         workingDirectory: $(Build.SourcesDirectory)\bookmark-browser-api
         zipAfterPublish: false
       displayName: 'Publish API build'
