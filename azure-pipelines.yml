@@ -12,7 +12,7 @@ variables:
 jobs:
   - job: Build
     steps:
-    - task: NuGetToolInstaller@0
+    - task: NuGetToolInstaller@1
       displayName: 'Install NuGet'
     - task: NuGetCommand@2
       inputs:
