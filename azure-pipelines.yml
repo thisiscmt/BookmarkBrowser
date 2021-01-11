@@ -52,6 +52,12 @@ jobs:
         contents: '**'
         targetFolder: '$(Build.SourcesDirectory)\bookmark-browser\build\bin'
       displayName: 'Combine build output'
+    - task: CopyFiles@2
+      inputs:
+        sourceFolder: '$(Build.SourcesDirectory)\bookmark-browser-api'
+        contents: 'web.config'
+        targetFolder: '$(Build.SourcesDirectory)\bookmark-browser\build'
+      displayName: 'Copy web.config'
     - task: ArchiveFiles@2
       inputs:
         rootFolderOrFile: '$(Build.SourcesDirectory)\bookmark-browser\build'
