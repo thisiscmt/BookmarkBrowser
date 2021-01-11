@@ -20,6 +20,7 @@ namespace BookmarkBrowser.API.Controllers
         private readonly string _dataPath = "App_Data";
 
         #region Public methods
+        // POST api/bookmark
         [EnableCors(origins: "http://bmb.cmtybur.com,http://localhost:3006", headers: "*", methods: "*")]
         [HttpPost]
         [Route("api/bookmark")]
@@ -70,6 +71,7 @@ namespace BookmarkBrowser.API.Controllers
             }
         }
 
+        // GET api/bookmark
         [EnableCors(origins: "http://bmb.cmtybur.com,http://localhost:3006", headers: "*", methods: "*")]
         [HttpGet]
         [Route("api/bookmark")]
@@ -156,6 +158,7 @@ namespace BookmarkBrowser.API.Controllers
             }
         }
 
+        // POST api/log
         [EnableCors(origins: "http://bmb.cmtybur.com,http://localhost:3006", headers: "*", methods: "*")]
         [HttpPost]
         [Route("api/log")]

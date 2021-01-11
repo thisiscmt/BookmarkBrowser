@@ -13,7 +13,7 @@ namespace BookmarkBrowser.API
             config.Routes.MapHttpRoute(
                 name: "MainAPI",
                 routeTemplate: "api/bookmark",
-                defaults: new { controller = "SiteAPI" }
+                defaults: new { controller = "SiteApi" }
             );
 
             config.Formatters.JsonFormatter.SerializerSettings = new JsonSerializerSettings {
