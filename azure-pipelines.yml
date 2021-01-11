@@ -17,7 +17,7 @@ jobs:
     - task: NuGetCommand@2
       inputs:
         restoreSolution: '$(solution)'
-        restoreDirectory: $(Build.SourcesDirectory)\bookmark-browser-api
+        restoreDirectory: $(Build.SourcesDirectory)\bookmark-browser-api\packages
       displayName: 'Install API dependencies'
     - task: VSBuild@1
       inputs:
