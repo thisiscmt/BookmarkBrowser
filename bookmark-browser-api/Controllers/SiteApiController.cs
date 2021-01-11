@@ -1,45 +1,41 @@
 ﻿using System;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
 using System.Text;
+using System.Web;
 using System.IO;
+using System.Web.Http.Cors;
 using System.Linq;
-using System.Text.Json;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Hosting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 using BookmarkBrowser.API.Models;
 using BookmarkBrowser.API.Utils;
 
 namespace BookmarkBrowser.API.Controllers
 {
-    [ApiController]
-    [Route("api")]
-    public class SiteApiController : ControllerBase
+    public class SiteApiController : ApiController
     {
-        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly string _dataPath = "App_Data";
 
-        public SiteApiController(IWebHostEnvironment webHostEnvironment)
-        {
-            _webHostEnvironment = webHostEnvironment;
-        }
-
         #region Public methods
-        // POST api/bookmark
-        [EnableCors("DefaultPolicy")]
+        [EnableCors(origins: "http://bmb.cmtybur.com,http://localhost:3006", headers: "*", methods: "*")]
         [HttpPost]
-        [Route("bookmark")]
-        public ActionResult SetBookmarkData([FromBody] JsonElement data)
+        [Route("api/bookmark")]
+        public HttpResponseMessage SetBookmarkData([FromBody] JToken data)
         {
-            string filePath = Path.Combine(_webHostEnvironment.ContentRootPath, _dataPath, "bookmarks.dat");
+            string filePath = Path.Combine(HttpContext.Current.Request.MapPath("~"), _dataPath, "bookmarks.dat");
             Credentials creds = GetAutenticationCredentials();
 
             if (creds != null)
             {
                 if (!ValidUser(creds.Username, creds.Password))
                 {
-                    return Unauthorized("Authentication failed");
+                    return new HttpResponseMessage {
+                        StatusCode = HttpStatusCode.Unauthorized,
+                        Content = new StringContent("Authentication failed", Encoding.UTF8, "application/json")
+                    };
                 }
 
                 try
@@ -48,48 +44,61 @@ namespace BookmarkBrowser.API.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                    Utilities.WriteEvent(HttpContext.Current.Request.MapPath("~"),
+                                         ex.Message,
+                                         DateTime.Now,
+                                         ex.ToString(),
+                                         "SiteApiController",
+                                         "GetBookmarkData");
+
+                    return new HttpResponseMessage
+                    {
+                        StatusCode = HttpStatusCode.InternalServerError,
+                        Content = new StringContent("An expected error occurred", Encoding.UTF8, "application/json")
+                    };
                 }
 
-                return Ok();
+                return new HttpResponseMessage(HttpStatusCode.OK);
             }
             else
             {
-                return BadRequest("Missing authentication information");
+                return new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Content = new StringContent("Missing authentication information", Encoding.UTF8, "application/json")
+                };
             }
         }
 
-        // GET api/bookmark
-        [EnableCors("DefaultPolicy")]
+        [EnableCors(origins: "http://bmb.cmtybur.com,http://localhost:3006", headers: "*", methods: "*")]
         [HttpGet]
-        [Route("bookmark")]
-        public ActionResult GetBookmarkData()
+        [Route("api/bookmark")]
+        public HttpResponseMessage GetBookmarkData()
         {
             Bookmark rootBookmark;
             Bookmark bookmarkForSwap;
             Credentials creds = GetAutenticationCredentials();
-            string filePath = Path.Combine(_webHostEnvironment.ContentRootPath, _dataPath, "bookmarks.dat");
+            JObject storedBookmarkData;
+            string filePath = Path.Combine(HttpContext.Current.Request.MapPath("~"), _dataPath, "bookmarks.dat");
             string bookmarkData;
-            string uploadTimestamp;
             int bookmarkCount = 0;
 
             if (creds != null)
             {
                 if (!ValidUser(creds.Username, creds.Password))
                 {
-                    return Unauthorized("Authentication failed");
+                    return new HttpResponseMessage
+                    {
+                        StatusCode = HttpStatusCode.Unauthorized,
+                        Content = new StringContent("Authentication failed", Encoding.UTF8, "application/json")
+                    };
                 }
 
                 try
                 {
-                    bookmarkData = System.IO.File.ReadAllText(filePath, Encoding.UTF8);
-
-                    using (JsonDocument document = JsonDocument.Parse(bookmarkData))
-                    {
-                        rootBookmark = JsonSerializer.Deserialize<Bookmark>(document.RootElement.GetProperty("bookmarkData").ToString());
-                        uploadTimestamp = document.RootElement.GetProperty("uploadTimestamp").ToString();
-                    }
-
+                    bookmarkData = File.ReadAllText(filePath, Encoding.UTF8);
+                    storedBookmarkData = JObject.Parse(bookmarkData);
+                    rootBookmark = JsonConvert.DeserializeObject<Bookmark>(storedBookmarkData.Property("bookmarkData").Value.ToString());
                     rootBookmark.Path = "Root";
 
                     // Remove any top-level directories that have no children (e.g. 'Mobile Bookmarks' and 'Other Bookmarks')
@@ -109,23 +118,82 @@ namespace BookmarkBrowser.API.Controllers
                     // We set certain metadata on each directory to make navigation easier on the client, plus we get a count of actual bookmarks
                     SetMetadata(ref rootBookmark, ref bookmarkCount);
 
-                    var response = new
+                    var responseData = new
                     {
                         bookmarkData = rootBookmark,
                         count = bookmarkCount,
-                        uploadTimestamp
+                        uploadTimestamp = storedBookmarkData.Property("uploadTimestamp").Value
                     };
 
-                    return Ok(response);
+                    return Request.CreateResponse(
+                        HttpStatusCode.OK,
+                        responseData
+                    );
                 }
                 catch (Exception ex)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                    Utilities.WriteEvent(HttpContext.Current.Request.MapPath("~"),
+                                         ex.Message,
+                                         DateTime.Now,
+                                         ex.ToString(),
+                                         "SiteApiController",
+                                         "GetBookmarkData");
+
+                    return new HttpResponseMessage
+                    {
+                        StatusCode = HttpStatusCode.InternalServerError,
+                        Content = new StringContent("An unexpected error occurred", Encoding.UTF8, "application/json")
+                    };
                 }
             }
             else
             {
-                return BadRequest("Missing authentication information");
+                return new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Content = new StringContent("Missing authentication information", Encoding.UTF8, "application/json")
+                };
+            }
+        }
+
+        [EnableCors(origins: "http://bmb.cmtybur.com,http://localhost:3006", headers: "*", methods: "*")]
+        [HttpPost]
+        [Route("api/log")]
+        public HttpResponseMessage CreateLogEntry([FromBody] JToken data)
+        {
+            Credentials creds = GetAutenticationCredentials();
+            JObject logEntry;
+
+            if (creds != null)
+            {
+                if (!ValidUser(creds.Username, creds.Password))
+                {
+                    return new HttpResponseMessage
+                    {
+                        StatusCode = HttpStatusCode.Unauthorized,
+                        Content = new StringContent("Authentication failed", Encoding.UTF8, "application/json")
+                    };
+                }
+
+                logEntry = JObject.Parse(data.ToString());
+
+                Utilities.WriteEvent(HttpContext.Current.Request.MapPath("~"),
+                                     logEntry.Property("description") != null ? logEntry.Property("description").Value.ToString() : "",
+                                     DateTime.UtcNow,
+                                     logEntry.Property("longDescription") != null ? logEntry.Property("longDescription").Value.ToString() : "",
+                                     logEntry.Property("source") != null ? logEntry.Property("source").Value.ToString() : "",
+                                     logEntry.Property("process") != null ? logEntry.Property("process").Value.ToString() : "",
+                                     logEntry.Property("tag") != null ? logEntry.Property("tag").Value.ToString() : "");
+
+                return new HttpResponseMessage(HttpStatusCode.OK);
+            }
+            else
+            {
+                return new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Content = new StringContent("Missing authentication information", Encoding.UTF8, "application/json")
+                };
             }
         }
         #endregion
@@ -163,28 +231,26 @@ namespace BookmarkBrowser.API.Controllers
         {
             Encoding encoding;
             Credentials creds = null;
-            string authHeader = Request.Headers["Authorization"];
             string decodedCreds;
             int index;
 
-            if (authHeader != null && authHeader.StartsWith("Basic"))
+            if (Request.Headers.Authorization != null && Request.Headers.Authorization.ToString().StartsWith("Basic"))
             {
                 try
                 {
-                    var authHeaderValue = authHeader["Basic ".Length..].Trim();
                     encoding = Encoding.GetEncoding("iso-8859-1");
-                    decodedCreds = encoding.GetString(Convert.FromBase64String(authHeaderValue));
+                    decodedCreds = encoding.GetString(Convert.FromBase64String(Request.Headers.Authorization.Parameter));
                     index = decodedCreds.IndexOf(':');
 
                     creds = new Credentials
                     {
-                        Username = decodedCreds[0..index],
-                        Password = decodedCreds[(index + 1)..]
+                        Username = decodedCreds.Substring(0, index),
+                        Password = decodedCreds.Substring(index + 1)
                     };
                 }
                 catch (Exception ex)
                 {
-                    Utilities.WriteEvent(_webHostEnvironment.ContentRootPath,
+                    Utilities.WriteEvent(HttpContext.Current.Request.MapPath("~"),
                                          ex.Message, 
                                          DateTime.Now, 
                                          ex.ToString(), 
@@ -198,7 +264,7 @@ namespace BookmarkBrowser.API.Controllers
 
         private bool ValidUser(string userName, string password)
         {
-            string filePath = Path.Combine(_webHostEnvironment.ContentRootPath, _dataPath, "users.dat");
+            string filePath = Path.Combine(HttpContext.Current.Request.MapPath("~"), _dataPath, "users.dat");
             string line;
             string storedPassword;
             int mark;
@@ -215,7 +281,7 @@ namespace BookmarkBrowser.API.Controllers
                         if (line.StartsWith(userName))
                         {
                             mark = line.IndexOf('\t');
-                            storedPassword = line[mark..].Trim();
+                            storedPassword = line.Substring(mark, line.Length - mark).Trim();
                             valid = password.Equals(storedPassword, StringComparison.InvariantCulture);
 
                             break;
@@ -225,7 +291,7 @@ namespace BookmarkBrowser.API.Controllers
             }
             catch (Exception ex)
             {
-                Utilities.WriteEvent(_webHostEnvironment.ContentRootPath, 
+                Utilities.WriteEvent(HttpContext.Current.Request.MapPath("~"), 
                                      ex.Message, 
                                      DateTime.Now, 
                                      ex.ToString(), 

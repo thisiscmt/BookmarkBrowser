@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30717.126
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bookmark-browser-api", "bookmark-browser-api.csproj", "{5B1EBFD4-45BD-4104-ADE3-A827FC7B910B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bookmark-browser-api", "bookmark-browser-api.csproj", "{DE88DA03-9387-42D7-90FC-BBD877B3410E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,12 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5B1EBFD4-45BD-4104-ADE3-A827FC7B910B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5B1EBFD4-45BD-4104-ADE3-A827FC7B910B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5B1EBFD4-45BD-4104-ADE3-A827FC7B910B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5B1EBFD4-45BD-4104-ADE3-A827FC7B910B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE88DA03-9387-42D7-90FC-BBD877B3410E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE88DA03-9387-42D7-90FC-BBD877B3410E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE88DA03-9387-42D7-90FC-BBD877B3410E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE88DA03-9387-42D7-90FC-BBD877B3410E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {869CF581-2B0F-422C-AA2D-BB3590B2C1C7}
 	EndGlobalSection
 EndGlobal

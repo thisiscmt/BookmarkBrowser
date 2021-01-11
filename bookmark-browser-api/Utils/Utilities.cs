@@ -6,7 +6,7 @@ namespace BookmarkBrowser.API.Utils
     public class Utilities
     {
         #region Public methods
-        public static void WriteEvent(string rootPath, string desc, DateTime timestamp, string longDesc = "", string source = "", 
+        public static void WriteEvent(string basePath, string desc, DateTime timestamp, string longDesc = "", string source = "", 
                                       string process = "", string tag = "")
         {
             string msg = string.Empty;
@@ -15,7 +15,7 @@ namespace BookmarkBrowser.API.Utils
 
             try
             {
-                filePath = Path.Combine(rootPath, "logs", "errors.log");
+                filePath = Path.Combine(basePath, "logs", "errors.log");
                 dirPath = Path.GetDirectoryName(filePath);
 
                 if (!System.IO.Directory.Exists(dirPath))

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+
+using Newtonsoft.Json;
 
 namespace BookmarkBrowser.API.Models
 {
@@ -7,40 +8,40 @@ namespace BookmarkBrowser.API.Models
     {
         public Bookmark() {}
 
-        [JsonPropertyName("guid")]
+        [JsonProperty("guid")]
         public string GUID { get; set; }
 
-        [JsonPropertyName("title")]
+        [JsonProperty("title")]
         public string Title { get; set; }
 
-        [JsonPropertyName("index")]
+        [JsonProperty("index")]
         public int Index { get; set; }
 
-        [JsonPropertyName("dateAdded")]
+        [JsonProperty("dateAdded")]
         public long DateAdded { get; set; }
 
-        [JsonPropertyName("lastModified")]
+        [JsonProperty("lastModified")]
         public long LastModified { get; set; }
 
-        [JsonPropertyName("id")]
+        [JsonProperty("id")]
         public int ID { get; set; }
 
-        [JsonPropertyName("type")]
+        [JsonProperty("type")]
         public string Type { get; set; }
 
-        [JsonPropertyName("root")]
+        [JsonProperty("root")]
         public string Root { get; set; }
 
-        [JsonPropertyName("children")]
+        [JsonProperty("children")]
         public List<Bookmark> Children { get; set; }
 
-        [JsonPropertyName("uri")]
+        [JsonProperty("uri")]
         public string URI { get; set; }
 
-        [JsonPropertyName("iconuri")]
+        [JsonProperty("iconuri")]
         public string IconURI { get; set; }
 
-        [JsonPropertyName("path")]
+        [JsonProperty("path")]
         public string Path { get; set; }
     }
 }

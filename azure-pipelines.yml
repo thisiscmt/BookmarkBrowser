@@ -10,31 +10,25 @@ variables:
 jobs:
   - job: Build
     steps:
-    - task: UseDotNet@2
+    - task: NuGetToolInstaller@0
+      displayName: 'Install NuGet'
+    - task: NuGetCommand@2
       inputs:
-        version: '3.1.x'
-        packageType: sdk
-      displayName: 'Install .NET Core'
-    - task: DotNetCoreCLI@2
+        restoreSolution: '$(solution)'
+      workingDirectory: $(Build.SourcesDirectory)\bookmark-browser-api
+      displayName: 'Retrieve NuGet packages'
+    - task: VSBuild@1
       inputs:
-        command: 'build'
-        arguments: '--configuration $(buildConfiguration)'
-        workingDirectory: $(Build.SourcesDirectory)\bookmark-browser-api
+        solution: '**/*.sln'
+        platform: 'Any CPU'
+        configuration: '$(buildConfiguration)'
+      workingDirectory: $(Build.SourcesDirectory)\bookmark-browser-api
       displayName: 'Build the API'
-    #- task: DotNetCoreCLI@2
+    #- task: VSTest@2
     #  inputs:
-    #    command: test
-    #    arguments: '--configuration $(buildConfiguration)'
-    #    projects: '**/*Tests/*.csproj'
-    #  displayName: 'Run unit tests'
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: publish
-        publishWebProjects: True
-        arguments: '--configuration $(BuildConfiguration) --runtime win-x64 --framework netcoreapp3.1 --output $(Build.ArtifactStagingDirectory)\api-deploy --self-contained true'
-        workingDirectory: $(Build.SourcesDirectory)\bookmark-browser-api
-        zipAfterPublish: false
-      displayName: 'Publish API build'
+    #    platform: '$(buildPlatform)'
+    #    configuration: '$(buildConfiguration)'
+    #  displayName: 'Run API unit tests'
     - task: NodeTool@0
       inputs:
         versionSpec: '12.x'
@@ -53,7 +47,7 @@ jobs:
       displayName: 'Run UI unit tests'
     - task: CopyFiles@2
       inputs:
-        sourceFolder: '$(Build.ArtifactStagingDirectory)\api-deploy\bookmark-browser-api'
+        sourceFolder: '$(Build.SourcesDirectory)\bookmark-browser-api\bin\$(buildConfiguration)'
         contents: '**'
         targetFolder: '$(Build.SourcesDirectory)\bookmark-browser\build'
       displayName: 'Combine build output'
