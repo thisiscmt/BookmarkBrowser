@@ -5,6 +5,8 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
 jobs:
@@ -15,14 +17,13 @@ jobs:
     - task: NuGetCommand@2
       inputs:
         restoreSolution: '$(solution)'
-      workingDirectory: $(Build.SourcesDirectory)\bookmark-browser-api
-      displayName: 'Retrieve NuGet packages'
+      restoreDirectory: $(Build.SourcesDirectory)\bookmark-browser-api
+      displayName: 'Install NuGet packages'
     - task: VSBuild@1
       inputs:
-        solution: '**/*.sln'
-        platform: 'Any CPU'
+        solution: '$(Build.SourcesDirectory)\bookmark-browser-api\$(solution)'
+        platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
-      workingDirectory: $(Build.SourcesDirectory)\bookmark-browser-api
       displayName: 'Build the API'
     #- task: VSTest@2
     #  inputs:
