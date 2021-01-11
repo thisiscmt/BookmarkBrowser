@@ -48,9 +48,9 @@ jobs:
       displayName: 'Run UI unit tests'
     - task: CopyFiles@2
       inputs:
-        sourceFolder: '$(Build.SourcesDirectory)\bookmark-browser-api\bin\$(buildConfiguration)'
+        sourceFolder: '$(Build.SourcesDirectory)\bookmark-browser-api\bin'
         contents: '**'
-        targetFolder: '$(Build.SourcesDirectory)\bookmark-browser\build'
+        targetFolder: '$(Build.SourcesDirectory)\bookmark-browser\build\bin'
       displayName: 'Combine build output'
     - task: ArchiveFiles@2
       inputs:
