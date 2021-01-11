@@ -19,6 +19,10 @@ jobs:
         restoreSolution: '$(solution)'
         restoreDirectory: $(Build.SourcesDirectory)\bookmark-browser-api
       displayName: 'Install API dependencies'
+    - script: |
+        dir
+      workingDirectory: $(Build.SourcesDirectory)\bookmark-browser-api
+      displayName: 'Dir listing of API'
     - task: VSBuild@1
       inputs:
         solution: '$(Build.SourcesDirectory)\bookmark-browser-api\$(solution)'
