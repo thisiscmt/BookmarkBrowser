@@ -12,7 +12,7 @@ namespace BookmarkBrowser.API
 
             config.Routes.MapHttpRoute(
                 name: "MainAPI",
-                routeTemplate: "api/bookmark",
+                routeTemplate: "",
                 defaults: new { controller = "SiteApi" }
             );
 
