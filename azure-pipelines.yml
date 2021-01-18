@@ -44,15 +44,15 @@ jobs:
     - task: CopyFiles@2
       inputs:
         sourceFolder: '$(Build.SourcesDirectory)\bookmark-browser-api\bin'
-        contents: '**'
+        contents: '*.dll'
         targetFolder: '$(Build.SourcesDirectory)\bookmark-browser\build\bin'
-      displayName: 'Combine build output'
+      displayName: 'Copy API build output'
     - task: CopyFiles@2
       inputs:
         sourceFolder: '$(Build.SourcesDirectory)\bookmark-browser-api'
         contents: 'global.asax'
         targetFolder: '$(Build.SourcesDirectory)\bookmark-browser\build'
-      displayName: 'Copy global.asax file'
+      displayName: 'Copy global.asax'
     - task: CopyFiles@2
       inputs:
         sourceFolder: '$(Build.SourcesDirectory)\bookmark-browser-api'
