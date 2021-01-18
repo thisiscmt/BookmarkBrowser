@@ -8,7 +8,7 @@ Version 3.0 is basically a tech stack upgrade: the front end is now based on [Re
 
 Future state:
 
-Mozilla has said they want to provide a nicer way for third-party apps to authenticate a Firefox account so they can access Sync data, likely via via OAuth. I don't know the current state of play but it would be nice to avoid the extra steps to update the data on your device, as well as have the capability of adding a new bookmark via the app. Both of those features are on the roadmap. I wanted to upgrade the back end APIs to ASP.NET Core, but had all kinds of issues trying to get the new code to work on on my Azure Windows 2016 VM. I will either try that again or switch to a different back end (Node.js, Pyton, etc) based on whether connecting to Sync is an option.
+Mozilla has said they want to provide a nicer way for third-party apps to authenticate a Firefox account so they can access Sync data, likely via via OAuth. I don't know the current state of play but it would be nice to avoid the extra steps to update the data on your device, as well as have the capability of adding a new bookmark via the app. Both of those features are on the roadmap. I wanted to upgrade the back end APIs to ASP.NET Core, but had all kinds of issues trying to get the new code to work on on my Azure Windows VM. I will either try that again or switch to a different back end (Node.js, Python, etc) based on whether connecting to Sync is an option.
 
 Postscript:
 
