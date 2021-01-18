@@ -20,7 +20,6 @@ namespace BookmarkBrowser.API.Controllers
         private readonly string _dataPath = "App_Data";
 
         #region Public methods
-        // POST api/bookmark
         [EnableCors(origins: "http://bmb.cmtybur.com,http://localhost:3006", headers: "*", methods: "*")]
         [HttpPost]
         [Route("api/bookmark")]
@@ -45,12 +44,12 @@ namespace BookmarkBrowser.API.Controllers
                 }
                 catch (Exception ex)
                 {
-                    Utilities.WriteEvent(HttpContext.Current.Request.MapPath("~"),
-                                         ex.Message,
-                                         DateTime.Now,
-                                         ex.ToString(),
-                                         "SiteApiController",
-                                         "GetBookmarkData");
+                    Utility.WriteEvent(HttpContext.Current.Request.MapPath("~"),
+                                       ex.Message,
+                                       DateTime.Now,
+                                       ex.ToString(),
+                                       "SiteApiController",
+                                       "GetBookmarkData");
 
                     return new HttpResponseMessage
                     {
@@ -71,7 +70,6 @@ namespace BookmarkBrowser.API.Controllers
             }
         }
 
-        // GET api/bookmark
         [EnableCors(origins: "http://bmb.cmtybur.com,http://localhost:3006", headers: "*", methods: "*")]
         [HttpGet]
         [Route("api/bookmark")]
@@ -134,12 +132,12 @@ namespace BookmarkBrowser.API.Controllers
                 }
                 catch (Exception ex)
                 {
-                    Utilities.WriteEvent(HttpContext.Current.Request.MapPath("~"),
-                                         ex.Message,
-                                         DateTime.Now,
-                                         ex.ToString(),
-                                         "SiteApiController",
-                                         "GetBookmarkData");
+                    Utility.WriteEvent(HttpContext.Current.Request.MapPath("~"),
+                                       ex.Message,
+                                       DateTime.Now,
+                                       ex.ToString(),
+                                       "SiteApiController",
+                                       "GetBookmarkData");
 
                     return new HttpResponseMessage
                     {
@@ -158,7 +156,6 @@ namespace BookmarkBrowser.API.Controllers
             }
         }
 
-        // POST api/log
         [EnableCors(origins: "http://bmb.cmtybur.com,http://localhost:3006", headers: "*", methods: "*")]
         [HttpPost]
         [Route("api/log")]
@@ -180,13 +177,13 @@ namespace BookmarkBrowser.API.Controllers
 
                 logEntry = JObject.Parse(data.ToString());
 
-                Utilities.WriteEvent(HttpContext.Current.Request.MapPath("~"),
-                                     logEntry.Property("description") != null ? logEntry.Property("description").Value.ToString() : "",
-                                     DateTime.UtcNow,
-                                     logEntry.Property("longDescription") != null ? logEntry.Property("longDescription").Value.ToString() : "",
-                                     logEntry.Property("source") != null ? logEntry.Property("source").Value.ToString() : "",
-                                     logEntry.Property("process") != null ? logEntry.Property("process").Value.ToString() : "",
-                                     logEntry.Property("tag") != null ? logEntry.Property("tag").Value.ToString() : "");
+                Utility.WriteEvent(HttpContext.Current.Request.MapPath("~"),
+                                   logEntry.Property("description") != null ? logEntry.Property("description").Value.ToString() : "",
+                                   DateTime.UtcNow,
+                                   logEntry.Property("longDescription") != null ? logEntry.Property("longDescription").Value.ToString() : "",
+                                   logEntry.Property("source") != null ? logEntry.Property("source").Value.ToString() : "",
+                                   logEntry.Property("process") != null ? logEntry.Property("process").Value.ToString() : "",
+                                   logEntry.Property("tag") != null ? logEntry.Property("tag").Value.ToString() : "");
 
                 return new HttpResponseMessage(HttpStatusCode.OK);
             }
@@ -253,7 +250,7 @@ namespace BookmarkBrowser.API.Controllers
                 }
                 catch (Exception ex)
                 {
-                    Utilities.WriteEvent(HttpContext.Current.Request.MapPath("~"),
+                    Utility.WriteEvent(HttpContext.Current.Request.MapPath("~"),
                                          ex.Message, 
                                          DateTime.Now, 
                                          ex.ToString(), 
@@ -294,12 +291,12 @@ namespace BookmarkBrowser.API.Controllers
             }
             catch (Exception ex)
             {
-                Utilities.WriteEvent(HttpContext.Current.Request.MapPath("~"), 
-                                     ex.Message, 
-                                     DateTime.Now, 
-                                     ex.ToString(), 
-                                     "SiteApiController", 
-                                     "ValidUser");
+                Utility.WriteEvent(HttpContext.Current.Request.MapPath("~"), 
+                                   ex.Message, 
+                                   DateTime.Now, 
+                                   ex.ToString(), 
+                                   "SiteApiController", 
+                                   "ValidUser");
             }
 
             return valid;

@@ -25,11 +25,6 @@ jobs:
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
       displayName: 'Build the API'
-    #- task: VSTest@2
-    #  inputs:
-    #    platform: '$(buildPlatform)'
-    #    configuration: '$(buildConfiguration)'
-    #  displayName: 'Run API unit tests'
     - task: NodeTool@0
       inputs:
         versionSpec: '12.x'
@@ -52,6 +47,12 @@ jobs:
         contents: '**'
         targetFolder: '$(Build.SourcesDirectory)\bookmark-browser\build\bin'
       displayName: 'Combine build output'
+    - task: CopyFiles@2
+      inputs:
+        sourceFolder: '$(Build.SourcesDirectory)\bookmark-browser-api'
+        contents: 'global.asax'
+        targetFolder: '$(Build.SourcesDirectory)\bookmark-browser\build'
+      displayName: 'Copy global.asax file'
     - task: CopyFiles@2
       inputs:
         sourceFolder: '$(Build.SourcesDirectory)\bookmark-browser-api'

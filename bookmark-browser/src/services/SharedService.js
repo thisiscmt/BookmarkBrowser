@@ -15,8 +15,11 @@ class SharedService {
                 headerText = 'Bookmarks';
             }
         }
-        else {
+        else if (currentPage === 'Home' || currentPage === "Preferences" || currentPage === 'Config') {
             headerText = currentPage;
+
+        } else {
+            headerText = "Error"
         }
 
         return headerText;

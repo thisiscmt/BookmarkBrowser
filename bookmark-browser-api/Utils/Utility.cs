@@ -3,7 +3,7 @@ using System.IO;
 
 namespace BookmarkBrowser.API.Utils
 {
-    public class Utilities
+    public class Utility
     {
         #region Public methods
         public static void WriteEvent(string basePath, string desc, DateTime timestamp, string longDesc = "", string source = "", 

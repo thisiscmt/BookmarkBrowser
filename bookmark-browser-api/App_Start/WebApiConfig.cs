@@ -10,12 +10,6 @@ namespace BookmarkBrowser.API
             config.EnableCors();
             config.MapHttpAttributeRoutes();
 
-            config.Routes.MapHttpRoute(
-                name: "MainAPI",
-                routeTemplate: "",
-                defaults: new { controller = "SiteApi" }
-            );
-
             config.Formatters.JsonFormatter.SerializerSettings = new JsonSerializerSettings {
                 NullValueHandling = NullValueHandling.Ignore
             };
