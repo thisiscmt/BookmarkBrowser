@@ -12,12 +12,15 @@ using Newtonsoft.Json.Linq;
 
 using BookmarkBrowser.API.Models;
 using BookmarkBrowser.API.Utils;
+using System.Collections.Generic;
 
 namespace BookmarkBrowser.API.Controllers
 {
     public class SiteApiController : ApiController
     {
         private readonly string _dataPath = "App_Data";
+        private readonly string _bookmarkFile = "bookmarks.dat";
+        private readonly string _userFile = "users.dat";
 
         #region Public methods
         [EnableCors(origins: "http://bmb.cmtybur.com,http://localhost:3006", headers: "*", methods: "*")]
@@ -25,14 +28,18 @@ namespace BookmarkBrowser.API.Controllers
         [Route("api/bookmark")]
         public HttpResponseMessage SetBookmarkData([FromBody] JToken data)
         {
-            string filePath = Path.Combine(HttpContext.Current.Request.MapPath("~"), _dataPath, "bookmarks.dat");
-            Credentials creds = GetAutenticationCredentials();
+            string filePath = Path.Combine(HttpContext.Current.Request.MapPath("~"), _dataPath);
+            Credential creds = GetAutenticationCredentials();
+            User user;
 
             if (creds != null)
             {
-                if (!ValidUser(creds.Username, creds.Password))
+                user = GetUser(creds.Username);
+
+                if (!ValidUser(user, creds))
                 {
-                    return new HttpResponseMessage {
+                    return new HttpResponseMessage
+                    {
                         StatusCode = HttpStatusCode.Unauthorized,
                         Content = new StringContent("Authentication failed", Encoding.UTF8, "application/json")
                     };
@@ -40,6 +47,14 @@ namespace BookmarkBrowser.API.Controllers
 
                 try
                 {
+                    filePath = Path.Combine(filePath, user.Id);
+
+                    if (!Directory.Exists(filePath))
+                    {
+                        Directory.CreateDirectory(filePath);
+                    }
+
+                    filePath = Path.Combine(filePath, _bookmarkFile);
                     System.IO.File.WriteAllText(filePath, data.ToString(), Encoding.UTF8);
                 }
                 catch (Exception ex)
@@ -77,15 +92,18 @@ namespace BookmarkBrowser.API.Controllers
         {
             Bookmark rootBookmark;
             Bookmark bookmarkForSwap;
-            Credentials creds = GetAutenticationCredentials();
+            Credential creds = GetAutenticationCredentials();
+            User user;
             JObject storedBookmarkData;
-            string filePath = Path.Combine(HttpContext.Current.Request.MapPath("~"), _dataPath, "bookmarks.dat");
+            string filePath = Path.Combine(HttpContext.Current.Request.MapPath("~"), _dataPath);
             string bookmarkData;
             int bookmarkCount = 0;
 
             if (creds != null)
             {
-                if (!ValidUser(creds.Username, creds.Password))
+                user = GetUser(creds.Username);
+
+                if (!ValidUser(user, creds))
                 {
                     return new HttpResponseMessage
                     {
@@ -96,6 +114,7 @@ namespace BookmarkBrowser.API.Controllers
 
                 try
                 {
+                    filePath = Path.Combine(filePath, user.Id, _bookmarkFile);
                     bookmarkData = File.ReadAllText(filePath, Encoding.UTF8);
                     storedBookmarkData = JObject.Parse(bookmarkData);
                     rootBookmark = JsonConvert.DeserializeObject<Bookmark>(storedBookmarkData.Property("bookmarkData").Value.ToString());
@@ -161,12 +180,15 @@ namespace BookmarkBrowser.API.Controllers
         [Route("api/log")]
         public HttpResponseMessage CreateLogEntry([FromBody] JToken data)
         {
-            Credentials creds = GetAutenticationCredentials();
+            Credential creds = GetAutenticationCredentials();
+            User user;
             JObject logEntry;
 
             if (creds != null)
             {
-                if (!ValidUser(creds.Username, creds.Password))
+                user = GetUser(creds.Username);
+
+                if (!ValidUser(user, creds))
                 {
                     return new HttpResponseMessage
                     {
@@ -227,10 +249,10 @@ namespace BookmarkBrowser.API.Controllers
             }
         }
 
-        private Credentials GetAutenticationCredentials()
+        private Credential GetAutenticationCredentials()
         {
             Encoding encoding;
-            Credentials creds = null;
+            Credential creds = null;
             string decodedCreds;
             int index;
 
@@ -242,7 +264,7 @@ namespace BookmarkBrowser.API.Controllers
                     decodedCreds = encoding.GetString(Convert.FromBase64String(Request.Headers.Authorization.Parameter));
                     index = decodedCreds.IndexOf(':');
 
-                    creds = new Credentials
+                    creds = new Credential
                     {
                         Username = decodedCreds.Substring(0, index),
                         Password = decodedCreds.Substring(index + 1)
@@ -262,41 +284,46 @@ namespace BookmarkBrowser.API.Controllers
             return creds;
         }
 
-        private bool ValidUser(string userName, string password)
+        private User GetUser(string userName)
         {
-            string filePath = Path.Combine(HttpContext.Current.Request.MapPath("~"), _dataPath, "users.dat");
-            string line;
-            string storedPassword;
-            int mark;
-            bool valid = false;
+            List<User> users;
+            string filePath = Path.Combine(HttpContext.Current.Request.MapPath("~"), _dataPath, _userFile);
+            string userData;
+            User user = null;
 
             try
             {
-                using (StreamReader userFile = new StreamReader(filePath))
+                userData = File.ReadAllText(filePath, Encoding.UTF8);
+                users = JsonConvert.DeserializeObject<List<User>>(userData);
+
+                foreach (User knownUser in users)
                 {
-                    while (!userFile.EndOfStream)
+                    if (knownUser.Username == userName)
                     {
-                        line = userFile.ReadLine();
-
-                        if (line.StartsWith(userName))
-                        {
-                            mark = line.IndexOf('\t');
-                            storedPassword = line.Substring(mark, line.Length - mark).Trim();
-                            valid = password.Equals(storedPassword, StringComparison.InvariantCulture);
-
-                            break;
-                        }
+                        user = knownUser;
                     }
                 }
             }
             catch (Exception ex)
             {
-                Utility.WriteEvent(HttpContext.Current.Request.MapPath("~"), 
-                                   ex.Message, 
-                                   DateTime.Now, 
-                                   ex.ToString(), 
-                                   "SiteApiController", 
-                                   "ValidUser");
+                Utility.WriteEvent(HttpContext.Current.Request.MapPath("~"),
+                                   ex.Message,
+                                   DateTime.Now,
+                                   ex.ToString(),
+                                   "SiteApiController",
+                                   "GetUser");
+            }
+
+            return user;
+        }
+
+        private bool ValidUser(User user, Credential creds)
+        {
+            bool valid = false;
+
+            if (user != null && user.Password == creds.Password)
+            {
+                valid = true;
             }
 
             return valid;

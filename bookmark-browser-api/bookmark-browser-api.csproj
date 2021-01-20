@@ -101,7 +101,8 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\SiteApiController.cs" />
     <Compile Include="Models\Bookmark.cs" />
-    <Compile Include="Models\Credentials.cs" />
+    <Compile Include="Models\Credential.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Utils\Utility.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
