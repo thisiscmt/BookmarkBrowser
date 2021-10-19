@@ -125,7 +125,7 @@ const Header = (props) => {
 
     return (
         <header>
-            <div className={classes.headerContainer}>
+            <div data-testid="header-container" className={classes.headerContainer}>
                 {
                     (currentPage === 'Bookmarks') &&
                     <Button id='BackButton' className={classes.navButton} onClick={goToPriorLevel}>Back</Button>
