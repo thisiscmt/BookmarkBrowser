@@ -27,12 +27,6 @@ jobs:
         npm run test
       workingDirectory: $(Build.SourcesDirectory)/bookmark-browser
       displayName: 'Run UI unit tests'
-    - task: CopyFiles@2
-      inputs:
-        sourceFolder: '$(Build.SourcesDirectory)/bookmark-browser-api'
-        contents: '**'
-        targetFolder: '$(Build.SourcesDirectory)/bookmark-browser/build/api'
-      displayName: 'Copy API source'
     - task: ArchiveFiles@2
       inputs:
         rootFolderOrFile: '$(Build.SourcesDirectory)/bookmark-browser-api'
