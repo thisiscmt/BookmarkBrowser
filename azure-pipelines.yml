@@ -44,7 +44,7 @@ jobs:
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)/bookmark-browser-api-$(Build.BuildId).zip'
-        ArtifactName: bookmark-browser-ui
+        ArtifactName: bookmark-browser-api
       displayName: 'Publish API artifact'
     - task: PublishBuildArtifacts@1
       inputs:
