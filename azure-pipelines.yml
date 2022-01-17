@@ -11,12 +11,10 @@ jobs:
       inputs:
         versionSpec: '14.x'
       displayName: 'Install Node.js'
-
     - script: |
         npm install
       workingDirectory: $(Build.SourcesDirectory)/bookmark-browser-api
       displayName: 'Install API dependencies'
-
     - script: |
         npm install
       workingDirectory: $(Build.SourcesDirectory)/bookmark-browser
@@ -29,7 +27,6 @@ jobs:
         npm run test
       workingDirectory: $(Build.SourcesDirectory)/bookmark-browser
       displayName: 'Run UI unit tests'
-
     - task: CopyFiles@2
       inputs:
         sourceFolder: '$(Build.SourcesDirectory)/bookmark-browser-api'
@@ -38,13 +35,25 @@ jobs:
       displayName: 'Copy API source'
     - task: ArchiveFiles@2
       inputs:
+        rootFolderOrFile: '$(Build.SourcesDirectory)/bookmark-browser-api'
+        includeRootFolder: false
+        archiveType: zip
+        archiveFile: '$(Build.ArtifactStagingDirectory)/bookmark-browser-api-$(Build.BuildId).zip'
+      displayName: 'Create API artifact'
+    - task: ArchiveFiles@2
+      inputs:
         rootFolderOrFile: '$(Build.SourcesDirectory)/bookmark-browser/build'
         includeRootFolder: false
         archiveType: zip
         archiveFile: '$(Build.ArtifactStagingDirectory)/bookmark-browser-$(Build.BuildId).zip'
-      displayName: 'Create artifact'
+      displayName: 'Create UI artifact'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/bookmark-browser-api-$(Build.BuildId).zip'
+        ArtifactName: bookmark-browser-ui
+      displayName: 'Publish API artifact'
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)/bookmark-browser-$(Build.BuildId).zip'
-        ArtifactName: bookmark-browser
-      displayName: 'Publish artifact'
+        ArtifactName: bookmark-browser-ui
+      displayName: 'Publish UI artifact'
