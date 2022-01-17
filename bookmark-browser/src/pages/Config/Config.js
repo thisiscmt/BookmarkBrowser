@@ -27,6 +27,7 @@ const styles = makeStyles({
     },
 
     statsLabel: {
+        textDecoration: 'underline',
         marginRight: '12px'
     },
 
