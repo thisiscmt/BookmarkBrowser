@@ -39,7 +39,7 @@ jobs:
         rootFolderOrFile: '$(Build.SourcesDirectory)/bookmark-browser/build'
         includeRootFolder: false
         archiveType: zip
-        archiveFile: '$(Build.ArtifactStagingDirectory)/bookmark-browser-$(Build.BuildId).zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/bookmark-browser-ui-$(Build.BuildId).zip'
       displayName: 'Create UI artifact'
     - task: PublishBuildArtifacts@1
       inputs:
