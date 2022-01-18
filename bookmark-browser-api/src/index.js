@@ -50,7 +50,7 @@ function onListening() {
     debug('Listening on ' + bind);
 }
 
-const port = normalizePort(process.env.PORT || 3060);
+const port = normalizePort(process.env.PORT || 8080);
 app.set('port', port);
 
 const server = http.createServer(app);
