@@ -9,10 +9,10 @@ const app = express();
 app.use(express.json({limit: '5mb'}));
 app.use(express.urlencoded({ limit: '5mb', extended: false }));
 app.use(cors({
-    origin: 'http://localhost:3006'
+    origin: process.env.BMB_ALLOWED_ORIGIN
 }));
 
-app.use('/api', baseRouter);
-app.use('/api/bookmark', bookmarkRouter);
+app.use('/', baseRouter);
+app.use('/bookmark', bookmarkRouter);
 
 export default app;
