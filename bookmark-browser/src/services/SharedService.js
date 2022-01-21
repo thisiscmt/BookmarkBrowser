@@ -54,7 +54,7 @@ class SharedService {
 
         if (error) {
             if (error.response && typeof error.response.data && typeof error.response.data === 'string') {
-                msg = error.response;
+                msg = error.response.data;
             } else if (error.response && error.response.statusText) {
                 msg = error.response.statusText;
             } else {
