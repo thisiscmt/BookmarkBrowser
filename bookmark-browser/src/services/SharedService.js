@@ -53,9 +53,7 @@ class SharedService {
         let msg = '';
 
         if (error) {
-            console.log('auth error: %o', error);
-
-            if (error.response && typeof error.response === 'string') {
+            if (error.response && typeof error.response.data && typeof error.response.data === 'string') {
                 msg = error.response;
             } else if (error.response && error.response.statusText) {
                 msg = error.response.statusText;
