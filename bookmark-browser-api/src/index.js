@@ -36,7 +36,7 @@ function onListening() {
     debug('Listening on ' + bind);
 }
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3060;
 app.set('port', port);
 
 const server = http.createServer(app);
