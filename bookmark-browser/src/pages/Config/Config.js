@@ -4,7 +4,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/styles';
-import * as Moment from 'moment';
+import {DateTime} from 'luxon';
 
 import SharedService from '../../services/SharedService';
 import { Context } from '../../stores/mainStore';
@@ -97,7 +97,7 @@ const Config = (props) => {
 
             reader.onload = async (event) => {
                 const passwordToUse = passwordChanged ? password : state.dataService.getApplicationData('Password');
-                const authHeader = 'Basic ' + btoa(userName + ':' + passwordToUse);
+                const authHeader = 'Basic ' + window.btoa(userName + ':' + passwordToUse);
 
                 try {
                     await state.dataService.uploadBookmarkData(event.target.result, authHeader);
@@ -125,7 +125,7 @@ const Config = (props) => {
         if (userName && password) {
             dispatch({ type: 'SET_BANNER_MESSAGE', payload: '' });
             const passwordToUse = passwordChanged ? password : state.dataService.getApplicationData('Password');
-            const authHeader = 'Basic ' + btoa(userName + ':' + passwordToUse);
+            const authHeader = 'Basic ' + window.btoa(userName + ':' + passwordToUse);
 
             try {
                 const response = await state.dataService.downloadBookmarkData(authHeader);
@@ -152,6 +152,8 @@ const Config = (props) => {
             dispatch({ type: 'SET_BANNER_MESSAGE', payload: 'You must provide a username and password' });
         }
     };
+
+    const timestampFormat = {...DateTime.DATE_MED, ...DateTime.TIME_SIMPLE, month: 'long' };
 
     return (
         <section className='content-container'>
@@ -223,7 +225,15 @@ const Config = (props) => {
 
                     <div>
                         <span className={classes.statsLabel}>Timestamp:</span>
-                        <span>{new Moment(uploadTimestamp).local().format('MMMM D, YYYY h:mm a')}</span>
+                        <span>
+                            {
+                                DateTime.fromMillis(uploadTimestamp).toLocaleString({
+                                    ...DateTime.DATE_MED,
+                                    ...DateTime.TIME_SIMPLE,
+                                    month: 'long'
+                                })
+                            }
+                        </span>
                     </div>
                 </div>
             }
