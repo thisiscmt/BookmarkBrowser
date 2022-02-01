@@ -153,8 +153,6 @@ const Config = (props) => {
         }
     };
 
-    const timestampFormat = {...DateTime.DATE_MED, ...DateTime.TIME_SIMPLE, month: 'long' };
-
     return (
         <section className='content-container'>
             <div className={classes.section}>

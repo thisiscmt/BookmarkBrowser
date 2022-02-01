@@ -10,7 +10,7 @@ import Preferences from './pages/Preferences/Preferences';
 import Config from './pages/Config/Config';
 import ErrorPage from './pages/ErrorPage/ErrorPage';
 import Store from './stores/mainStore';
-import './App.less';
+import './App.scss';
 
 function App() {
     // This ref is used to scroll to the top of the page after navigation is completed, as a convenience to the user in case the link they clicked
