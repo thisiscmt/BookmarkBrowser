@@ -122,6 +122,7 @@ namespace BookmarkBrowserAPI.Util
             return new BookmarkData(rootItem, bookmarkCount, bookmarkObject.Property("timestamp")!.Value.ToString());
 
         }
+
         public static void SetMetadata(ref Bookmark dir, ref int bookmarkCount)
         {
             Bookmark newDir;

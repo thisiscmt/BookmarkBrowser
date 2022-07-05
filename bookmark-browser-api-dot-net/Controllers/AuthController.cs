@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Cors;
 
 using FxSyncNet;
 using FxSyncNet.Models;
@@ -8,11 +9,11 @@ using BookmarkBrowserAPI.Util;
 namespace BookmarkBrowserAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("auth")]
     public class AuthController : ControllerBase
     {
-        [HttpPost]
-        [Route("login")]
+        #region Controller methods
+        [HttpPost("login")]
         public IActionResult Login([FromHeader(Name = "authorization")] string authHeader, [FromQuery] string reason)
         {
             if (authHeader is null)
@@ -45,8 +46,7 @@ namespace BookmarkBrowserAPI.Controllers
             return Ok(loginResponse);
         }
 
-        [HttpPost]
-        [Route("verify")]
+        [HttpPost("verify")]
         public IActionResult Verify([FromBody] LoginVerification verification)
         {
             SyncClient syncClient = new SyncClient();
@@ -61,5 +61,6 @@ namespace BookmarkBrowserAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        #endregion
     }
 }

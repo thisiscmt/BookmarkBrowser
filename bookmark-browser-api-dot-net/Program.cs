@@ -2,6 +2,17 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3006", "https://bmb.cmtybur.com")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
+
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddMvc();
 builder.Services.AddEndpointsApiExplorer();
@@ -46,7 +57,6 @@ if (app.Environment.IsDevelopment())
 }
 
 AppDomain.CurrentDomain.SetData("ContentRootPath", builder.Environment.ContentRootPath);
-//AppDomain.CurrentDomain.SetData("WebRootPath", builder.Environment.WebRootPath);
 AppDomain.CurrentDomain.SetData("AppDataPath", Path.Combine(builder.Environment.ContentRootPath, "app_data"));
 AppDomain.CurrentDomain.SetData("LogPath", Path.Combine(builder.Environment.ContentRootPath, "logs"));
 

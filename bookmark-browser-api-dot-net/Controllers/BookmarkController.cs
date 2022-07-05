@@ -18,7 +18,6 @@ namespace BookmarkBrowserAPI.Controllers
 
         #region Controller methods
         [HttpGet]
-        [EnableCors("DefaultPolicy")]
         public IActionResult GetBookmarks([FromHeader(Name = "authorization")] string authHeader, [FromQuery] string sessionToken, 
                                           [FromQuery] string keyFetchToken)
         {
@@ -70,8 +69,7 @@ namespace BookmarkBrowserAPI.Controllers
         }
 
         [HttpGet("backup")]
-        [EnableCors("DefaultPolicy")]
-        public IActionResult GetBookmarkBackup([FromHeader(Name = "authorization")] string authHeader)
+        public IActionResult GetBookmarksBackup([FromHeader(Name = "authorization")] string authHeader)
         {
             string bookmarkBackup;
 
@@ -120,7 +118,6 @@ namespace BookmarkBrowserAPI.Controllers
         }
 
         [HttpPut("backup")]
-        [EnableCors("DefaultPolicy")]
         public IActionResult SaveBookmarkBackup([FromHeader(Name = "authorization")] string authHeader, [FromBody] JObject data)
         {
             var userVerification = VerifyUser(authHeader);
