@@ -30,8 +30,8 @@ const Preferences = (props) => {
     });
 
     return (
-        <section className={'content-container'}>
-            <div className={'form-field'}>
+        <section className='content-container'>
+            <div className='form-field'>
                 <FormControlLabel
                     classes={{
                         root: classes.checkboxes

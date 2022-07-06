@@ -51,7 +51,7 @@ const Footer = (props) => {
                 <li>
                     <Button
                         component={Link}
-                        to={'/'}
+                        to='/'
                         className={classes.footerLink}
                         variant='outlined'
                         disableRipple={true}
@@ -62,7 +62,7 @@ const Footer = (props) => {
                 <li>
                     <Button
                         component={Link}
-                        to={'/bookmarks'}
+                        to='/bookmarks'
                         className={classes.footerLink}
                         variant='outlined'
                         disableRipple={true}
@@ -73,7 +73,7 @@ const Footer = (props) => {
                 <li>
                     <Button
                         component={Link}
-                        to={'/preferences'}
+                        to='/preferences'
                         className={classes.footerLink}
                         variant='outlined'
                         disableRipple={true}
@@ -84,7 +84,7 @@ const Footer = (props) => {
                 <li>
                     <Button
                         component={Link}
-                        to={'/config'}
+                        to='/config'
                         className={classes.footerLink}
                         variant='outlined'
                         disableRipple={true}

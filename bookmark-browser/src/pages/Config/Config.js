@@ -3,11 +3,15 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import Radio from '@material-ui/core/Radio';
 import { makeStyles } from '@material-ui/styles';
 import {DateTime} from 'luxon';
 
 import SharedService from '../../services/SharedService';
 import { Context } from '../../stores/mainStore';
+import AuthService from '../../services/AuthService';
+import BookmarkService from '../../services/BookmarkService';
 
 const styles = makeStyles({
     section: {
@@ -24,6 +28,10 @@ const styles = makeStyles({
         marginRight: '8px',
         minWidth: '90px',
         textAlign: 'left'
+    },
+
+    dataSourceLabel: {
+        marginRight: '16px'
     },
 
     statsLabel: {
@@ -45,6 +53,11 @@ const styles = makeStyles({
         marginBottom: '12px'
     },
 
+    dataSourceOptions: {
+        paddingBottom: '2px',
+        paddingTop: '2px'
+    },
+
     actionButton: {
         backgroundColor: '#396B9E'
     }
@@ -52,7 +65,6 @@ const styles = makeStyles({
 
 const Config = (props) => {
     const classes = styles(props);
-
     const [state, dispatch] = useContext(Context);
     const [ userName, setUserName ] = useState(state.dataService.getApplicationData('UserName') ?
         state.dataService.getApplicationData('UserName') :
@@ -60,14 +72,18 @@ const Config = (props) => {
     );
     const [ password, setPassword ] = useState(state.dataService.getApplicationData('Password') ? '********' : '');
     const [ passwordChanged, setPasswordChanged ] = useState(false);
+    const [ dataSource, setDataSource ] = useState('Sync');
+    const [ loginMode, setLoginMode ] = useState(false);
+    const [ lastLoginTimestamp, setLastLoginTimestamp ] = useState(0);
+    const [ verified, setVerified ] = useState(false);
     const [ selectedFile, setSelectedFile ] = useState(null);
     const [ hasBookmarkData, setHasBookmarkData ] = useState(!!state.dataService.getApplicationData('BookmarkData'));
     const [ bookmarkCount, setBookmarkCount ] = useState(state.dataService.getApplicationData('BookmarkCount') ?
         state.dataService.getApplicationData('BookmarkCount') :
         0
     );
-    const [ uploadTimestamp, setUploadTimestamp ] = useState(state.dataService.getApplicationData('UploadTimestamp') ?
-        state.dataService.getApplicationData('UploadTimestamp') :
+    const [ bookmarkTimestamp, setBookmarkTimestamp ] = useState(state.dataService.getApplicationData('BookmarkTimestamp') ?
+        state.dataService.getApplicationData('BookmarkTimestamp') :
         0
     );
 
@@ -90,6 +106,15 @@ const Config = (props) => {
         }
     };
 
+    const handleLogin = async () => {
+        const passwordToUse = passwordChanged ? password : state.dataService.getApplicationData('Password');
+        const authHeader = 'Basic ' + window.btoa(userName + ':' + passwordToUse);
+        await AuthService.login(authHeader, 'login');
+
+
+
+    };
+
     const handleUploadBookmarkData = () =>{
         if (userName && password) {
             const reader = new FileReader();
@@ -100,7 +125,7 @@ const Config = (props) => {
                 const authHeader = 'Basic ' + window.btoa(userName + ':' + passwordToUse);
 
                 try {
-                    await state.dataService.uploadBookmarkData(event.target.result, authHeader);
+                    await BookmarkService.uploadBookmarkData(event.target.result, authHeader);
                     state.dataService.setApplicationData('UserName', userName);
 
                     if (passwordChanged) {
@@ -121,15 +146,15 @@ const Config = (props) => {
         }
     };
 
-    const handleDownloadBookmarkData = async () =>{
+    const handleRefreshData = async () =>{
         if (userName && password) {
             dispatch({ type: 'SET_BANNER_MESSAGE', payload: '' });
             const passwordToUse = passwordChanged ? password : state.dataService.getApplicationData('Password');
             const authHeader = 'Basic ' + window.btoa(userName + ':' + passwordToUse);
 
             try {
-                const response = await state.dataService.downloadBookmarkData(authHeader);
-                const timestamp = Number(response.data.uploadTimestamp);
+                const response = await BookmarkService.downloadBookmarkData(authHeader);
+                const timestamp = Number(response.data.timestamp);
                 state.dataService.setApplicationData('UserName', userName);
 
                 if (passwordChanged) {
@@ -138,11 +163,11 @@ const Config = (props) => {
 
                 state.dataService.setApplicationData('BookmarkData', response.data.bookmarkData);
                 state.dataService.setApplicationData('BookmarkCount', response.data.count);
-                state.dataService.setApplicationData('UploadTimestamp', timestamp);
+                state.dataService.setApplicationData('BookmarkTimestamp', timestamp);
 
                 setHasBookmarkData(true);
                 setBookmarkCount(response.data.count);
-                setUploadTimestamp(timestamp);
+                setBookmarkTimestamp(timestamp);
                 dispatch({ type: 'SET_BANNER_MESSAGE', payload: 'Bookmark data refreshed successfully' });
             } catch (error) {
                 dispatch({ type: 'SET_BANNER_MESSAGE', payload: SharedService.getErrorMessage(error) });
@@ -158,11 +183,8 @@ const Config = (props) => {
             <div className={classes.section}>
                 <FormControl fullWidth={SharedService.isMobile()}>
                     <FormControlLabel
-                        classes={{
-                            root: classes.textFieldLabelRoot,
-                            label: classes.textFieldLabel
-                        }}
-                        labelPlacement={'start'}
+                        classes={{ root: classes.textFieldLabelRoot, label: classes.textFieldLabel }}
+                        labelPlacement='start'
                         label='User name:'
                         control={
                             <TextField
@@ -187,11 +209,8 @@ const Config = (props) => {
             <div className={classes.section}>
                 <FormControl fullWidth={SharedService.isMobile()}>
                     <FormControlLabel
-                        classes={{
-                            root: classes.textFieldLabelRoot,
-                            label: classes.textFieldLabel
-                        }}
-                        labelPlacement={'start'}
+                        classes={{ root: classes.textFieldLabelRoot, label: classes.textFieldLabel }}
+                        labelPlacement='start'
                         label='Password:'
                         control={
                             <TextField
@@ -213,6 +232,30 @@ const Config = (props) => {
                 </FormControl>
             </div>
 
+            <div className={classes.section}>
+                <FormControl fullWidth={SharedService.isMobile()}>
+                    <FormControlLabel
+                        classes={{ root: classes.textFieldLabelRoot, label: `${classes.textFieldLabel} ${classes.dataSourceLabel}` }}
+                        labelPlacement='start'
+                        label='Data source:'
+                        control={
+                            <RadioGroup row={true} name="DataSource" value={dataSource} onChange={event => setDataSource(event.target.value)}>
+                                <FormControlLabel
+                                    value="Sync"
+                                    label="Sync"
+                                    control={<Radio color='primary' className={classes.dataSourceOptions} />}
+                                />
+                                <FormControlLabel
+                                    value="Backup"
+                                    label="Bookmark backup"
+                                    control={<Radio color='primary' className={classes.dataSourceOptions} />}
+                                />
+                            </RadioGroup>
+                        }
+                    />
+                </FormControl>
+            </div>
+
             {
                 hasBookmarkData &&
                 <div className={classes.section}>
@@ -225,7 +268,7 @@ const Config = (props) => {
                         <span className={classes.statsLabel}>Timestamp:</span>
                         <span>
                             {
-                                DateTime.fromMillis(uploadTimestamp).toLocaleString({
+                                DateTime.fromMillis(bookmarkTimestamp).toLocaleString({
                                     ...DateTime.DATE_MED,
                                     ...DateTime.TIME_SIMPLE,
                                     month: 'long'
@@ -237,7 +280,40 @@ const Config = (props) => {
             }
 
             {
-                !SharedService.isMobile() &&
+                dataSource === 'Sync' &&
+                <div className={classes.section}>
+                    <Button variant='contained' size='small' color='primary' className={classes.actionButton} onClick={handleLogin}>
+                        Login
+                    </Button>
+
+                    {
+                        loginMode &&
+                        <div>
+                            <div>
+                                <span className={classes.statsLabel}>Last login</span>
+                                <span>
+                                    {
+                                        DateTime.fromMillis(lastLoginTimestamp).toLocaleString({
+                                            ...DateTime.DATE_MED,
+                                            ...DateTime.TIME_SIMPLE,
+                                            month: 'long'
+                                        })
+                                    }
+                                </span>
+                            </div>
+
+                            <div>
+                                <span className={classes.statsLabel}>Verified?</span>
+                                <span>{verified ? 'Yes' : 'No'}</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+            }
+
+            {
+                dataSource === 'Backup' && !SharedService.isMobile() &&
                 <div className={classes.section}>
                     {
                         selectedFile &&
@@ -272,7 +348,7 @@ const Config = (props) => {
                     variant='contained'
                     color='primary'
                     size='small'
-                    onClick={handleDownloadBookmarkData}>Refresh
+                    onClick={handleRefreshData}>Refresh
                 </Button>
             </div>
         </section>

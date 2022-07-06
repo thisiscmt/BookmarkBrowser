@@ -1,4 +1,3 @@
-import Axios from 'axios';
 import WebStorage from 'webStorage';
 
 class DataService {
@@ -160,33 +159,6 @@ class DataService {
 
         return currentBookmarks;
     };
-
-    uploadBookmarkData = (bookmarkData, authHeader) => {
-        const config = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': authHeader
-            }
-        };
-
-        const data = {
-            bookmarkData,
-            uploadTimestamp: new Date().getTime()
-        }
-
-        return Axios.post(process.env.REACT_APP_API_URL + '/bookmark', data, config)
-    };
-
-    downloadBookmarkData = (authHeader) => {
-        const config = {
-            headers: {
-                'Authorization': authHeader
-            }
-        };
-
-        return Axios.get(process.env.REACT_APP_API_URL + '/bookmark', config)
-    }
 }
 
 export default DataService;
-

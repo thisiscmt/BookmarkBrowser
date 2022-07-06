@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/styles';
 
 import { Context } from '../../stores/mainStore';
 import Bookmark from '../../components/Bookmark/Bookmark';
+import {TypeCodes} from '../../enums/TypeCodes';
 
 const styles = makeStyles({
     topLevelHeader: {
@@ -87,13 +88,13 @@ const Bookmarks = forwardRef((props, ref) => {
         <section style={ bookmarkToolbar.length === 0 ? bookmarkContainerStyles : null }>
             <ul className={classes.bookmarkList}>
                 {
-                    (topLevel === true) &&
+                    topLevel === true &&
                     <li className={classes.topLevelHeader}>Bookmarks Toolbar</li>
                 }
 
                 {
                     bookmarkToolbar.map((bookmark, index) => {
-                        return bookmark.type !== 'Separator' ? (
+                        return bookmark.typeCode !== TypeCodes.Separator ? (
                             <li key={index} className={classes.bookmark}>
                                 <Bookmark key={index} bookmark={bookmark}/>
                             </li>
@@ -102,13 +103,13 @@ const Bookmarks = forwardRef((props, ref) => {
                 }
 
                 {
-                    (topLevel === true) &&
+                    topLevel === true &&
                     <li className={classes.topLevelHeader}>Bookmarks Menu</li>
                 }
 
                 {
                     bookmarkMenu.map((bookmark, index) => {
-                        return bookmark.type !== 'Separator' ? (
+                        return bookmark.typeCode !== TypeCodes.Separator ? (
                             <li key={index} className={classes.bookmark}>
                                 <Bookmark key={index} bookmark={bookmark}/>
                             </li>

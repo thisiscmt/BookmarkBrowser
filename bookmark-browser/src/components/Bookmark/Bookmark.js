@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import { Context } from '../../stores/mainStore';
+import { TypeCodes } from '../../enums/TypeCodes';
 import folderImage from '../../images/folder.png';
 import bookmarkImage from '../../images/bookmark.png';
 
@@ -90,20 +91,21 @@ const Bookmark = (props) => {
             <div className={classes.imageBlock}>
                 <img
                     alt='Item icon'
-                    src={bookmark.type === 'Directory' ? folderImage : bookmarkImage}
-                    className={bookmark.type === 'Bookmark' ? classes.bookmarkImage : ''}
+                    src={bookmark.typeCode === TypeCodes.Directory ? folderImage : bookmarkImage}
+                    className={bookmark.typeCode === TypeCodes.Bookmark ? classes.bookmarkImage : ''}
                 />
             </div>
+
             <div className={classes.linkBlock}>
                 {
-                    (bookmark.type === 'Directory') &&
+                    bookmark.typeCode === TypeCodes.Directory &&
                     <button className={classes.bookmarkDirectoryLink} onClick={(event) => goToDirectory(event, bookmark)}>
                         <div className={classes.directoryBlock}>{bookmark.title}</div>
                     </button>
                 }
 
                 {
-                    (bookmark.type === 'Bookmark') &&
+                    bookmark.typeCode === TypeCodes.Bookmark &&
                     // Using the ref property to set the href is needed since the URL could be a bookmarklet, and React will eventually ban
                     // 'javascript:' type href values for anchors
                     // eslint-disable-next-line jsx-a11y/anchor-is-valid
