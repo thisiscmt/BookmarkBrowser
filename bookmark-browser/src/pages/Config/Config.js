@@ -8,10 +8,11 @@ import Radio from '@material-ui/core/Radio';
 import { makeStyles } from '@material-ui/styles';
 import {DateTime} from 'luxon';
 
-import SharedService from '../../services/SharedService';
 import { Context } from '../../stores/mainStore';
+import SharedService from '../../services/SharedService';
 import AuthService from '../../services/AuthService';
 import BookmarkService from '../../services/BookmarkService';
+import { DataSources } from '../../enums/DataSources';
 
 const styles = makeStyles({
     section: {
@@ -72,10 +73,11 @@ const Config = (props) => {
     );
     const [ password, setPassword ] = useState(state.dataService.getApplicationData('Password') ? '********' : '');
     const [ passwordChanged, setPasswordChanged ] = useState(false);
-    const [ dataSource, setDataSource ] = useState('Sync');
-    const [ loginMode, setLoginMode ] = useState(false);
-    const [ lastLoginTimestamp, setLastLoginTimestamp ] = useState(0);
+    const [ dataSource, setDataSource ] = useState(DataSources.Sync);
+    const [ lastLoginTimestamp, setLastLoginTimestamp ] = useState(null);
     const [ verified, setVerified ] = useState(false);
+    const [ sessionToken, setSessionToken ] = useState('');
+    const [ keyFetchToken, setKeyFetchToken ] = useState('');
     const [ selectedFile, setSelectedFile ] = useState(null);
     const [ hasBookmarkData, setHasBookmarkData ] = useState(!!state.dataService.getApplicationData('BookmarkData'));
     const [ bookmarkCount, setBookmarkCount ] = useState(state.dataService.getApplicationData('BookmarkCount') ?
@@ -109,10 +111,12 @@ const Config = (props) => {
     const handleLogin = async () => {
         const passwordToUse = passwordChanged ? password : state.dataService.getApplicationData('Password');
         const authHeader = 'Basic ' + window.btoa(userName + ':' + passwordToUse);
-        await AuthService.login(authHeader, 'login');
+        const loginResponse = await AuthService.login(authHeader);
 
-
-
+        setSessionToken(loginResponse.data.sessionToken);
+        setKeyFetchToken(loginResponse.data.keyFetchToken);
+        setVerified(loginResponse.data.verified);
+        setLastLoginTimestamp(loginResponse.data.authAt);
     };
 
     const handleUploadBookmarkData = () =>{
@@ -151,9 +155,20 @@ const Config = (props) => {
             dispatch({ type: 'SET_BANNER_MESSAGE', payload: '' });
             const passwordToUse = passwordChanged ? password : state.dataService.getApplicationData('Password');
             const authHeader = 'Basic ' + window.btoa(userName + ':' + passwordToUse);
+            let response;
 
             try {
-                const response = await BookmarkService.downloadBookmarkData(authHeader);
+                if (dataSource === DataSources.Sync) {
+                    if (!(sessionToken && keyFetchToken && verified)) {
+                        dispatch({ type: 'SET_BANNER_MESSAGE', payload: 'Login is required' });
+                        return;
+                    }
+
+                    response = await BookmarkService.getBookmarks(authHeader, sessionToken, keyFetchToken);
+                } else if (dataSource === DataSources.Backup) {
+                    response = await BookmarkService.downloadBookmarkData(authHeader);
+                }
+
                 const timestamp = Number(response.data.timestamp);
                 state.dataService.setApplicationData('UserName', userName);
 
@@ -241,12 +256,12 @@ const Config = (props) => {
                         control={
                             <RadioGroup row={true} name="DataSource" value={dataSource} onChange={event => setDataSource(event.target.value)}>
                                 <FormControlLabel
-                                    value="Sync"
+                                    value={DataSources.Sync}
                                     label="Sync"
                                     control={<Radio color='primary' className={classes.dataSourceOptions} />}
                                 />
                                 <FormControlLabel
-                                    value="Backup"
+                                    value={DataSources.Backup}
                                     label="Bookmark backup"
                                     control={<Radio color='primary' className={classes.dataSourceOptions} />}
                                 />
@@ -280,15 +295,15 @@ const Config = (props) => {
             }
 
             {
-                dataSource === 'Sync' &&
+                dataSource === DataSources.Sync &&
                 <div className={classes.section}>
                     <Button variant='contained' size='small' color='primary' className={classes.actionButton} onClick={handleLogin}>
                         Login
                     </Button>
 
                     {
-                        loginMode &&
-                        <div>
+                        lastLoginTimestamp &&
+                        <div className={classes.section}>
                             <div>
                                 <span className={classes.statsLabel}>Last login</span>
                                 <span>
@@ -313,7 +328,7 @@ const Config = (props) => {
             }
 
             {
-                dataSource === 'Backup' && !SharedService.isMobile() &&
+                dataSource === DataSources.Backup && !SharedService.isMobile() &&
                 <div className={classes.section}>
                     {
                         selectedFile &&

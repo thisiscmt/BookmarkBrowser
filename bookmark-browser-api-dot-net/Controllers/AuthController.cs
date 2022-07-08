@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Cors;
 
 using FxSyncNet;
 using FxSyncNet.Models;
@@ -13,8 +12,8 @@ namespace BookmarkBrowserAPI.Controllers
     public class AuthController : ControllerBase
     {
         #region Controller methods
-        [HttpPost("login")]
-        public IActionResult Login([FromHeader(Name = "authorization")] string authHeader, [FromQuery] string reason)
+        [HttpGet("login")]
+        public IActionResult Login([FromHeader(Name = "authorization")] string authHeader, [FromQuery] string reason = "login")
         {
             if (authHeader is null)
             {
