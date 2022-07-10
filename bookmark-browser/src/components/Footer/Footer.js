@@ -2,7 +2,7 @@ import {makeStyles} from '@material-ui/styles';
 import {Link} from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 
-const styles = makeStyles({
+const useStyles = makeStyles({
     footerContainer: {
         marginBottom: '20px'
     },
@@ -43,7 +43,7 @@ const styles = makeStyles({
 });
 
 const Footer = (props) => {
-    const classes = styles(props);
+    const classes = useStyles(props);
 
     return (
         <footer className={classes.footerContainer}>

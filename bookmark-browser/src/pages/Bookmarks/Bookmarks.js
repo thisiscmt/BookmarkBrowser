@@ -6,7 +6,7 @@ import Bookmark from '../../components/Bookmark/Bookmark';
 import {TypeCodes} from '../../enums/TypeCodes';
 import {AlertSeverity} from '../../enums/AlertSeverity';
 
-const styles = makeStyles({
+const useStyles = makeStyles({
     topLevelHeader: {
         backgroundColor: '#fadb4e',
         borderColor: '#f7c942',
@@ -56,7 +56,7 @@ const styles = makeStyles({
 });
 
 const Bookmarks = forwardRef((props, ref) => {
-    const classes = styles(props);
+    const classes = useStyles(props);
     const [state, dispatch] = useContext(Context);
     const dataService = state.dataService;
     const currentNavigation = state.currentNavigation;
@@ -83,10 +83,8 @@ const Bookmarks = forwardRef((props, ref) => {
         }
     }, [dataService, currentNavigation, ref, dispatch, setBookmarkToolbar, setBookmarkMenu, setTopLevel])
 
-    const bookmarkContainerStyles = {marginBottom: '16px'};
-
     return (
-        <section style={ bookmarkToolbar.length === 0 ? bookmarkContainerStyles : null }>
+        <section style={ bookmarkToolbar.length === 0 ? {marginBottom: '16px'} : null }>
             <ul className={classes.bookmarkList}>
                 {
                     topLevel === true &&

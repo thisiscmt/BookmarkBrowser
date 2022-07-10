@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
 import {makeStyles} from '@material-ui/styles';
 
-const styles = makeStyles({
+const useStyles = makeStyles({
     welcomeText: {
         marginTop: 0
     },
@@ -13,7 +13,7 @@ const styles = makeStyles({
 });
 
 const Home = (props) => {
-    const classes = styles(props);
+    const classes = useStyles(props);
 
     useEffect(() => {
         document.title = 'Home - Bookmark Browser';

@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/styles';
 import { Context } from '../../stores/mainStore';
 import SharedService from '../../services/SharedService';
 
-const styles = makeStyles({
+const useStyles = makeStyles({
     headerContainer: {
         backgroundColor: '#5e87b0',
         borderColor: '#456f9a',
@@ -43,7 +43,7 @@ const styles = makeStyles({
 });
 
 const Header = (props) => {
-    const classes = styles(props);
+    const classes = useStyles(props);
     const location = useLocation();
 
     const getCurrentPage = (location) => {

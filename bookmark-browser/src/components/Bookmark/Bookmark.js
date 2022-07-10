@@ -6,7 +6,7 @@ import { TypeCodes } from '../../enums/TypeCodes';
 import folderImage from '../../images/folder.png';
 import bookmarkImage from '../../images/bookmark.png';
 
-const styles = makeStyles({
+const useStyles = makeStyles({
     bookmarkBlock: {
         alignItems: 'center',
         display: 'flex',
@@ -69,7 +69,7 @@ const styles = makeStyles({
 });
 
 const Bookmark = (props) => {
-    const classes = styles(props);
+    const classes = useStyles(props);
     const bookmark = props.bookmark;
     const [, dispatch] = useContext(Context);
 

@@ -14,7 +14,7 @@ import BookmarkService from '../../services/BookmarkService';
 import { DataSources } from '../../enums/DataSources';
 import {AlertSeverity} from '../../enums/AlertSeverity';
 
-const styles = makeStyles({
+const useStyles = makeStyles({
     section: {
         marginTop: '16px'
     },
@@ -67,7 +67,7 @@ const styles = makeStyles({
 });
 
 const Config = (props) => {
-    const classes = styles(props);
+    const classes = useStyles(props);
     const [state, dispatch] = useContext(Context);
     const [ userName, setUserName ] = useState(state.dataService.getApplicationData('UserName') ?
         state.dataService.getApplicationData('UserName') :
