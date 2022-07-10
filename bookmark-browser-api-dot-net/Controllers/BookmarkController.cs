@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Text;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using FxSyncNet;
@@ -18,8 +16,7 @@ namespace BookmarkBrowserAPI.Controllers
 
         #region Controller methods
         [HttpGet]
-        public IActionResult GetBookmarks([FromHeader(Name = "authorization")] string authHeader, [FromQuery] string sessionToken, 
-                                          [FromQuery] string keyFetchToken)
+        public IActionResult GetBookmarks([FromHeader(Name = "authorization")] string authHeader)
         {
             var userVerification = VerifyUser(authHeader);
             {
@@ -33,7 +30,15 @@ namespace BookmarkBrowserAPI.Controllers
 
             try
             {
-                syncClient.OpenSyncAccount(user.Username, user.Password, keyFetchToken, sessionToken);
+                var creds = AuthHelpers.GetAutenticationCredentials(authHeader);
+
+                if (creds is null)
+                {
+                    return BadRequest("Missing authentication information");
+                }
+
+                var loginResponse = syncClient.Login(creds.Username, creds.Password, "login");
+                syncClient.OpenSyncAccount(user.Username, user.Password, loginResponse.KeyFetchToken, loginResponse.SessionToken);
                 IEnumerable<FxSyncNet.Models.Bookmark> bookmarks = syncClient.GetBookmarks();
 
                 var bookmarkData = BookmarkHelpers.BuildBookmarks(bookmarks);
@@ -56,11 +61,18 @@ namespace BookmarkBrowserAPI.Controllers
             }
             catch (AuthenticationException ex)
             {
-                return StatusCode(StatusCodes.Status400BadRequest, ServiceHelpers.GetExceptionMessage(ex));
+                return StatusCode(StatusCodes.Status403Forbidden, ServiceHelpers.GetExceptionMessage(ex));
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ServiceHelpers.GetExceptionMessage(ex));
+                if (ex.InnerException is not null && ex.InnerException!.GetType() == typeof(AuthenticationException))
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden, ServiceHelpers.GetExceptionMessage(ex));
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, ServiceHelpers.GetExceptionMessage(ex));
+                }
             }
             finally
             {

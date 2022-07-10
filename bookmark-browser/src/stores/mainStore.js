@@ -6,7 +6,8 @@ import DataService from '../services/DataService';
 const initialState = {
     dataService: new DataService(),
     currentNavigation: {},
-    bannerMessage: ''
+    bannerMessage: '',
+    bannerSeverity: ''
 };
 
 const Store = ({children}) => {

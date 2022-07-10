@@ -26,7 +26,7 @@ const Home = (props) => {
             </div>
 
             <div className={classes.content}>
-                This application provides an easy way to navigate through and use your Sync bookmarks on a mobile device.
+                This app provides an easy way to navigate through and use your Sync bookmarks on a mobile device.
             </div>
         </section>
     )

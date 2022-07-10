@@ -4,6 +4,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import {Context} from '../../stores/mainStore';
+import {AlertSeverity} from '../../enums/AlertSeverity';
 
 const styles = makeStyles({
     checkboxes: {
@@ -20,7 +21,7 @@ const Preferences = (props) => {
     const savePreferences = (event) => {
         setGoToLastKnownDirectory(event.target.checked);
         state.dataService.setApplicationData('LastKnownDirectoryOnStartup', event.target.checked);
-        dispatch({ type: 'SET_BANNER_MESSAGE', payload: 'Preferences saved'})
+        dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: 'Preferences saved', severity: AlertSeverity.Success} });
     }
 
     const [ goToLastKnownDirectory, setGoToLastKnownDirectory] = useState(state.dataService.getApplicationData('LastKnownDirectoryOnStartup'));

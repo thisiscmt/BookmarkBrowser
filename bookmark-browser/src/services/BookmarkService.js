@@ -1,15 +1,11 @@
 import Axios from 'axios';
 
 class BookmarkService {
-    static getBookmarks = (authHeader, sessionToken, keyFetchToken) => {
+    static getBookmarks = (authHeader) => {
         const config = {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': authHeader
-            },
-            params: {
-                sessionToken,
-                keyFetchToken
             }
         };
 

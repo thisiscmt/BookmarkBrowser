@@ -1,4 +1,4 @@
-﻿namespace BookmarkBrowserAPI.Models
+﻿namespace BookmarkBrowserAPI.Enums
 {
     public enum TypeCodes : int
     {

@@ -1,6 +1,7 @@
 import {useContext, useEffect, useState} from 'react';
 import { useLocation } from 'react-router-dom'
 import Button from '@material-ui/core/Button';
+import Alert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/styles';
 
 import { Context } from '../../stores/mainStore';
@@ -39,14 +40,6 @@ const styles = makeStyles({
         margin: '8px',
         padding: '8px 0 8px 0'
     },
-
-    msgPanel: {
-        color: 'red',
-        fontSize: '14px',
-        marginBottom: 0,
-        marginTop: '16px',
-        textAlign: 'center'
-    }
 });
 
 const Header = (props) => {
@@ -98,7 +91,7 @@ const Header = (props) => {
 
         setCurrentPage(newCurrentPage);
         setHeaderText(SharedService.getHeaderText(newCurrentPage, newCurrentDirectory));
-        dispatch({ type: 'SET_BANNER_MESSAGE', payload: ''})
+        dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: ''} })
     }, [location, currentNavigation, dataService, dispatch, setCurrentPage, setHeaderText]);
 
     const goToPriorLevel = () => {
@@ -141,9 +134,7 @@ const Header = (props) => {
 
             {
                 state.bannerMessage &&
-                <div className={classes.msgPanel}>
-                    {state.bannerMessage}
-                </div>
+                <Alert severity={state.bannerSeverity}>{state.bannerMessage}</Alert>
             }
         </header>
     );

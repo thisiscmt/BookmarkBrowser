@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 
+using BookmarkBrowserAPI.Enums;
+
 namespace BookmarkBrowserAPI.Models
 {
     public class Bookmark

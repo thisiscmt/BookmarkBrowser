@@ -10,9 +10,9 @@ import {DateTime} from 'luxon';
 
 import { Context } from '../../stores/mainStore';
 import SharedService from '../../services/SharedService';
-import AuthService from '../../services/AuthService';
 import BookmarkService from '../../services/BookmarkService';
 import { DataSources } from '../../enums/DataSources';
+import {AlertSeverity} from '../../enums/AlertSeverity';
 
 const styles = makeStyles({
     section: {
@@ -36,13 +36,15 @@ const styles = makeStyles({
     },
 
     statsLabel: {
-        textDecoration: 'underline',
+        fontSize: '0.875rem',
+        fontWeight: 'bold',
         marginRight: '12px'
     },
 
     fileUploadLabel: {
         cursor: 'pointer',
-        marginRight: '8px'
+        marginRight: '8px',
+        textDecoration: 'underline'
     },
 
     fileUploadInput: {
@@ -74,10 +76,6 @@ const Config = (props) => {
     const [ password, setPassword ] = useState(state.dataService.getApplicationData('Password') ? '********' : '');
     const [ passwordChanged, setPasswordChanged ] = useState(false);
     const [ dataSource, setDataSource ] = useState(DataSources.Sync);
-    const [ lastLoginTimestamp, setLastLoginTimestamp ] = useState(null);
-    const [ verified, setVerified ] = useState(false);
-    const [ sessionToken, setSessionToken ] = useState('');
-    const [ keyFetchToken, setKeyFetchToken ] = useState('');
     const [ selectedFile, setSelectedFile ] = useState(null);
     const [ hasBookmarkData, setHasBookmarkData ] = useState(!!state.dataService.getApplicationData('BookmarkData'));
     const [ bookmarkCount, setBookmarkCount ] = useState(state.dataService.getApplicationData('BookmarkCount') ?
@@ -108,21 +106,10 @@ const Config = (props) => {
         }
     };
 
-    const handleLogin = async () => {
-        const passwordToUse = passwordChanged ? password : state.dataService.getApplicationData('Password');
-        const authHeader = 'Basic ' + window.btoa(userName + ':' + passwordToUse);
-        const loginResponse = await AuthService.login(authHeader);
-
-        setSessionToken(loginResponse.data.sessionToken);
-        setKeyFetchToken(loginResponse.data.keyFetchToken);
-        setVerified(loginResponse.data.verified);
-        setLastLoginTimestamp(loginResponse.data.authAt);
-    };
-
     const handleUploadBookmarkData = () =>{
         if (userName && password) {
             const reader = new FileReader();
-            dispatch({ type: 'SET_BANNER_MESSAGE', payload: '' });
+            dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: ''} });
 
             reader.onload = async (event) => {
                 const passwordToUse = passwordChanged ? password : state.dataService.getApplicationData('Password');
@@ -137,34 +124,29 @@ const Config = (props) => {
                     }
 
                     setSelectedFile(null);
-                    dispatch({ type: 'SET_BANNER_MESSAGE', payload: 'Bookmark data uploaded successfully' });
+                    dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: 'Bookmark data uploaded successfully', severity: AlertSeverity.Success} });
                 } catch (error) {
-                    dispatch({ type: 'SET_BANNER_MESSAGE', payload: SharedService.getErrorMessage(error) });
+                    dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: SharedService.getErrorMessage(error), severity: AlertSeverity.Error} });
                 }
             };
 
             reader.readAsText(selectedFile);
         }
         else {
-            dispatch({ type: 'SET_BANNER_MESSAGE', payload: 'You must provide a user name and password' });
+            dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: 'You must provide a user name and password', severity: AlertSeverity.Warning} });
         }
     };
 
     const handleRefreshData = async () =>{
         if (userName && password) {
-            dispatch({ type: 'SET_BANNER_MESSAGE', payload: '' });
+            dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: ''} });
             const passwordToUse = passwordChanged ? password : state.dataService.getApplicationData('Password');
             const authHeader = 'Basic ' + window.btoa(userName + ':' + passwordToUse);
             let response;
 
             try {
                 if (dataSource === DataSources.Sync) {
-                    if (!(sessionToken && keyFetchToken && verified)) {
-                        dispatch({ type: 'SET_BANNER_MESSAGE', payload: 'Login is required' });
-                        return;
-                    }
-
-                    response = await BookmarkService.getBookmarks(authHeader, sessionToken, keyFetchToken);
+                    response = await BookmarkService.getBookmarks(authHeader);
                 } else if (dataSource === DataSources.Backup) {
                     response = await BookmarkService.downloadBookmarkData(authHeader);
                 }
@@ -183,13 +165,17 @@ const Config = (props) => {
                 setHasBookmarkData(true);
                 setBookmarkCount(response.data.count);
                 setBookmarkTimestamp(timestamp);
-                dispatch({ type: 'SET_BANNER_MESSAGE', payload: 'Bookmark data refreshed successfully' });
+                dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: 'Bookmark data refreshed successfully', severity: AlertSeverity.Success} });
             } catch (error) {
-                dispatch({ type: 'SET_BANNER_MESSAGE', payload: SharedService.getErrorMessage(error) });
+                if (error.response.status === 403) {
+                    dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: 'Please verify the current login', severity: AlertSeverity.Info} });
+                } else {
+                    dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: SharedService.getErrorMessage(error), severity: AlertSeverity.Error} });
+                }
             }
         }
         else {
-            dispatch({ type: 'SET_BANNER_MESSAGE', payload: 'You must provide a username and password' });
+            dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: 'You must provide a user name and password', severity: AlertSeverity.Warning} });
         }
     };
 
@@ -292,39 +278,6 @@ const Config = (props) => {
                         </span>
                     </div>
                 </div>
-            }
-
-            {
-                dataSource === DataSources.Sync &&
-                <div className={classes.section}>
-                    <Button variant='contained' size='small' color='primary' className={classes.actionButton} onClick={handleLogin}>
-                        Login
-                    </Button>
-
-                    {
-                        lastLoginTimestamp &&
-                        <div className={classes.section}>
-                            <div>
-                                <span className={classes.statsLabel}>Last login</span>
-                                <span>
-                                    {
-                                        DateTime.fromMillis(lastLoginTimestamp).toLocaleString({
-                                            ...DateTime.DATE_MED,
-                                            ...DateTime.TIME_SIMPLE,
-                                            month: 'long'
-                                        })
-                                    }
-                                </span>
-                            </div>
-
-                            <div>
-                                <span className={classes.statsLabel}>Verified?</span>
-                                <span>{verified ? 'Yes' : 'No'}</span>
-                            </div>
-                        </div>
-                    }
-                </div>
-
             }
 
             {

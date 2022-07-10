@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/styles';
 import { Context } from '../../stores/mainStore';
 import Bookmark from '../../components/Bookmark/Bookmark';
 import {TypeCodes} from '../../enums/TypeCodes';
+import {AlertSeverity} from '../../enums/AlertSeverity';
 
 const styles = makeStyles({
     topLevelHeader: {
@@ -78,7 +79,7 @@ const Bookmarks = forwardRef((props, ref) => {
             // way down in the list
             ref.current.scrollIntoView();
         } else {
-            dispatch({ type: 'SET_BANNER_MESSAGE', payload: 'Go to the Config page to refresh your bookmark data'})
+            dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: 'Go to the Config page to refresh your bookmark data', severity: AlertSeverity.Info} })
         }
     }, [dataService, currentNavigation, ref, dispatch, setBookmarkToolbar, setBookmarkMenu, setTopLevel])
 

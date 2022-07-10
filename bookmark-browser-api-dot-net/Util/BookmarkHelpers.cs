@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 
 using BookmarkBrowserAPI.Models;
+using BookmarkBrowserAPI.Enums;
 
 namespace BookmarkBrowserAPI.Util
 {
