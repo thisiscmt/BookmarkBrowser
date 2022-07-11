@@ -20,7 +20,7 @@ jobs:
       displayName: 'Install .NET Core SDK'
     - task: NuGetToolInstaller@1
       inputs:
-        versionSpec: 5.x
+        versionSpec: 6.x
     - task: NodeTool@0
       inputs:
         versionSpec: '16.x'
@@ -28,7 +28,7 @@ jobs:
     - task: DotNetCoreCLI@2
       inputs:
         command: "restore"
-        feedsToUse: "config"
+        feedsToUse: "select"
         projects: "**/*.csproj"
         includeNuGetOrg: true
       displayName: "Install API dependencies"
