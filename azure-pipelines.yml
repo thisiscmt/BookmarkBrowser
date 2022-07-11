@@ -18,20 +18,20 @@ jobs:
         version: $(dotNetVersion)
         includePreviewVersions: false
       displayName: 'Install .NET Core SDK'
-    - task: NuGetToolInstaller@1
-      inputs:
-        versionSpec: 6.x
+#    - task: NuGetToolInstaller@1
+#      inputs:
+#        versionSpec: 6.x
     - task: NodeTool@0
       inputs:
         versionSpec: '16.x'
       displayName: 'Install Node.js'
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: "restore"
-        feedsToUse: "select"
-        projects: "**/*.csproj"
-        includeNuGetOrg: true
-      displayName: "Install API dependencies"
+#    - task: DotNetCoreCLI@2
+#      inputs:
+#        command: "restore"
+#        feedsToUse: "select"
+#        projects: "**/*.csproj"
+#        includeNuGetOrg: true
+#      displayName: "Install API dependencies"
 #    - script: 
 #        dotnet restore
 #      displayName: "Install API dependencies"
