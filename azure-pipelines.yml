@@ -25,8 +25,7 @@ jobs:
     - task: DotNetCoreCLI@2
       inputs:
         command: "restore"
-        feedsToUse: "select"
-        feedRestore: "store/feedName"
+        feedsToUse: "config"
         projects: "**/*.csproj"
         includeNuGetOrg: true
       displayName: "Install API dependencies"
