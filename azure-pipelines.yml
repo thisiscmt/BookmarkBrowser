@@ -18,6 +18,9 @@ jobs:
         version: $(dotNetVersion)
         includePreviewVersions: false
       displayName: 'Install .NET Core SDK'
+    - task: NuGetToolInstaller@1
+      inputs:
+        versionSpec: 5.x
     - task: NodeTool@0
       inputs:
         versionSpec: '16.x'
@@ -29,6 +32,9 @@ jobs:
         projects: "**/*.csproj"
         includeNuGetOrg: true
       displayName: "Install API dependencies"
+#    - script: 
+#        dotnet restore
+#      displayName: "Install API dependencies"
     - script: |
         dotnet build --configuration $(buildConfiguration)
       workingDirectory: $(Build.SourcesDirectory)/bookmark-browser-api-dot-net
