@@ -22,7 +22,6 @@ jobs:
       inputs:
         versionSpec: '16.x'
       displayName: 'Install Node.js'
-    - task: NuGetAuthenticate@0
     - task: DotNetCoreCLI@2
       inputs:
         command: "restore"
