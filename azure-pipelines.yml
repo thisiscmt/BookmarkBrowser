@@ -18,31 +18,18 @@ jobs:
         version: $(dotNetVersion)
         includePreviewVersions: false
       displayName: 'Install .NET Core SDK'
-#    - task: NuGetToolInstaller@1
-#      inputs:
-#        versionSpec: 6.x
     - task: NodeTool@0
       inputs:
         versionSpec: '16.x'
       displayName: 'Install Node.js'
-#    - task: DotNetCoreCLI@2
-#      inputs:
-#        command: "restore"
-#        feedsToUse: "select"
-#        projects: "**/*.csproj"
-#        includeNuGetOrg: true
-#      displayName: "Install API dependencies"
-#    - script: 
-#        dotnet restore
-#      displayName: "Install API dependencies"
-    - script: |
-        dotnet build --configuration $(buildConfiguration)
-      workingDirectory: $(Build.SourcesDirectory)/bookmark-browser-api-dot-net
-      displayName: 'Build the API'
     - script: |
         npm install
       workingDirectory: $(Build.SourcesDirectory)/bookmark-browser
       displayName: 'Install UI dependencies'
+    - script: |
+        dotnet build --configuration $(buildConfiguration)
+      workingDirectory: $(Build.SourcesDirectory)/bookmark-browser-api-dot-net
+      displayName: 'Build the API'
     - script: |
         npm run build
       workingDirectory: $(Build.SourcesDirectory)/bookmark-browser
@@ -56,7 +43,7 @@ jobs:
         command: publish
         publishWebProjects: True
         workingDirectory: $(Build.SourcesDirectory)/bookmark-browser-api-dot-net
-        arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
+        arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)/bookmark-browser-api-$(Build.BuildId).zip'
         zipAfterPublish: True
       displayName: 'Create API artifact'
     - task: ArchiveFiles@2
@@ -66,16 +53,11 @@ jobs:
         archiveType: zip
         archiveFile: '$(Build.ArtifactStagingDirectory)/bookmark-browser-ui-$(Build.BuildId).zip'
       displayName: 'Create UI artifact'
-    - task: PublishPipelineArtifact@1
+    - task: PublishBuildArtifacts@1
       inputs:
-        targetPath: '$(Build.ArtifactStagingDirectory)'
-        artifactName: bookmark-browser-api-dot-net
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/bookmark-browser-api-$(Build.BuildId).zip'
+        ArtifactName: bookmark-browser-api-dot-net
       displayName: 'Publish API artifact'
-#    - task: PublishBuildArtifacts@1
-#      inputs:
-#        PathtoPublish: '$(Build.ArtifactStagingDirectory)/bookmark-browser-api-$(Build.BuildId).zip'
-#        ArtifactName: bookmark-browser-api
-#      displayName: 'Publish API artifact'
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)/bookmark-browser-ui-$(Build.BuildId).zip'
