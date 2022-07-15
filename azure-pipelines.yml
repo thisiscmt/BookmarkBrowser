@@ -43,7 +43,7 @@ jobs:
         command: publish
         publishWebProjects: True
         workingDirectory: $(Build.SourcesDirectory)/bookmark-browser-api-dot-net
-        arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)/bookmark-browser-api-$(Build.BuildId).zip'
+        arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)/bookmark-browser-api-dot-net.zip'
         zipAfterPublish: True
       displayName: 'Create API artifact'
     - task: ArchiveFiles@2
@@ -51,15 +51,15 @@ jobs:
         rootFolderOrFile: '$(Build.SourcesDirectory)/bookmark-browser/build'
         includeRootFolder: false
         archiveType: zip
-        archiveFile: '$(Build.ArtifactStagingDirectory)/bookmark-browser-ui-$(Build.BuildId).zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/bookmark-browser-ui.zip'
       displayName: 'Create UI artifact'
+#    - task: PublishBuildArtifacts@1
+#      inputs:
+#        PathtoPublish: '$(Build.ArtifactStagingDirectory)/bookmark-browser-api-$(Build.BuildId).zip'
+#        ArtifactName: bookmark-browser-api-dot-net
+#      displayName: 'Publish API artifact'
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/bookmark-browser-api-$(Build.BuildId).zip'
-        ArtifactName: bookmark-browser-api-dot-net
-      displayName: 'Publish API artifact'
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/bookmark-browser-ui-$(Build.BuildId).zip'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/bookmark-browser-ui.zip'
         ArtifactName: bookmark-browser-ui
       displayName: 'Publish UI artifact'
