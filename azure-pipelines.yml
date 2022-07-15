@@ -53,11 +53,11 @@ jobs:
         archiveType: zip
         archiveFile: '$(Build.ArtifactStagingDirectory)/bookmark-browser-ui.zip'
       displayName: 'Create UI artifact'
-#    - task: PublishBuildArtifacts@1
-#      inputs:
-#        PathtoPublish: '$(Build.ArtifactStagingDirectory)/bookmark-browser-api-$(Build.BuildId).zip'
-#        ArtifactName: bookmark-browser-api-dot-net
-#      displayName: 'Publish API artifact'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/bookmark-browser-api-dot-net.zip'
+        ArtifactName: bookmark-browser-api-dot-net
+      displayName: 'Publish API artifact'
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)/bookmark-browser-ui.zip'
