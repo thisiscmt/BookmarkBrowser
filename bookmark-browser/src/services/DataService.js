@@ -1,5 +1,7 @@
 import WebStorage from 'webStorage';
 
+import {TypeCodes} from '../enums/TypeCodes';
+
 class DataService {
     constructor() {
         this.appData = WebStorage.createInstance({
@@ -53,7 +55,7 @@ class DataService {
             directory = path.shift();
 
             for (let i = 0; i < items.length; i++) {
-                if (items[i].title === directory && items[i].type === 'Directory') {
+                if (items[i].title === directory && items[i].typeCode === TypeCodes.Directory) {
                     // We know to stop when we've found the final directory in the node's path
                     if (path.length === 0) {
                         bookmark = items[i];
