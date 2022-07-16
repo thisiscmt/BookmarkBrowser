@@ -20,7 +20,7 @@ const Home = (props) => {
     });
 
     return (
-        <section className='content-container'>
+        <main className='content-container'>
             <div>
                 <h3 className={classes.welcomeText}>Welcome to the Bookmark Browser</h3>
             </div>
@@ -28,7 +28,7 @@ const Home = (props) => {
             <div className={classes.content}>
                 This app provides an easy way to navigate through and use your Sync bookmarks on a mobile device.
             </div>
-        </section>
+        </main>
     )
 }
 

@@ -18,7 +18,7 @@ function App() {
     const topOfPageRef = useRef();
 
     return (
-        <section ref={topOfPageRef}>
+        <main ref={topOfPageRef}>
             <Store>
                 <BrowserRouter>
                     <Paper elevation={5}>
@@ -46,7 +46,7 @@ function App() {
                     </Paper>
                 </BrowserRouter>
             </Store>
-        </section>
+        </main>
     );
 }
 

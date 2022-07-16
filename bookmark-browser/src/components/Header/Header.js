@@ -2,6 +2,7 @@ import {useContext, useEffect, useState} from 'react';
 import { useLocation } from 'react-router-dom'
 import Button from '@material-ui/core/Button';
 import Alert from '@material-ui/lab/Alert';
+import Fade from '@material-ui/core/Fade';
 import { makeStyles } from '@material-ui/styles';
 
 import { Context } from '../../stores/mainStore';
@@ -134,7 +135,11 @@ const Header = (props) => {
 
             {
                 state.bannerMessage &&
-                <Alert severity={state.bannerSeverity}>{state.bannerMessage}</Alert>
+                <>
+                    <Fade in={state.bannerMessage}>
+                        <Alert severity={state.bannerSeverity}>{state.bannerMessage}</Alert>
+                    </Fade>
+                </>
             }
         </header>
     );

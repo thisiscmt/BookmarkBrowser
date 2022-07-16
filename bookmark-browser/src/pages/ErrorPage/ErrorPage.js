@@ -6,9 +6,9 @@ const ErrorPage = () => {
     });
 
     return (
-        <section style={{ textAlign: 'center' }}>
+        <main className='error-page'>
             <p>The page you are trying to reach can't be found</p>
-        </section>
+        </main>
     )
 }
 

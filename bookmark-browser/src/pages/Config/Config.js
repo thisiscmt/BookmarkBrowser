@@ -8,6 +8,7 @@ import Radio from '@material-ui/core/Radio';
 import { makeStyles } from '@material-ui/styles';
 import {DateTime} from 'luxon';
 
+import LoadingOverlay from '../../components/LoadingOverlay/LoadingOverlay';
 import { Context } from '../../stores/mainStore';
 import SharedService from '../../services/SharedService';
 import BookmarkService from '../../services/BookmarkService';
@@ -86,6 +87,7 @@ const Config = (props) => {
         state.dataService.getApplicationData('BookmarkTimestamp') :
         0
     );
+    const [ loading, setLoading ] = useState(false);
 
     useEffect(() => {
         document.title = 'Config - Bookmark Browser';
@@ -116,6 +118,7 @@ const Config = (props) => {
                 const authHeader = 'Basic ' + window.btoa(userName + ':' + passwordToUse);
 
                 try {
+                    setLoading(true);
                     await BookmarkService.uploadBookmarkData(event.target.result, authHeader);
                     state.dataService.setApplicationData('UserName', userName);
 
@@ -127,6 +130,8 @@ const Config = (props) => {
                     dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: 'Bookmark data uploaded successfully', severity: AlertSeverity.Success} });
                 } catch (error) {
                     dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: SharedService.getErrorMessage(error), severity: AlertSeverity.Error} });
+                } finally {
+                    setLoading(false);
                 }
             };
 
@@ -145,6 +150,8 @@ const Config = (props) => {
             let response;
 
             try {
+                setLoading(true);
+
                 if (dataSource === DataSources.Sync) {
                     response = await BookmarkService.getBookmarks(authHeader);
                 } else if (dataSource === DataSources.Backup) {
@@ -172,6 +179,8 @@ const Config = (props) => {
                 } else {
                     dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: SharedService.getErrorMessage(error), severity: AlertSeverity.Error} });
                 }
+            } finally {
+                setLoading(false);
             }
         }
         else {
@@ -180,7 +189,9 @@ const Config = (props) => {
     };
 
     return (
-        <section className='content-container'>
+        <main className='content-container loadable-container'>
+            <LoadingOverlay open={loading} />
+
             <div className={classes.section}>
                 <FormControl fullWidth={SharedService.isMobile()}>
                     <FormControlLabel
@@ -319,7 +330,7 @@ const Config = (props) => {
                     onClick={handleRefreshData}>Refresh
                 </Button>
             </div>
-        </section>
+        </main>
     );
 }
 

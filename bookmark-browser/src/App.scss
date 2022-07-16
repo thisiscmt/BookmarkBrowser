@@ -9,8 +9,16 @@ body {
 }
 
 .content-container {
-    margin-bottom: 16px;
-    margin-top: 16px;
+    padding-bottom: 16px;
+    padding-top: 16px;
+    text-align: center;
+}
+
+.loadable-container {
+    position: relative;
+}
+
+.error-page {
     text-align: center;
 }
 

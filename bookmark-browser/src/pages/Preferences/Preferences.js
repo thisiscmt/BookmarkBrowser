@@ -31,7 +31,7 @@ const Preferences = (props) => {
     });
 
     return (
-        <section className='content-container'>
+        <main className='content-container'>
             <div className='form-field'>
                 <FormControlLabel
                     classes={{
@@ -48,7 +48,7 @@ const Preferences = (props) => {
                     label='Go to last directory upon startup'
                 />
             </div>
-        </section>
+        </main>
     );
 }
 

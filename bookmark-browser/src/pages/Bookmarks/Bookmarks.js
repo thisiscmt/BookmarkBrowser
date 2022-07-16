@@ -84,7 +84,7 @@ const Bookmarks = forwardRef((props, ref) => {
     }, [dataService, currentNavigation, ref, dispatch, setBookmarkToolbar, setBookmarkMenu, setTopLevel])
 
     return (
-        <section style={ bookmarkToolbar.length === 0 ? {marginBottom: '16px'} : null }>
+        <main style={ bookmarkToolbar.length === 0 ? {marginBottom: '16px'} : null }>
             <ul className={classes.bookmarkList}>
                 {
                     topLevel === true &&
@@ -116,7 +116,7 @@ const Bookmarks = forwardRef((props, ref) => {
                     })
                 }
             </ul>
-        </section>
+        </main>
     );
 });
 
