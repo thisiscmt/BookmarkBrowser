@@ -4,11 +4,11 @@ This web application is for accessing Firefox bookmarks from a mobile device. It
 
 Version 1.0 was built on [KnockoutJS](http://knockoutjs.com/) and used the [FxSyncNet](https://github.com/pieterderycke/FxSyncNet) wrapper to access Sync storage directly, via an ASP.NET web API back end. Version 2.0 was based on [AngularJS](https://angularjs.org) and didn't attempt to connect to any Sync APIs. Instead it allowed you to upload a backup of your Firefox bookmarks in JSON form to a server, and then provided a way to download that data to your mobile device. The issue I kept running into was Mozilla would constantly change the login API such that I couldn't authenticate and grab bookmark data in the background.
 
-Version 3 is basically a tech stack upgrade: the front end is now based on [React.js](https://reactjs.org) and the back end has been ported to Node.js. All bookmark data is stored in browser storage to allow fast and easy navigation. The app also has an option to return to the last directory you were at in the bookmark hierarchy the next time you browse to the app.
+Version 3.5 is a tech stack upgrade and a return to accessing Sync services directly: the front end is now based on [React.js](https://reactjs.org) and the back end has been re-built as a [ASP.NET Core 6 web API](https://docs.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-6.0) service. All bookmark data is stored in browser storage to allow fast and easy navigation. The app also has an option to return to the last directory you were at in the bookmark hierarchy the next time you browse to the app.
 
 Future state:
 
-Mozilla has said they want to provide a nicer way for third-party apps to authenticate a Firefox account so they can access Sync data, likely via OAuth. I don't know the current state of play but it would be nice to avoid the extra steps to update the data on your device, as well as have the capability of adding a new bookmark via the app. Both of those features are on the roadmap.
+The back end is using legacy BrowserID support to access Sync services. It's possible to use OAuth for authentication but it would require coordination with Mozilla, which is far too great of a burden for me to try and use it. I plan to add the capability of adding a new bookmark via the app.
 
 Postscript:
 
