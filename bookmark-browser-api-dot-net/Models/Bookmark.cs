@@ -43,7 +43,7 @@ namespace BookmarkBrowserAPI.Models
         public string Type { get; set; }
 
         [JsonProperty("typeCode")]
-        public TypeCodes TypeCode { get; set; }
+        public Enums.TypeCode TypeCode { get; set; }
 
         [JsonProperty("uri")]
         public string Uri { get; set; }

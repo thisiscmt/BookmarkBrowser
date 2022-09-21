@@ -1,6 +1,6 @@
 ﻿namespace BookmarkBrowserAPI.Enums
 {
-    public enum TypeCodes : int
+    public enum TypeCode : int
     {
         Bookmark = 1,
         Directory = 2,

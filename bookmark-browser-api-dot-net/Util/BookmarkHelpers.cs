@@ -2,7 +2,6 @@
 using Newtonsoft.Json.Linq;
 
 using BookmarkBrowserAPI.Models;
-using BookmarkBrowserAPI.Enums;
 
 namespace BookmarkBrowserAPI.Util
 {
@@ -28,7 +27,7 @@ namespace BookmarkBrowserAPI.Util
                     Id = dir.Id,
                     Title = dir.Title,
                     Type = FxSyncNet.Models.BookmarkType.Folder.ToString(),
-                    TypeCode = TypeCodes.Directory
+                    TypeCode = Enums.TypeCode.Directory
                 });
             }
 
@@ -47,11 +46,11 @@ namespace BookmarkBrowserAPI.Util
                     {
                         Id = item.Id,
                         Title = item.Title,
-                        Uri = item.Uri.AbsoluteUri,
+                        Uri = item.Uri.AbsoluteUri.EndsWith("/") ? item.Uri.AbsoluteUri[..^1] : item.Uri.AbsoluteUri,
                         Type = item.Type.ToString(),
                         Tags = tags,
                         Keyword = item.Keyword ?? "",
-                        TypeCode = TypeCodes.Bookmark
+                        TypeCode = Enums.TypeCode.Bookmark
                     });
                 }
             }
@@ -77,7 +76,7 @@ namespace BookmarkBrowserAPI.Util
             {
                 Id = "Root",
                 Type = FxSyncNet.Models.BookmarkType.Folder.ToString(),
-                TypeCode = TypeCodes.Directory,
+                TypeCode = Enums.TypeCode.Directory,
                 Root = "placesRoot",
                 Path = "Root"
             };
@@ -106,7 +105,7 @@ namespace BookmarkBrowserAPI.Util
             // Remove any top-level directories that have no children (e.g. 'Other Bookmarks')
             for (int i = rootItem.Children.Count - 1; i >= 0; i--)
             {
-                if (rootItem.Children.ElementAt(i).TypeCode == TypeCodes.Directory && rootItem.Children.ElementAt(i).Children.Count == 0)
+                if (rootItem.Children.ElementAt(i).TypeCode == Enums.TypeCode.Directory && rootItem.Children.ElementAt(i).Children.Count == 0)
                 {
                     rootItem.Children.RemoveAt(i);
                 }
@@ -132,13 +131,13 @@ namespace BookmarkBrowserAPI.Util
             {
                 foreach (Bookmark item in dir.Children)
                 {
-                    if (item.TypeCode == TypeCodes.Directory)
+                    if (item.TypeCode == Enums.TypeCode.Directory)
                     {
                         item.Path = dir.Path + "\\" + item.Title;
                         newDir = item;
                         SetMetadata(ref newDir, ref bookmarkCount);
                     }
-                    else if (item.TypeCode == TypeCodes.Bookmark)
+                    else if (item.TypeCode == Enums.TypeCode.Bookmark)
                     {
                         bookmarkCount += 1;
                     }

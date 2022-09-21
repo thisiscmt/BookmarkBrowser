@@ -45,7 +45,7 @@ const Preferences = (props) => {
                             onChange={savePreferences}
                         />
                     }
-                    label='Go to last directory upon startup'
+                    label='Remember last known directory'
                 />
             </div>
         </main>
