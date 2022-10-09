@@ -46,5 +46,10 @@ namespace FxSyncNet
         {
             return Get<BasicStorageObject>("storage/" + storageObject, credential);
         }
+
+        public Task WriteStorageObject(string collection, BasicStorageObject storageObject)
+        {
+            return Put("storage/" + collection + "/" + storageObject.Id, storageObject, credential);
+        }
     }
 }

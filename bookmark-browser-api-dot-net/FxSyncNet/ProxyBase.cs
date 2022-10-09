@@ -71,6 +71,13 @@ namespace FxSyncNet
             return Task.Run(() => (TResponse)Execute(HttpMethod.Post, requestUri, jsonPayload, typeof(TResponse), authenticationHeader, null));
         }
 
+        protected Task Put(string requestUri, BasicStorageObject bso, HawkNet.HawkCredential credential)
+        {
+            string jsonPayload = GetJsonPayload(bso);
+            AuthenticationHeaderValue authenticationHeader = GetHawkAuthenticationHeader(HttpMethod.Put, requestUri, null, credential);
+            return Task.Run(() => Execute(HttpMethod.Put, requestUri, jsonPayload, null, authenticationHeader, null));
+        }
+
         private object Execute(HttpMethod method, string requestUri, string jsonPayload, Type responseType, AuthenticationHeaderValue authenticationHeader, string clientState)
         {
             HttpRequestMessage requestMessage = new HttpRequestMessage(method, requestUri);

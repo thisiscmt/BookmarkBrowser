@@ -60,5 +60,14 @@ namespace FxSyncNet
 
             return JsonConvert.DeserializeObject<T>(plaintext);
         }
+
+        public static T EncryptWbo(SyncKeys syncKeys, string payload)
+        {
+            BasicStorageObject bso = new BasicStorageObject();
+
+
+
+            return JsonConvert.SerializeObject(bso);
+        }
     }
 }

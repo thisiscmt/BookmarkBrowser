@@ -167,6 +167,40 @@ namespace BookmarkBrowserAPI.Controllers
 
             return Ok();
         }
+
+        [HttpPut("")]
+        public IActionResult AddBookmark([FromHeader(Name = "authorization")] string authHeader, [FromBody] JObject data)
+        {
+            var userVerification = VerifyUser(authHeader);
+
+            if (userVerification.User is null)
+            {
+                return userVerification.Reason!;
+            }
+
+            var user = userVerification.User;
+            SyncClient syncClient = new();
+
+            try
+            {
+                var creds = AuthHelpers.GetAutenticationCredentials(authHeader);
+
+                if (creds is null)
+                {
+                    return BadRequest("Missing authentication information");
+                }
+
+                var loginResponse = syncClient.Login(creds.Username, creds.Password, "login");
+                syncClient.OpenSyncAccount(user.Username, user.Password, loginResponse.KeyFetchToken, loginResponse.SessionToken);
+                syncClient.AddBookmark(data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+            return Ok();
+        }
         #endregion
 
         #region Private methods
