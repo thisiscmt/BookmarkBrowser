@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import Paper from '@material-ui/core/Paper';
+import {Paper} from '@material-ui/core';
 
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';

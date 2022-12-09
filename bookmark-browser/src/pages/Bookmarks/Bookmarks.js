@@ -1,4 +1,5 @@
 import { forwardRef, useContext, useEffect, useState } from 'react';
+import {Box} from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
 import { Context } from '../../stores/mainStore';
@@ -84,7 +85,7 @@ const Bookmarks = forwardRef((props, ref) => {
     }, [dataService, currentNavigation, ref, dispatch, setBookmarkToolbar, setBookmarkMenu, setTopLevel])
 
     return (
-        <main style={ bookmarkToolbar.length === 0 ? {marginBottom: '16px'} : null }>
+        <Box style={ bookmarkToolbar.length === 0 ? {marginBottom: '16px'} : null }>
             <ul className={classes.bookmarkList}>
                 {
                     topLevel === true &&
@@ -116,7 +117,7 @@ const Bookmarks = forwardRef((props, ref) => {
                     })
                 }
             </ul>
-        </main>
+        </Box>
     );
 });
 

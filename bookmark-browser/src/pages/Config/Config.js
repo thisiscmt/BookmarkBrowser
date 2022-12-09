@@ -1,10 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import Radio from '@material-ui/core/Radio';
+import {Box, Button, FormControl, FormControlLabel, Radio, RadioGroup, TextField} from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import {DateTime} from 'luxon';
 
@@ -189,7 +184,7 @@ const Config = (props) => {
     };
 
     return (
-        <main className='content-container loadable-container'>
+        <Box className='content-container loadable-container'>
             <LoadingOverlay open={loading} />
 
             <div className={classes.section}>
@@ -330,7 +325,7 @@ const Config = (props) => {
                     onClick={handleRefreshData}>Refresh
                 </Button>
             </div>
-        </main>
+        </Box>
     );
 }
 

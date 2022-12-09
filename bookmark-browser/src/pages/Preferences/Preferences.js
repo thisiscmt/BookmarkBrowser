@@ -1,7 +1,6 @@
 import {useContext, useEffect, useState} from 'react';
+import {Box, Checkbox, FormControlLabel} from '@material-ui/core';
 import {makeStyles} from '@material-ui/styles';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import {Context} from '../../stores/mainStore';
 import {AlertSeverity} from '../../enums/AlertSeverity';
@@ -31,7 +30,7 @@ const Preferences = (props) => {
     });
 
     return (
-        <main className='content-container'>
+        <Box className='content-container'>
             <div className='form-field'>
                 <FormControlLabel
                     classes={{
@@ -48,7 +47,7 @@ const Preferences = (props) => {
                     label='Remember last known directory'
                 />
             </div>
-        </main>
+        </Box>
     );
 }
 
