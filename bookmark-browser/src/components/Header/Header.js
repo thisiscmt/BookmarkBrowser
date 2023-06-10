@@ -6,7 +6,9 @@ import Fade from '@material-ui/core/Fade';
 import { makeStyles } from '@material-ui/styles';
 
 import { Context } from '../../stores/mainStore';
-import SharedService from '../../services/SharedService';
+import * as DataService from '../../services/dataService';
+import * as SharedService from '../../services/sharedService';
+import {STORAGE_CURRENT_DIRECTORY, STORAGE_CURRENT_NODE, STORAGE_PREFS_GO_TO_LAST_DIRECTORY} from '../../constants/constants';
 
 const useStyles = makeStyles({
     headerContainer: {
@@ -62,7 +64,6 @@ const Header = (props) => {
     const [ currentPage, setCurrentPage] = useState(getCurrentPage(location));
     const [ headerText, setHeaderText] = useState(SharedService.getHeaderText(currentPage, 'Root'));
     const [state, dispatch] = useContext(Context);
-    const dataService = state.dataService;
     const currentNavigation = state.currentNavigation;
 
     // We update various pieces of the UI and clear any previous banner message upon each route change
@@ -83,25 +84,25 @@ const Header = (props) => {
             }
         } else {
             // If there is no current nav data then we are at app startup, so we check if we should go to a saved current directory
-            const lastKnownDirectoryOnStartup = !!dataService.getApplicationData('LastKnownDirectoryOnStartup');
+            const lastKnownDirectoryOnStartup = !!DataService.getApplicationData(STORAGE_PREFS_GO_TO_LAST_DIRECTORY);
 
             if (lastKnownDirectoryOnStartup) {
-                newCurrentDirectory = dataService.getApplicationData('CurrentDirectory');
+                newCurrentDirectory = DataService.getApplicationData(STORAGE_CURRENT_DIRECTORY);
             }
         }
 
         setCurrentPage(newCurrentPage);
         setHeaderText(SharedService.getHeaderText(newCurrentPage, newCurrentDirectory));
         dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: ''} })
-    }, [location, currentNavigation, dataService, dispatch, setCurrentPage, setHeaderText]);
+    }, [location, currentNavigation, dispatch, setCurrentPage, setHeaderText]);
 
     const goToPriorLevel = () => {
         dispatch({
             type: 'SET_CURRENT_NAVIGATION',
             payload: {
                 action: 'GoToPriorLevel',
-                node: dataService.getSessionData('CurrentNode'),
-                directory: dataService.getSessionData('CurrentDirectory')
+                node: JSON.parse(DataService.getSessionData(STORAGE_CURRENT_NODE)),
+                directory: DataService.getSessionData(STORAGE_CURRENT_DIRECTORY)
             }
         });
     }
@@ -136,7 +137,7 @@ const Header = (props) => {
             {
                 state.bannerMessage &&
                 <>
-                    <Fade in={state.bannerMessage}>
+                    <Fade in={!!state.bannerMessage}>
                         <Alert severity={state.bannerSeverity}>{state.bannerMessage}</Alert>
                     </Fade>
                 </>

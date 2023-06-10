@@ -1,10 +1,11 @@
-import {useContext, useEffect, useState} from 'react';
-import {makeStyles} from '@material-ui/styles';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { useContext, useEffect, useState } from 'react';
+import { makeStyles } from '@material-ui/styles';
+import { Checkbox, FormControlLabel } from '@material-ui/core';
 
 import {Context} from '../../stores/mainStore';
+import * as DataService from '../../services/dataService';
 import {AlertSeverity} from '../../enums/AlertSeverity';
+import {STORAGE_PREFS_GO_TO_LAST_DIRECTORY} from '../../constants/constants';
 
 const styles = makeStyles({
     checkboxes: {
@@ -16,19 +17,18 @@ const styles = makeStyles({
 
 const Preferences = (props) => {
     const classes = styles(props);
-    const [state, dispatch] = useContext(Context);
-
-    const savePreferences = (event) => {
-        setGoToLastKnownDirectory(event.target.checked);
-        state.dataService.setApplicationData('LastKnownDirectoryOnStartup', event.target.checked);
-        dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: 'Preferences saved', severity: AlertSeverity.Success} });
-    }
-
-    const [ goToLastKnownDirectory, setGoToLastKnownDirectory] = useState(state.dataService.getApplicationData('LastKnownDirectoryOnStartup'));
+    const [ goToLastKnownDirectory, setGoToLastKnownDirectory] = useState(!!DataService.getApplicationData(STORAGE_PREFS_GO_TO_LAST_DIRECTORY));
+    const [, dispatch] = useContext(Context);
 
     useEffect(() => {
         document.title = 'Preferences - Bookmark Browser';
     });
+
+    const savePreferences = (event) => {
+        setGoToLastKnownDirectory(event.target.checked);
+        DataService.setApplicationData(STORAGE_PREFS_GO_TO_LAST_DIRECTORY, event.target.checked);
+        dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: 'Preferences saved', severity: AlertSeverity.Success} });
+    }
 
     return (
         <main className='content-container'>

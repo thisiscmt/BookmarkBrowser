@@ -3,8 +3,10 @@ import { makeStyles } from '@material-ui/styles';
 
 import { Context } from '../../stores/mainStore';
 import Bookmark from '../../components/Bookmark/Bookmark';
+import * as DataService from '../../services/dataService';
 import {TypeCodes} from '../../enums/TypeCodes';
 import {AlertSeverity} from '../../enums/AlertSeverity';
+import {STORAGE_BOOKMARK_DATA} from '../../constants/constants';
 
 const useStyles = makeStyles({
     topLevelHeader: {
@@ -57,19 +59,17 @@ const useStyles = makeStyles({
 
 const Bookmarks = forwardRef((props, ref) => {
     const classes = useStyles(props);
-    const [state, dispatch] = useContext(Context);
-    const dataService = state.dataService;
-    const currentNavigation = state.currentNavigation;
-
     const [ bookmarkToolbar, setBookmarkToolbar ] = useState([]);
     const [ bookmarkMenu, setBookmarkMenu ] = useState([]);
     const [ topLevel, setTopLevel ] = useState(false);
+    const [state, dispatch] = useContext(Context);
+    const currentNavigation = state.currentNavigation;
 
     useEffect(() => {
         document.title = 'Bookmarks - Bookmark Browser';
 
-        if (dataService.getApplicationData('BookmarkData')) {
-            const currentBookmarks = dataService.getCurrentBookmarks(currentNavigation)
+        if (DataService.getApplicationData(STORAGE_BOOKMARK_DATA)) {
+            const currentBookmarks = DataService.getCurrentBookmarks(currentNavigation)
 
             setBookmarkToolbar(currentBookmarks.bookmarkToolbar);
             setBookmarkMenu(currentBookmarks.bookmarkMenu);
@@ -81,10 +81,10 @@ const Bookmarks = forwardRef((props, ref) => {
         } else {
             dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: 'Go to the Config page to refresh your bookmark data', severity: AlertSeverity.Info} })
         }
-    }, [dataService, currentNavigation, ref, dispatch, setBookmarkToolbar, setBookmarkMenu, setTopLevel])
+    }, [currentNavigation, ref, dispatch, setBookmarkToolbar, setBookmarkMenu, setTopLevel])
 
     return (
-        <main style={ bookmarkToolbar.length === 0 ? {marginBottom: '16px'} : null }>
+        <main>
             <ul className={classes.bookmarkList}>
                 {
                     topLevel === true &&

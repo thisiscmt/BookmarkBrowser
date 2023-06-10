@@ -10,10 +10,18 @@ import {DateTime} from 'luxon';
 
 import LoadingOverlay from '../../components/LoadingOverlay/LoadingOverlay';
 import { Context } from '../../stores/mainStore';
-import SharedService from '../../services/SharedService';
-import BookmarkService from '../../services/BookmarkService';
+import * as SharedService from '../../services/sharedService';
+import * as DataService from '../../services/dataService';
+import * as BookmarkService from '../../services/bookmarkService';
 import { DataSources } from '../../enums/DataSources';
 import {AlertSeverity} from '../../enums/AlertSeverity';
+import {
+    STORAGE_BOOKMARK_COUNT,
+    STORAGE_BOOKMARK_DATA,
+    STORAGE_BOOKMARK_TIMESTAMP,
+    STORAGE_PASSWORD,
+    STORAGE_USER_NAME
+} from '../../constants/constants';
 
 const useStyles = makeStyles({
     section: {
@@ -25,11 +33,11 @@ const useStyles = makeStyles({
     },
 
     textFieldLabel: {
-        fontSize: '0.875rem',
-        fontWeight: 'bold',
+        fontSize: '14px',
+        fontWeight: 500,
         marginRight: '8px',
         minWidth: '90px',
-        textAlign: 'left'
+        textAlign: 'right'
     },
 
     dataSourceLabel: {
@@ -37,8 +45,8 @@ const useStyles = makeStyles({
     },
 
     statsLabel: {
-        fontSize: '0.875rem',
-        fontWeight: 'bold',
+        fontSize: '14px',
+        fontWeight: 500,
         marginRight: '12px'
     },
 
@@ -69,25 +77,22 @@ const useStyles = makeStyles({
 
 const Config = (props) => {
     const classes = useStyles(props);
-    const [state, dispatch] = useContext(Context);
-    const [ userName, setUserName ] = useState(state.dataService.getApplicationData('UserName') ?
-        state.dataService.getApplicationData('UserName') :
-        ''
-    );
-    const [ password, setPassword ] = useState(state.dataService.getApplicationData('Password') ? '********' : '');
+    const [ userName, setUserName ] = useState(DataService.getApplicationData(STORAGE_USER_NAME) ? DataService.getApplicationData(STORAGE_USER_NAME) : '');
+    const [ password, setPassword ] = useState(DataService.getApplicationData(STORAGE_PASSWORD) ? '********' : '');
     const [ passwordChanged, setPasswordChanged ] = useState(false);
     const [ dataSource, setDataSource ] = useState(DataSources.Sync);
     const [ selectedFile, setSelectedFile ] = useState(null);
-    const [ hasBookmarkData, setHasBookmarkData ] = useState(!!state.dataService.getApplicationData('BookmarkData'));
-    const [ bookmarkCount, setBookmarkCount ] = useState(state.dataService.getApplicationData('BookmarkCount') ?
-        state.dataService.getApplicationData('BookmarkCount') :
+    const [ hasBookmarkData, setHasBookmarkData ] = useState(!!DataService.getApplicationData(STORAGE_BOOKMARK_DATA));
+    const [ bookmarkCount, setBookmarkCount ] = useState(Number(DataService.getApplicationData(STORAGE_BOOKMARK_COUNT)) ?
+        Number(DataService.getApplicationData(STORAGE_BOOKMARK_COUNT)) :
         0
     );
-    const [ bookmarkTimestamp, setBookmarkTimestamp ] = useState(state.dataService.getApplicationData('BookmarkTimestamp') ?
-        state.dataService.getApplicationData('BookmarkTimestamp') :
+    const [ bookmarkTimestamp, setBookmarkTimestamp ] = useState(Number(DataService.getApplicationData(STORAGE_BOOKMARK_TIMESTAMP)) ?
+        Number(DataService.getApplicationData(STORAGE_BOOKMARK_TIMESTAMP)) :
         0
     );
     const [ loading, setLoading ] = useState(false);
+    const [, dispatch] = useContext(Context);
 
     useEffect(() => {
         document.title = 'Config - Bookmark Browser';
@@ -114,16 +119,16 @@ const Config = (props) => {
             dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: ''} });
 
             reader.onload = async (event) => {
-                const passwordToUse = passwordChanged ? password : state.dataService.getApplicationData('Password');
+                const passwordToUse = passwordChanged ? password : DataService.getApplicationData(STORAGE_PASSWORD);
                 const authHeader = 'Basic ' + window.btoa(userName + ':' + passwordToUse);
 
                 try {
                     setLoading(true);
                     await BookmarkService.uploadBookmarkData(event.target.result, authHeader);
-                    state.dataService.setApplicationData('UserName', userName);
+                    DataService.setApplicationData(STORAGE_USER_NAME, userName);
 
                     if (passwordChanged) {
-                        state.dataService.setApplicationData('Password', password);
+                        DataService.setApplicationData(STORAGE_PASSWORD, password);
                     }
 
                     setSelectedFile(null);
@@ -145,7 +150,7 @@ const Config = (props) => {
     const handleRefreshData = async () =>{
         if (userName && password) {
             dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: ''} });
-            const passwordToUse = passwordChanged ? password : state.dataService.getApplicationData('Password');
+            const passwordToUse = passwordChanged ? password : DataService.getApplicationData(STORAGE_PASSWORD);
             const authHeader = 'Basic ' + window.btoa(userName + ':' + passwordToUse);
             let response;
 
@@ -159,19 +164,20 @@ const Config = (props) => {
                 }
 
                 const timestamp = Number(response.data.timestamp);
-                state.dataService.setApplicationData('UserName', userName);
+                DataService.setApplicationData(STORAGE_USER_NAME, userName);
 
                 if (passwordChanged) {
-                    state.dataService.setApplicationData('Password', password);
+                    DataService.setApplicationData(STORAGE_PASSWORD, password);
                 }
 
-                state.dataService.setApplicationData('BookmarkData', response.data.bookmarkData);
-                state.dataService.setApplicationData('BookmarkCount', response.data.count);
-                state.dataService.setApplicationData('BookmarkTimestamp', timestamp);
+                DataService.setApplicationData(STORAGE_BOOKMARK_DATA, JSON.stringify(response.data.bookmarkData));
+                DataService.setApplicationData(STORAGE_BOOKMARK_COUNT, response.data.count);
+                DataService.setApplicationData(STORAGE_BOOKMARK_TIMESTAMP, timestamp);
 
                 setHasBookmarkData(true);
                 setBookmarkCount(response.data.count);
                 setBookmarkTimestamp(timestamp);
+
                 dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: 'Bookmark data refreshed successfully', severity: AlertSeverity.Success} });
             } catch (error) {
                 if (error.response.status === 403) {

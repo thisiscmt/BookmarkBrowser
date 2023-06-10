@@ -1,10 +1,8 @@
 import React, {createContext, useReducer} from 'react';
 
 import Reducer from './mainReducer'
-import DataService from '../services/DataService';
 
 const initialState = {
-    dataService: new DataService(),
     currentNavigation: {},
     bannerMessage: '',
     bannerSeverity: ''
