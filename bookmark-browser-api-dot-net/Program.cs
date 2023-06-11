@@ -48,6 +48,8 @@ builder.Services.Configure<RouteOptions>(options =>
     }
 );
 
+builder.WebHost.UseKestrel(option => option.AddServerHeader = false);
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -64,4 +66,11 @@ app.UseHttpsRedirection();
 app.UseCors();
 app.UseAuthorization();
 app.MapControllers();
+
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Add("Content-Security-Policy", "default-src 'self';");
+    await next();
+});
+
 app.Run();

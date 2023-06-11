@@ -17,7 +17,7 @@ namespace BookmarkBrowserAPI.Util
                                                             select b).ToList();
 
             IList<FxSyncNet.Models.Bookmark> items = (from b in bookmarks
-                                                      where b.Type == FxSyncNet.Models.BookmarkType.Bookmark
+                                                      where (b.Type == FxSyncNet.Models.BookmarkType.Bookmark || b.Type == FxSyncNet.Models.BookmarkType.Separator)
                                                       select b).ToList();
 
             foreach (FxSyncNet.Models.Bookmark dir in directories)
@@ -33,25 +33,41 @@ namespace BookmarkBrowserAPI.Util
 
             foreach (FxSyncNet.Models.Bookmark item in items)
             {
-                if (item.Uri != null)
+                if (item.Type == FxSyncNet.Models.BookmarkType.Separator)
                 {
-                    string tags = "";
-
-                    if (item.Tags != null)
-                    {
-                        tags = string.Join(", ", item.Tags);
-                    }
-
                     bookmarkIdMapping.Add(item.Id, new Bookmark
                     {
                         Id = item.Id,
-                        Title = item.Title,
-                        Uri = item.Uri.AbsoluteUri.EndsWith("/") ? item.Uri.AbsoluteUri[..^1] : item.Uri.AbsoluteUri,
+                        Title = "",
+                        Uri = "",
                         Type = item.Type.ToString(),
-                        Tags = tags,
-                        Keyword = item.Keyword ?? "",
-                        TypeCode = Enums.TypeCode.Bookmark
+                        Tags = "",
+                        Keyword = "",
+                        TypeCode = Enums.TypeCode.Separator
                     });
+                }
+                else
+                {
+                    if (item.Uri != null)
+                    {
+                        string tags = "";
+
+                        if (item.Tags != null)
+                        {
+                            tags = string.Join(", ", item.Tags);
+                        }
+
+                        bookmarkIdMapping.Add(item.Id, new Bookmark
+                        {
+                            Id = item.Id,
+                            Title = item.Title,
+                            Uri = item.Uri.AbsoluteUri.EndsWith("/") ? item.Uri.AbsoluteUri[..^1] : item.Uri.AbsoluteUri,
+                            Type = item.Type.ToString(),
+                            Tags = tags,
+                            Keyword = item.Keyword ?? "",
+                            TypeCode = Enums.TypeCode.Bookmark
+                        });
+                    }
                 }
             }
 

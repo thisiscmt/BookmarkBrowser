@@ -54,6 +54,10 @@ const useStyles = makeStyles({
         borderTopWidth: '1px',
         color: 'rgb(51, 51, 51)',
         textAlign: 'left'
+    },
+
+    separator: {
+        borderTop: '1px solid rgb(153, 153, 153)'
     }
 });
 
@@ -93,11 +97,21 @@ const Bookmarks = forwardRef((props, ref) => {
 
                 {
                     bookmarkToolbar.map((bookmark, index) => {
-                        return bookmark.typeCode !== TypeCodes.Separator ? (
-                            <li key={index} className={classes.bookmark}>
-                                <Bookmark key={index} bookmark={bookmark}/>
-                            </li>
-                        ) : ''
+                        let listElement;
+
+                        if (bookmark.typeCode === TypeCodes.Separator) {
+                            listElement = (
+                                <li key={index} className={classes.separator} />
+                            );
+                        } else {
+                            listElement = (
+                                <li key={index} className={classes.bookmark}>
+                                    <Bookmark key={index} bookmark={bookmark}/>
+                                </li>
+                            );
+                        }
+
+                        return listElement;
                     })
                 }
 
