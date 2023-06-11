@@ -57,7 +57,8 @@ const useStyles = makeStyles({
     },
 
     separator: {
-        borderTop: '1px solid rgb(153, 153, 153)'
+        borderTop: '1px solid rgb(153, 153, 153)',
+        borderBottom: '4px solid rgb(243, 243, 243)'
     }
 });
 
