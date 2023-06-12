@@ -8,7 +8,8 @@ import { makeStyles } from '@material-ui/styles';
 import { Context } from '../../stores/mainStore';
 import * as DataService from '../../services/dataService';
 import * as SharedService from '../../services/sharedService';
-import {STORAGE_CURRENT_DIRECTORY, STORAGE_CURRENT_NODE, STORAGE_PREFS_GO_TO_LAST_DIRECTORY} from '../../constants/constants';
+import { STORAGE_CURRENT_DIRECTORY, STORAGE_CURRENT_NODE, STORAGE_PREFS_GO_TO_LAST_DIRECTORY } from '../../constants/constants';
+import { colors } from '../../colors/colors';
 
 const useStyles = makeStyles({
     headerContainer: {
@@ -32,8 +33,8 @@ const useStyles = makeStyles({
     },
 
     navButton: {
-        background: '#396b9e',
-        borderColor: '#1f3a56',
+        background: colors.primaryBackground,
+        borderColor: colors.navLinkBorder,
         borderRadius: '4px',
         borderStyle: 'solid',
         borderWidth: '1px',
@@ -53,7 +54,7 @@ const Header = (props) => {
         let curPage = location.pathname.replace(/\//g, '');
 
         if (curPage) {
-            curPage = curPage[0].toUpperCase() + curPage.substr(1);
+            curPage = curPage[0].toUpperCase() + curPage.substring(1);
         } else {
             curPage = 'Home';
         }

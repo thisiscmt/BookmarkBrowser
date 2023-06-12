@@ -2,6 +2,8 @@ import {Link} from 'react-router-dom';
 import { Button } from '@material-ui/core';
 import {makeStyles} from '@material-ui/styles';
 
+import { colors } from '../../colors/colors';
+
 const useStyles = makeStyles({
     footerContainer: {
         marginBottom: '20px'
@@ -20,8 +22,8 @@ const useStyles = makeStyles({
     },
 
     footerLink: {
-        background: '#396B9E',
-        borderColor: '#1F3A56',
+        background: colors.primaryBackground,
+        borderColor: colors.navLinkBorder,
         borderWidth: '1px',
         borderRadius: '2px',
         borderStyle: 'solid',

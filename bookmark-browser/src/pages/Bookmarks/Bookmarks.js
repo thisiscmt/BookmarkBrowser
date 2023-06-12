@@ -4,9 +4,10 @@ import { makeStyles } from '@material-ui/styles';
 import { Context } from '../../stores/mainStore';
 import Bookmark from '../../components/Bookmark/Bookmark';
 import * as DataService from '../../services/dataService';
-import {TypeCodes} from '../../enums/TypeCodes';
-import {AlertSeverity} from '../../enums/AlertSeverity';
-import {STORAGE_BOOKMARK_DATA} from '../../constants/constants';
+import { TypeCodes } from '../../enums/TypeCodes';
+import { AlertSeverity } from '../../enums/AlertSeverity';
+import { STORAGE_BOOKMARK_DATA } from '../../constants/constants';
+import { colors } from '../../colors/colors';
 
 const useStyles = makeStyles({
     topLevelHeader: {
@@ -32,7 +33,7 @@ const useStyles = makeStyles({
     bookmark: {
         backgroundAttachment: 'scroll',
         backgroundClip: 'border-box',
-        backgroundColor: 'rgb(243, 243, 243)',
+        backgroundColor: colors.bookmarkBackground,
         backgroundImage: 'none',
         backgroundOrigin: 'padding-box',
         backgroundPosition: '0% 0%',
@@ -40,16 +41,16 @@ const useStyles = makeStyles({
         backgroundPositionY: '0%',
         backgroundRepeat: 'repeat',
         backgroundSize: 'auto auto',
-        borderBottomColor: 'rgb(153, 153, 153)',
+        borderBottomColor: colors.bookmarkBorder,
         borderBottomStyle: 'solid',
         borderBottomWidth: 0,
-        borderLeftColor: 'rgb(153, 153, 153)',
+        borderLeftColor: colors.bookmarkBorder,
         borderLeftStyle: 'solid',
         borderLeftWidth: 0,
-        borderRightColor: 'rgb(153, 153, 153)',
+        borderRightColor: colors.bookmarkBorder,
         borderRightStyle: 'solid',
         borderRightWidth: 0,
-        borderTopColor: 'rgb(153, 153, 153)',
+        borderTopColor: colors.bookmarkBorder,
         borderTopStyle: 'solid',
         borderTopWidth: '1px',
         color: 'rgb(51, 51, 51)',
@@ -57,8 +58,8 @@ const useStyles = makeStyles({
     },
 
     separator: {
-        borderTop: '1px solid rgb(153, 153, 153)',
-        borderBottom: '4px solid rgb(243, 243, 243)'
+        borderTop: `1px solid ${colors.bookmarkBorder}`,
+        borderBottom: `4px solid ${colors.bookmarkBackground}`
     }
 });
 

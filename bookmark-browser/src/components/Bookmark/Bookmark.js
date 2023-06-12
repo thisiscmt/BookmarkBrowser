@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/styles';
 
 import { Context } from '../../stores/mainStore';
 import { TypeCodes } from '../../enums/TypeCodes';
+import { colors } from '../../colors/colors';
 import folderImage from '../../images/folder.png';
 import bookmarkImage from '../../images/bookmark.png';
 
@@ -13,7 +14,7 @@ const useStyles = makeStyles({
 
         '& a': {
             '&:link, &:visited, &:active': {
-                color: '#337ab7'
+                color: colors.bookmarkLink
             },
 
             '&:hover': {
@@ -59,7 +60,7 @@ const useStyles = makeStyles({
     bookmarkDirectoryLink: {
         backgroundColor: 'transparent',
         border: 0,
-        color: '#337ab7',
+        color: colors.bookmarkLink,
         cursor: 'pointer',
         outline: 'none',
         padding: 0,

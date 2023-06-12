@@ -28,7 +28,7 @@ export const getDirectoryFromPath = (path) => {
     const index = path.lastIndexOf('\\');
 
     if (index > -1) {
-        return path.substr(index + 1);
+        return path.substring(index + 1);
     }
     else {
         return path;

@@ -14,7 +14,7 @@ import * as SharedService from '../../services/sharedService';
 import * as DataService from '../../services/dataService';
 import * as BookmarkService from '../../services/bookmarkService';
 import { DataSources } from '../../enums/DataSources';
-import {AlertSeverity} from '../../enums/AlertSeverity';
+import { AlertSeverity } from '../../enums/AlertSeverity';
 import {
     STORAGE_BOOKMARK_COUNT,
     STORAGE_BOOKMARK_DATA,
@@ -22,6 +22,7 @@ import {
     STORAGE_PASSWORD,
     STORAGE_USER_NAME
 } from '../../constants/constants';
+import { colors } from '../../colors/colors';
 
 const useStyles = makeStyles({
     section: {
@@ -71,7 +72,7 @@ const useStyles = makeStyles({
     },
 
     actionButton: {
-        backgroundColor: '#396B9E'
+        backgroundColor: colors.primaryBackground
     }
 });
 
