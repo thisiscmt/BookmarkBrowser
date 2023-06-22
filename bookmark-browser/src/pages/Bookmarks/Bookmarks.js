@@ -89,6 +89,24 @@ const Bookmarks = forwardRef((props, ref) => {
         }
     }, [currentNavigation, ref, dispatch, setBookmarkToolbar, setBookmarkMenu, setTopLevel])
 
+    const getBookmarkElement = (bookmark, index) => {
+        let listElement;
+
+        if (bookmark.typeCode === TypeCodes.Separator) {
+            listElement = (
+                <li key={index} className={classes.separator} />
+            );
+        } else {
+            listElement = (
+                <li key={index} className={classes.bookmark}>
+                    <Bookmark key={index} bookmark={bookmark}/>
+                </li>
+            );
+        }
+
+        return listElement;
+    };
+
     return (
         <main>
             <ul className={classes.bookmarkList}>
@@ -96,24 +114,9 @@ const Bookmarks = forwardRef((props, ref) => {
                     topLevel === true &&
                     <li className={classes.topLevelHeader}>Bookmarks Toolbar</li>
                 }
-
                 {
                     bookmarkToolbar.map((bookmark, index) => {
-                        let listElement;
-
-                        if (bookmark.typeCode === TypeCodes.Separator) {
-                            listElement = (
-                                <li key={index} className={classes.separator} />
-                            );
-                        } else {
-                            listElement = (
-                                <li key={index} className={classes.bookmark}>
-                                    <Bookmark key={index} bookmark={bookmark}/>
-                                </li>
-                            );
-                        }
-
-                        return listElement;
+                        return getBookmarkElement(bookmark, index);
                     })
                 }
 
@@ -121,14 +124,9 @@ const Bookmarks = forwardRef((props, ref) => {
                     topLevel === true &&
                     <li className={classes.topLevelHeader}>Bookmarks Menu</li>
                 }
-
                 {
                     bookmarkMenu.map((bookmark, index) => {
-                        return bookmark.typeCode !== TypeCodes.Separator ? (
-                            <li key={index} className={classes.bookmark}>
-                                <Bookmark key={index} bookmark={bookmark}/>
-                            </li>
-                        ) : ''
+                        return getBookmarkElement(bookmark, index);
                     })
                 }
             </ul>
