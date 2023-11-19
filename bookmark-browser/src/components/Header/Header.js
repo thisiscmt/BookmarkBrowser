@@ -1,9 +1,7 @@
-import {useContext, useEffect, useState} from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom'
-import Button from '@material-ui/core/Button';
-import Alert from '@material-ui/lab/Alert';
-import Fade from '@material-ui/core/Fade';
-import { makeStyles } from '@material-ui/styles';
+import { Alert, Button, Fade } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 
 import { Context } from '../../stores/mainStore';
 import * as DataService from '../../services/dataService';
@@ -11,7 +9,7 @@ import * as SharedService from '../../services/sharedService';
 import { STORAGE_CURRENT_DIRECTORY, STORAGE_CURRENT_NODE, STORAGE_PREFS_GO_TO_LAST_DIRECTORY } from '../../constants/constants';
 import { colors } from '../../colors/colors';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles()(() => ({
     headerContainer: {
         backgroundColor: '#5e87b0',
         borderColor: '#456f9a',
@@ -44,10 +42,10 @@ const useStyles = makeStyles({
         margin: '8px',
         padding: '8px 0 8px 0'
     },
-});
+}));
 
 const Header = (props) => {
-    const classes = useStyles(props);
+    const { classes, cx } = useStyles(props);
     const location = useLocation();
 
     const getCurrentPage = (location) => {
@@ -121,17 +119,17 @@ const Header = (props) => {
 
     return (
         <header>
-            <div data-testid="header-container" className={classes.headerContainer}>
+            <div data-testid="header-container" className={cx(classes.headerContainer)}>
                 {
                     (currentPage === 'Bookmarks') &&
-                    <Button id='BackButton' className={classes.navButton} onClick={goToPriorLevel}>Back</Button>
+                    <Button id='BackButton' className={cx(classes.navButton)} onClick={goToPriorLevel}>Back</Button>
                 }
 
-                <h5 className={classes.headerText}>{headerText}</h5>
+                <h5 className={cx(classes.headerText)}>{headerText}</h5>
 
                 {
                     (currentPage === 'Bookmarks') &&
-                    <Button id='GoToTopButton' className={classes.navButton} onClick={goToTop}>Top</Button>
+                    <Button id='GoToTopButton' className={cx(classes.navButton)} onClick={goToTop}>Top</Button>
                 }
             </div>
 

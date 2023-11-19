@@ -1,10 +1,10 @@
-import {Link} from 'react-router-dom';
-import { Button } from '@material-ui/core';
-import {makeStyles} from '@material-ui/styles';
+import { Link } from 'react-router-dom';
+import { Button } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 
 import { colors } from '../../colors/colors';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles()(() => ({
     footerContainer: {
         marginBottom: '20px'
     },
@@ -42,19 +42,19 @@ const useStyles = makeStyles({
             background: '#417BB5'
         }
     }
-});
+}));
 
 const Footer = (props) => {
-    const classes = useStyles(props);
+    const { classes, cx } = useStyles(props);
 
     return (
-        <footer className={classes.footerContainer}>
-            <ul className={classes.footerList}>
+        <footer className={cx(classes.footerContainer)}>
+            <ul className={cx(classes.footerList)}>
                 <li>
                     <Button
                         component={Link}
                         to='/'
-                        className={classes.footerLink}
+                        className={cx(classes.footerLink)}
                         variant='outlined'
                         disableRipple={true}
                     >
@@ -65,7 +65,7 @@ const Footer = (props) => {
                     <Button
                         component={Link}
                         to='/bookmarks'
-                        className={classes.footerLink}
+                        className={cx(classes.footerLink)}
                         variant='outlined'
                         disableRipple={true}
                     >
@@ -76,7 +76,7 @@ const Footer = (props) => {
                     <Button
                         component={Link}
                         to='/preferences'
-                        className={classes.footerLink}
+                        className={cx(classes.footerLink)}
                         variant='outlined'
                         disableRipple={true}
                     >
@@ -87,7 +87,7 @@ const Footer = (props) => {
                     <Button
                         component={Link}
                         to='/config'
-                        className={classes.footerLink}
+                        className={cx(classes.footerLink)}
                         variant='outlined'
                         disableRipple={true}
                     >

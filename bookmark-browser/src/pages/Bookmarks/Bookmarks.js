@@ -1,5 +1,5 @@
 import { forwardRef, useContext, useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from 'tss-react/mui';
 
 import { Context } from '../../stores/mainStore';
 import Bookmark from '../../components/Bookmark/Bookmark';
@@ -9,7 +9,7 @@ import { AlertSeverity } from '../../enums/AlertSeverity';
 import { STORAGE_BOOKMARK_DATA } from '../../constants/constants';
 import { colors } from '../../colors/colors';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles()(() => ({
     topLevelHeader: {
         backgroundColor: '#fadb4e',
         borderColor: '#f7c942',
@@ -61,10 +61,10 @@ const useStyles = makeStyles({
         borderTop: `1px solid ${colors.bookmarkBorder}`,
         borderBottom: `4px solid ${colors.bookmarkBackground}`
     }
-});
+}));
 
 const Bookmarks = forwardRef((props, ref) => {
-    const classes = useStyles(props);
+    const { classes, cx } = useStyles(props);
     const [ bookmarkToolbar, setBookmarkToolbar ] = useState([]);
     const [ bookmarkMenu, setBookmarkMenu ] = useState([]);
     const [ topLevel, setTopLevel ] = useState(false);
@@ -94,11 +94,11 @@ const Bookmarks = forwardRef((props, ref) => {
 
         if (bookmark.typeCode === TypeCodes.Separator) {
             listElement = (
-                <li key={index} className={classes.separator} />
+                <li key={index} className={cx(classes.separator)} />
             );
         } else {
             listElement = (
-                <li key={index} className={classes.bookmark}>
+                <li key={index} className={cx(classes.bookmark)}>
                     <Bookmark key={index} bookmark={bookmark}/>
                 </li>
             );
@@ -108,11 +108,11 @@ const Bookmarks = forwardRef((props, ref) => {
     };
 
     return (
-        <main>
-            <ul className={classes.bookmarkList}>
+        <div>
+            <ul className={cx(classes.bookmarkList)}>
                 {
                     topLevel === true &&
-                    <li className={classes.topLevelHeader}>Bookmarks Toolbar</li>
+                    <li className={cx(classes.topLevelHeader)}>Bookmarks Toolbar</li>
                 }
                 {
                     bookmarkToolbar.map((bookmark, index) => {
@@ -122,7 +122,7 @@ const Bookmarks = forwardRef((props, ref) => {
 
                 {
                     topLevel === true &&
-                    <li className={classes.topLevelHeader}>Bookmarks Menu</li>
+                    <li className={cx(classes.topLevelHeader)}>Bookmarks Menu</li>
                 }
                 {
                     bookmarkMenu.map((bookmark, index) => {
@@ -130,7 +130,7 @@ const Bookmarks = forwardRef((props, ref) => {
                     })
                 }
             </ul>
-        </main>
+        </div>
     );
 });
 

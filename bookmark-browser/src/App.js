@@ -1,6 +1,6 @@
 import { useRef } from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import Paper from '@material-ui/core/Paper';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Paper } from '@mui/material';
 
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
@@ -24,23 +24,13 @@ function App() {
                     <Paper elevation={5}>
                         <Header />
 
-                        <Switch>
-                            <Route exact path='/'>
-                                <Home />
-                            </Route>
-                            <Route exact path='/bookmarks'>
-                                <Bookmarks ref={topOfPageRef} />
-                            </Route>
-                            <Route exact path='/preferences'>
-                                <Preferences />
-                            </Route>
-                            <Route exact path='/config'>
-                                <Config />
-                            </Route>
-                            <Route>
-                                <ErrorPage />
-                            </Route>
-                        </Switch>
+                        <Routes>
+                            <Route path='/' element={<Home />} />
+                            <Route path='/bookmarks' element={<Bookmarks ref={topOfPageRef} />} />
+                            <Route path='/preferences' element={<Preferences />} />
+                            <Route path='/config' element={<Config />} />
+                            <Route path='*' element={<ErrorPage />} />
+                        </Routes>
 
                         <Footer/>
                     </Paper>

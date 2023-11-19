@@ -1,12 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import Radio from '@material-ui/core/Radio';
-import { makeStyles } from '@material-ui/styles';
-import {DateTime} from 'luxon';
+import { Button, Fade, FormControl, FormControlLabel, Radio, RadioGroup, TextField } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
+import { DateTime } from 'luxon';
 
 import LoadingOverlay from '../../components/LoadingOverlay/LoadingOverlay';
 import { Context } from '../../stores/mainStore';
@@ -24,7 +19,7 @@ import {
 } from '../../constants/constants';
 import { colors } from '../../colors/colors';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles()(() => ({
     section: {
         marginTop: '16px'
     },
@@ -53,7 +48,7 @@ const useStyles = makeStyles({
 
     fileUploadLabel: {
         cursor: 'pointer',
-        marginRight: '8px',
+        marginRight: '12px',
         textDecoration: 'underline'
     },
 
@@ -67,17 +62,16 @@ const useStyles = makeStyles({
     },
 
     dataSourceOptions: {
-        paddingBottom: '2px',
-        paddingTop: '2px'
+        padding: '5px'
     },
 
     actionButton: {
         backgroundColor: colors.primaryBackground
     }
-});
+}));
 
 const Config = (props) => {
-    const classes = useStyles(props);
+    const { classes, cx } = useStyles(props);
     const [ userName, setUserName ] = useState(DataService.getApplicationData(STORAGE_USER_NAME) ? DataService.getApplicationData(STORAGE_USER_NAME) : '');
     const [ password, setPassword ] = useState(DataService.getApplicationData(STORAGE_PASSWORD) ? '********' : '');
     const [ passwordChanged, setPasswordChanged ] = useState(false);
@@ -199,10 +193,10 @@ const Config = (props) => {
         <main className='content-container loadable-container'>
             <LoadingOverlay open={loading} />
 
-            <div className={classes.section}>
+            <div className={cx(classes.section)}>
                 <FormControl fullWidth={SharedService.isMobile()}>
                     <FormControlLabel
-                        classes={{ root: classes.textFieldLabelRoot, label: classes.textFieldLabel }}
+                        classes={{ root: cx(classes.textFieldLabelRoot), label: cx(classes.textFieldLabel) }}
                         labelPlacement='start'
                         label='User name:'
                         control={
@@ -225,10 +219,10 @@ const Config = (props) => {
                 </FormControl>
             </div>
 
-            <div className={classes.section}>
+            <div className={cx(classes.section)}>
                 <FormControl fullWidth={SharedService.isMobile()}>
                     <FormControlLabel
-                        classes={{ root: classes.textFieldLabelRoot, label: classes.textFieldLabel }}
+                        classes={{ root: cx(classes.textFieldLabelRoot), label: cx(classes.textFieldLabel) }}
                         labelPlacement='start'
                         label='Password:'
                         control={
@@ -251,10 +245,10 @@ const Config = (props) => {
                 </FormControl>
             </div>
 
-            <div className={classes.section}>
+            <div className={cx(classes.section)}>
                 <FormControl fullWidth={SharedService.isMobile()}>
                     <FormControlLabel
-                        classes={{ root: classes.textFieldLabelRoot, label: `${classes.textFieldLabel} ${classes.dataSourceLabel}` }}
+                        classes={{ root: cx(classes.textFieldLabelRoot), label: `${cx(classes.textFieldLabel)} ${cx(classes.dataSourceLabel)}` }}
                         labelPlacement='start'
                         label='Data source:'
                         control={
@@ -262,12 +256,12 @@ const Config = (props) => {
                                 <FormControlLabel
                                     value={DataSources.Sync}
                                     label="Sync"
-                                    control={<Radio color='primary' className={classes.dataSourceOptions} />}
+                                    control={<Radio color='primary' className={cx(classes.dataSourceOptions)} />}
                                 />
                                 <FormControlLabel
                                     value={DataSources.Backup}
                                     label="Bookmark backup"
-                                    control={<Radio color='primary' className={classes.dataSourceOptions} />}
+                                    control={<Radio color='primary' className={cx(classes.dataSourceOptions)} />}
                                 />
                             </RadioGroup>
                         }
@@ -277,14 +271,14 @@ const Config = (props) => {
 
             {
                 hasBookmarkData &&
-                <div className={classes.section}>
+                <div className={cx(classes.section)}>
                     <div>
-                        <span className={classes.statsLabel}>Bookmarks:</span>
+                        <span className={cx(classes.statsLabel)}>Bookmarks:</span>
                         <span>{bookmarkCount.toLocaleString('en')}</span>
                     </div>
 
                     <div>
-                        <span className={classes.statsLabel}>Timestamp:</span>
+                        <span className={cx(classes.statsLabel)}>Timestamp:</span>
                         <span>
                             {
                                 DateTime.fromMillis(bookmarkTimestamp).toLocaleString({
@@ -300,37 +294,40 @@ const Config = (props) => {
 
             {
                 dataSource === DataSources.Backup && !SharedService.isMobile() &&
-                <div className={classes.section}>
-                    {
-                        selectedFile &&
-                        <div className={classes.selectedFile}>{ selectedFile.name }</div>
-                    }
+                <Fade in={dataSource === DataSources.Backup && !SharedService.isMobile()} timeout={600}>
+                    <div className={cx(classes.section)}>
+                        {
+                            selectedFile &&
+                            <div className={cx(classes.selectedFile)}>{ selectedFile.name }</div>
+                        }
 
-                    <label htmlFor='FileUpload' className={classes.fileUploadLabel}>Browse
-                        <input
-                            type='file'
-                            id='FileUpload'
-                            name='file'
-                            className={classes.fileUploadInput}
-                            onChange={handleSelectFile}
-                            accept='.json'
-                        />
-                    </label>
-                    <Button
-                        variant='outlined'
-                        color='default'
-                        size='small'
-                        disabled={!selectedFile}
-                        onClick={handleUploadBookmarkData}
-                    >
-                        Upload
-                    </Button>
-                </div>
+                        <label htmlFor='FileUpload' className={cx(classes.fileUploadLabel)}>Browse
+                            <input
+                                type='file'
+                                id='FileUpload'
+                                name='file'
+                                className={cx(classes.fileUploadInput)}
+                                onChange={handleSelectFile}
+                                accept='.json'
+                            />
+                        </label>
+
+                        <Button
+                            variant='outlined'
+                            color='secondary'
+                            size='small'
+                            disabled={!selectedFile}
+                            onClick={handleUploadBookmarkData}
+                        >
+                            Upload
+                        </Button>
+                    </div>
+                </Fade>
             }
 
-            <div className={classes.section}>
+            <div className={cx(classes.section)}>
                 <Button
-                    className={classes.actionButton}
+                    className={cx(classes.actionButton)}
                     variant='contained'
                     color='primary'
                     size='small'

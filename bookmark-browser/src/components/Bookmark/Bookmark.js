@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from 'tss-react/mui';
 
 import { Context } from '../../stores/mainStore';
 import { TypeCodes } from '../../enums/TypeCodes';
@@ -7,7 +7,7 @@ import { colors } from '../../colors/colors';
 import folderImage from '../../images/folder.png';
 import bookmarkImage from '../../images/bookmark.png';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles()(() => ({
     bookmarkBlock: {
         alignItems: 'center',
         display: 'flex',
@@ -67,10 +67,10 @@ const useStyles = makeStyles({
         textAlign: 'left',
         width: '100%'
     }
-});
+}));
 
 const Bookmark = (props) => {
-    const classes = useStyles(props);
+    const { classes, cx } = useStyles(props);
     const bookmark = props.bookmark;
     const [, dispatch] = useContext(Context);
 
@@ -88,20 +88,20 @@ const Bookmark = (props) => {
     };
 
     return (
-        <div className={classes.bookmarkBlock}>
-            <div className={classes.imageBlock}>
+        <div className={cx(classes.bookmarkBlock)}>
+            <div className={cx(classes.imageBlock)}>
                 <img
                     alt='Item icon'
                     src={bookmark.typeCode === TypeCodes.Directory ? folderImage : bookmarkImage}
-                    className={bookmark.typeCode === TypeCodes.Bookmark ? classes.bookmarkImage : ''}
+                    className={bookmark.typeCode === TypeCodes.Bookmark ? cx(classes.bookmarkImage) : ''}
                 />
             </div>
 
-            <div className={classes.linkBlock}>
+            <div className={cx(classes.linkBlock)}>
                 {
                     bookmark.typeCode === TypeCodes.Directory &&
-                    <button className={classes.bookmarkDirectoryLink} onClick={(event) => goToDirectory(event, bookmark)}>
-                        <div className={classes.directoryBlock}>{bookmark.title}</div>
+                    <button className={cx(classes.bookmarkDirectoryLink)} onClick={(event) => goToDirectory(event, bookmark)}>
+                        <div className={cx(classes.directoryBlock)}>{bookmark.title}</div>
                     </button>
                 }
 
@@ -115,8 +115,8 @@ const Bookmark = (props) => {
                        rel='noreferrer'
                        target='_blank'
                     >
-                        <div className={classes.nameBlock}>{bookmark.title}</div>
-                        <div className={classes.locationBlock}>{bookmark.uri}</div>
+                        <div className={cx(classes.nameBlock)}>{bookmark.title}</div>
+                        <div className={cx(classes.locationBlock)}>{bookmark.uri}</div>
                     </a>
                 }
             </div>

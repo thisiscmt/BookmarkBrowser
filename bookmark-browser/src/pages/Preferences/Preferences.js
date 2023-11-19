@@ -1,22 +1,22 @@
 import { useContext, useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import { Checkbox, FormControlLabel } from '@material-ui/core';
+import { Checkbox, FormControlLabel } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 
-import {Context} from '../../stores/mainStore';
+import { Context } from '../../stores/mainStore';
 import * as DataService from '../../services/dataService';
-import {AlertSeverity} from '../../enums/AlertSeverity';
-import {STORAGE_PREFS_GO_TO_LAST_DIRECTORY} from '../../constants/constants';
+import { AlertSeverity } from '../../enums/AlertSeverity';
+import { STORAGE_PREFS_GO_TO_LAST_DIRECTORY } from '../../constants/constants';
 
-const styles = makeStyles({
+const useStyles = makeStyles()(() => ({
     checkboxes: {
         '& span': {
             padding: '0 4px 0 0'
         }
     }
-});
+}));
 
 const Preferences = (props) => {
-    const classes = styles(props);
+    const { classes, cx } = useStyles(props);
     const [ goToLastKnownDirectory, setGoToLastKnownDirectory] = useState(!!DataService.getApplicationData(STORAGE_PREFS_GO_TO_LAST_DIRECTORY));
     const [, dispatch] = useContext(Context);
 
@@ -31,11 +31,11 @@ const Preferences = (props) => {
     }
 
     return (
-        <main className='content-container'>
-            <div className='form-field'>
+        <div className='content-container'>
+            <div>
                 <FormControlLabel
                     classes={{
-                        root: classes.checkboxes
+                        root: cx(classes.checkboxes)
                     }}
                     control={
                         <Checkbox
@@ -48,7 +48,7 @@ const Preferences = (props) => {
                     label='Remember last known directory'
                 />
             </div>
-        </main>
+        </div>
     );
 }
 
