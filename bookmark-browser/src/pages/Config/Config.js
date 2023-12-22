@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { Button, Fade, FormControl, FormControlLabel, Radio, RadioGroup, TextField } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
-import { DateTime } from 'luxon';
 
 import LoadingOverlay from '../../components/LoadingOverlay/LoadingOverlay';
 import { Context } from '../../stores/mainStore';
@@ -189,6 +188,33 @@ const Config = (props) => {
         }
     };
 
+    const getBookmarkTimestampFormatted = () => {
+        let bookmarkTimestampFormatted;
+
+        if (bookmarkTimestamp) {
+            const now = new Date(Number(bookmarkTimestamp));
+
+            const dateOptions = {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            };
+
+            const timeOptions = {
+                timeZoneName: 'short',
+                hour: 'numeric',
+                minute: 'numeric',
+                hour12: true
+            };
+
+            bookmarkTimestampFormatted = `${new Intl.DateTimeFormat(undefined, dateOptions).format(now)} at ${new Intl.DateTimeFormat(undefined, timeOptions).format(now)}`;
+        }
+
+        return bookmarkTimestampFormatted;
+    }
+
+    const bookmarkTimestampFormatted = getBookmarkTimestampFormatted();
+
     return (
         <main className='content-container loadable-container'>
             <LoadingOverlay open={loading} />
@@ -279,15 +305,7 @@ const Config = (props) => {
 
                     <div>
                         <span className={cx(classes.statsLabel)}>Timestamp:</span>
-                        <span>
-                            {
-                                DateTime.fromMillis(bookmarkTimestamp).toLocaleString({
-                                    ...DateTime.DATE_MED,
-                                    ...DateTime.TIME_SIMPLE,
-                                    month: 'long'
-                                })
-                            }
-                        </span>
+                        <span>{bookmarkTimestampFormatted}</span>
                     </div>
                 </div>
             }
