@@ -39,10 +39,7 @@ const useStyles = makeStyles()(() => ({
         fontSize: '13px',
         fontWeight: 'bold',
         justifyContent: 'space-between',
-        padding: '14px 0 14px 0',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap'
+        padding: '14px 0 14px 0'
     },
 
     nameBlock: {
@@ -60,10 +57,15 @@ const useStyles = makeStyles()(() => ({
         whiteSpace: 'nowrap'
     },
 
+    directoryName: {
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap'
+    },
+
     directoryImage: {
         height: '24px',
-        marginRight: '2px',
-        width: '24px'
+        marginRight: '2px'
     },
 
     bookmarkImage: {
@@ -115,8 +117,8 @@ const Bookmark = (props) => {
                     bookmark.typeCode === TypeCodes.Directory &&
                     <button className={cx(classes.bookmarkDirectoryLink)} onClick={(event) => goToDirectory(event, bookmark)}>
                         <div className={cx(classes.directoryBlock)}>
-                            {bookmark.title}
-                            <span className={cx(classes.directoryImage)}><RightArrowIcon /></span>
+                            <div className={cx(classes.directoryName)}>{bookmark.title}</div>
+                            <div className={cx(classes.directoryImage)}><RightArrowIcon /></div>
                         </div>
                     </button>
                 }
