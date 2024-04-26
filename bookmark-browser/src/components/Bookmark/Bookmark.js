@@ -6,6 +6,7 @@ import { TypeCodes } from '../../enums/TypeCodes';
 import { colors } from '../../colors/colors';
 import folderImage from '../../images/folder.png';
 import bookmarkImage from '../../images/bookmark.png';
+import RightArrowIcon from '../Icons/RightArrowIcon';
 
 const useStyles = makeStyles()(() => ({
     bookmarkBlock: {
@@ -33,9 +34,15 @@ const useStyles = makeStyles()(() => ({
     },
 
     directoryBlock: {
+        alignItems: 'center',
+        display: 'flex',
         fontSize: '13px',
         fontWeight: 'bold',
-        padding: '14px 0 14px 0'
+        justifyContent: 'space-between',
+        padding: '14px 0 14px 0',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap'
     },
 
     nameBlock: {
@@ -51,6 +58,12 @@ const useStyles = makeStyles()(() => ({
         paddingBottom: '6px',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap'
+    },
+
+    directoryImage: {
+        height: '24px',
+        marginRight: '2px',
+        width: '24px'
     },
 
     bookmarkImage: {
@@ -101,7 +114,10 @@ const Bookmark = (props) => {
                 {
                     bookmark.typeCode === TypeCodes.Directory &&
                     <button className={cx(classes.bookmarkDirectoryLink)} onClick={(event) => goToDirectory(event, bookmark)}>
-                        <div className={cx(classes.directoryBlock)}>{bookmark.title}</div>
+                        <div className={cx(classes.directoryBlock)}>
+                            {bookmark.title}
+                            <span className={cx(classes.directoryImage)}><RightArrowIcon /></span>
+                        </div>
                     </button>
                 }
 
