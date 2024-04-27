@@ -65,7 +65,7 @@ const useStyles = makeStyles()(() => ({
 
     directoryImage: {
         height: '24px',
-        marginRight: '2px'
+        marginRight: '4px'
     },
 
     bookmarkImage: {
