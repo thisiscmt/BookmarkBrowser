@@ -8,10 +8,21 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+.site-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
 .content-container {
+    flex: 1;
     padding-bottom: 16px;
     padding-top: 16px;
     text-align: center;
+}
+
+.bookmark-content-container {
+    flex: 1;
 }
 
 .loadable-container {

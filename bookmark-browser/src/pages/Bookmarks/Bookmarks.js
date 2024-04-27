@@ -108,7 +108,7 @@ const Bookmarks = forwardRef((props, ref) => {
     };
 
     return (
-        <div>
+        <div className='bookmark-content-container'>
             <ul className={cx(classes.bookmarkList)}>
                 {
                     topLevel === true &&

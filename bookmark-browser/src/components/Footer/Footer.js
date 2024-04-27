@@ -6,7 +6,7 @@ import { colors } from '../../colors/colors';
 
 const useStyles = makeStyles()(() => ({
     footerContainer: {
-        marginBottom: '20px'
+        paddingBottom: '20px'
     },
 
     footerList: {

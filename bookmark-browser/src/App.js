@@ -1,6 +1,5 @@
 import { useRef } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Paper } from '@mui/material';
 
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
@@ -21,7 +20,7 @@ function App() {
         <main ref={topOfPageRef}>
             <Store>
                 <BrowserRouter>
-                    <Paper elevation={5}>
+                    <div className='site-container'>
                         <Header />
 
                         <Routes>
@@ -33,7 +32,7 @@ function App() {
                         </Routes>
 
                         <Footer/>
-                    </Paper>
+                    </div>
                 </BrowserRouter>
             </Store>
         </main>

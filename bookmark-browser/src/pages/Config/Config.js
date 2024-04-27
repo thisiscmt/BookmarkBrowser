@@ -64,6 +64,10 @@ const useStyles = makeStyles()(() => ({
         padding: '5px'
     },
 
+    timestamp: {
+        marginTop: '4px'
+    },
+
     actionButton: {
         backgroundColor: colors.primaryBackground
     }
@@ -219,7 +223,7 @@ const Config = (props) => {
         <main className='content-container loadable-container'>
             <LoadingOverlay open={loading} />
 
-            <div className={cx(classes.section)}>
+            <div>
                 <FormControl fullWidth={SharedService.isMobile()}>
                     <FormControlLabel
                         classes={{ root: cx(classes.textFieldLabelRoot), label: cx(classes.textFieldLabel) }}
@@ -303,7 +307,7 @@ const Config = (props) => {
                         <span>{bookmarkCount.toLocaleString('en')}</span>
                     </div>
 
-                    <div>
+                    <div className={cx(classes.timestamp)}>
                         <span className={cx(classes.statsLabel)}>Timestamp:</span>
                         <span>{bookmarkTimestampFormatted}</span>
                     </div>
