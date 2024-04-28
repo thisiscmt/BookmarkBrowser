@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
@@ -6,7 +6,7 @@ import { colors } from '../../colors/colors';
 
 const useStyles = makeStyles()(() => ({
     footerContainer: {
-        paddingBottom: '20px'
+        paddingBottom: '24px'
     },
 
     footerList: {
@@ -46,9 +46,10 @@ const useStyles = makeStyles()(() => ({
 
 const Footer = (props) => {
     const { classes, cx } = useStyles(props);
+    const location = useLocation();
 
     return (
-        <footer className={cx(classes.footerContainer)}>
+        <footer className={location.pathname === '/bookmarks' ? cx(classes.footerContainer) : undefined}>
             <ul className={cx(classes.footerList)}>
                 <li>
                     <Button
