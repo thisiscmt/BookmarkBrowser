@@ -78,7 +78,7 @@ const Config = (props) => {
     const [ userName, setUserName ] = useState(DataService.getApplicationData(STORAGE_USER_NAME) ? DataService.getApplicationData(STORAGE_USER_NAME) : '');
     const [ password, setPassword ] = useState(DataService.getApplicationData(STORAGE_PASSWORD) ? '********' : '');
     const [ passwordChanged, setPasswordChanged ] = useState(false);
-    const [ dataSource, setDataSource ] = useState(DataSources.Sync);
+    const [ dataSource, setDataSource ] = useState(DataSources.Backup);
     const [ selectedFile, setSelectedFile ] = useState(null);
     const [ hasBookmarkData, setHasBookmarkData ] = useState(!!DataService.getApplicationData(STORAGE_BOOKMARK_DATA));
     const [ bookmarkCount, setBookmarkCount ] = useState(Number(DataService.getApplicationData(STORAGE_BOOKMARK_COUNT)) ?
@@ -283,11 +283,11 @@ const Config = (props) => {
                         label='Data source:'
                         control={
                             <RadioGroup row={true} name="DataSource" value={dataSource} onChange={event => setDataSource(event.target.value)}>
-                                <FormControlLabel
-                                    value={DataSources.Sync}
-                                    label="Sync"
-                                    control={<Radio color='primary' className={cx(classes.dataSourceOptions)} />}
-                                />
+                                {/*<FormControlLabel*/}
+                                {/*    value={DataSources.Sync}*/}
+                                {/*    label="Sync"*/}
+                                {/*    control={<Radio color='primary' className={cx(classes.dataSourceOptions)} />}*/}
+                                {/*/>*/}
                                 <FormControlLabel
                                     value={DataSources.Backup}
                                     label="Bookmark backup"
