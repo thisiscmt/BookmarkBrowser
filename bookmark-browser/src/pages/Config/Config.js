@@ -60,7 +60,11 @@ const useStyles = makeStyles()(() => ({
         marginBottom: '12px'
     },
 
-    dataSourceOptions: {
+    dataSource: {
+        justifyContent: 'center'
+    },
+
+    dataSourceOption: {
         padding: '5px'
     },
 
@@ -279,6 +283,7 @@ const Config = (props) => {
                 <FormControl fullWidth={SharedService.isMobile()}>
                     <FormControlLabel
                         classes={{ root: cx(classes.textFieldLabelRoot), label: `${cx(classes.textFieldLabel)} ${cx(classes.dataSourceLabel)}` }}
+                        className={cx(classes.dataSource)}
                         labelPlacement='start'
                         label='Data source:'
                         control={
@@ -291,7 +296,7 @@ const Config = (props) => {
                                 <FormControlLabel
                                     value={DataSources.Backup}
                                     label="Bookmark backup"
-                                    control={<Radio color='primary' className={cx(classes.dataSourceOptions)} />}
+                                    control={<Radio color='primary' className={cx(classes.dataSourceOption)} />}
                                 />
                             </RadioGroup>
                         }
