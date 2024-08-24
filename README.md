@@ -9,4 +9,4 @@ Version 3.0 is a tech stack upgrade and for a while, a return to accessing Sync 
 It's possible to use OAuth for authenticating a Firefox account and getting to Sync that way. But it would require coordination with Mozilla, and I'm not sure if I want to pursue that yet.
 
 ### Postscript
-Mozilla did finally develop a version of [Firefox for iOS](https://www.mozilla.org/en-US/firefox/mobile/ios). The initial versions were not good, the UX was clunky and painful to use. Later editions are vastly improved, but I'm going to stick to mobile Safari. It still wins out in usability (the way you access bookmarks in Firefox for iOS is not ideal), and its performance is quite good.
+Mozilla did finally develop a version of [Firefox for iOS](https://www.mozilla.org/en-US/firefox/browsers/mobile/ios). The initial versions were not good, the UX was clunky and painful to use. Later editions are vastly improved, but I'm going to stick to mobile Safari. It still wins out in usability (the way you access bookmarks in Firefox for iOS is not ideal), and its performance is quite good.
