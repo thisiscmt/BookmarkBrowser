@@ -13,7 +13,7 @@ const useStyles = makeStyles()(() => ({
 }));
 
 const Home = (props) => {
-    const { classes, cx } = useStyles();
+    const { classes, cx } = useStyles(props);
 
     useEffect(() => {
         document.title = 'Home - Bookmark Browser';
