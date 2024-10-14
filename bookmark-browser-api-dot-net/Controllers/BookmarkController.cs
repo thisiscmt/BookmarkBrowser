@@ -2,7 +2,6 @@
 using System.Text;
 using Newtonsoft.Json.Linq;
 
-using FxSyncNet;
 using BookmarkBrowserAPI.Util;
 using BookmarkBrowserAPI.Models;
 
@@ -15,71 +14,6 @@ namespace BookmarkBrowserAPI.Controllers
         private readonly string BOOKMARK_FILE = "bookmarks.dat";
 
         #region Controller methods
-        [HttpGet]
-        public IActionResult GetBookmarks([FromHeader(Name = "authorization")] string authHeader)
-        {
-            var userVerification = VerifyUser(authHeader);
-            {
-                if (userVerification.User is null)
-                {
-                    return userVerification.Reason!;
-                }
-            }
-            var user = userVerification.User;
-            SyncClient syncClient = new();
-
-            try
-            {
-                var creds = AuthHelpers.GetAutenticationCredentials(authHeader);
-
-                if (creds is null)
-                {
-                    return BadRequest("Missing authentication information");
-                }
-
-                var loginResponse = syncClient.Login(creds.Username, creds.Password, "login");
-                syncClient.OpenSyncAccount(user.Username, user.Password, loginResponse.KeyFetchToken, loginResponse.SessionToken);
-                IEnumerable<FxSyncNet.Models.Bookmark> bookmarks = syncClient.GetBookmarks();
-
-                var bookmarkData = BookmarkHelpers.BuildBookmarks(bookmarks);
-                var response = new
-                {
-                    bookmarkData = bookmarkData.RootBookmark,
-                    count = bookmarkData.BookmarkCount,
-                    timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds()
-                };
-
-                return Ok(response);
-            }
-            catch (ServiceNotAvailableException ex)
-            {
-                return StatusCode(StatusCodes.Status504GatewayTimeout, ServiceHelpers.GetExceptionMessage(ex));
-            }
-            catch (InvalidOperationException ex)
-            {
-                return StatusCode(StatusCodes.Status400BadRequest, ServiceHelpers.GetExceptionMessage(ex));
-            }
-            catch (AuthenticationException ex)
-            {
-                return StatusCode(StatusCodes.Status403Forbidden, ServiceHelpers.GetExceptionMessage(ex));
-            }
-            catch (Exception ex)
-            {
-                if (ex.InnerException is not null && ex.InnerException!.GetType() == typeof(AuthenticationException))
-                {
-                    return StatusCode(StatusCodes.Status403Forbidden, ServiceHelpers.GetExceptionMessage(ex));
-                }
-                else
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, ServiceHelpers.GetExceptionMessage(ex));
-                }
-            }
-            finally
-            {
-                syncClient.CloseSyncAccount();
-            }
-        }
-
         [HttpGet("backup")]
         public IActionResult GetBookmarksBackup([FromHeader(Name = "authorization")] string authHeader)
         {
