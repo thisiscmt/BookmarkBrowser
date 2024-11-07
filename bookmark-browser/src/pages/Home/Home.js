@@ -26,7 +26,7 @@ const Home = (props) => {
             </div>
 
             <div className={cx(classes.content)}>
-                This app provides an easy way to navigate through and use your Sync bookmarks on a mobile device.
+                This site provides an easy way to navigate through and use your Firefox Sync bookmarks on a mobile device.
             </div>
         </main>
     )
