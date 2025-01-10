@@ -43,7 +43,7 @@ namespace BookmarkBrowserAPI.Controllers
                 if (!System.IO.Directory.Exists(dirPath))
                 {
                     ServiceHelpers.WriteEvent($"Could not find directory for user {user.Username} with ID {user.Id}", DateTime.Now, "", "BookmarkController", "GetBookmarkBackup");
-                    return StatusCode(StatusCodes.Status500InternalServerError, "Could not find directory");
+                    return StatusCode(StatusCodes.Status500InternalServerError, $"Could not find directory for user {user.Username}");
                 }
 
                 bookmarkBackup = System.IO.File.ReadAllText(Path.Combine(dirPath, BOOKMARK_FILE), Encoding.UTF8);

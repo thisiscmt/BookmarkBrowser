@@ -14,7 +14,8 @@ import {
     STORAGE_BOOKMARK_DATA,
     STORAGE_BOOKMARK_TIMESTAMP,
     STORAGE_PASSWORD,
-    STORAGE_USER_NAME
+    STORAGE_USER_NAME,
+    DEMO_USER_NAME
 } from '../../constants/constants';
 import { colors } from '../../colors/colors';
 
@@ -182,11 +183,7 @@ const Config = (props) => {
 
                 dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: 'Bookmark data refreshed successfully', severity: AlertSeverity.Success} });
             } catch (error) {
-                if (error.response.status === 403) {
-                    dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: 'Please verify the current login', severity: AlertSeverity.Info} });
-                } else {
-                    dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: SharedService.getErrorMessage(error), severity: AlertSeverity.Error} });
-                }
+                dispatch({ type: 'SET_BANNER_MESSAGE', payload: {message: SharedService.getErrorMessage(error), severity: AlertSeverity.Error} });
             } finally {
                 setLoading(false);
             }
@@ -336,6 +333,7 @@ const Config = (props) => {
                                 className={cx(classes.fileUploadInput)}
                                 onChange={handleSelectFile}
                                 accept='.json'
+                                disabled={userName === DEMO_USER_NAME && !window.location.href.startsWith('http://localhost')}
                             />
                         </label>
 
