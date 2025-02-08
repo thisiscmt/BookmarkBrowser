@@ -52,10 +52,6 @@ const useStyles = makeStyles()(() => ({
         textDecoration: 'underline'
     },
 
-    defaultCursor: {
-        cursor: 'default'
-    },
-
     fileUploadInput: {
         display: 'none'
     },
@@ -223,7 +219,6 @@ const Config = (props) => {
     }
 
     const bookmarkTimestampFormatted = getBookmarkTimestampFormatted();
-    const uploadLabelClassName = `${cx(classes.fileUploadLabel)}${userName === DEMO_USER_NAME && !window.location.href.startsWith('http://localhost') ? ` ${cx(classes.defaultCursor)}` : ''}`;
 
     return (
         <main className='content-container loadable-container'>
@@ -330,7 +325,7 @@ const Config = (props) => {
                             <div className={cx(classes.selectedFile)}>{ selectedFile.name }</div>
                         }
 
-                        <label htmlFor='FileUpload' className={uploadLabelClassName}>Browse
+                        <label htmlFor='FileUpload' className={cx(classes.fileUploadLabel)}>Browse
                             <input
                                 type='file'
                                 id='FileUpload'
