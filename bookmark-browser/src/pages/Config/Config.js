@@ -338,7 +338,6 @@ const Config = (props) => {
                                 className={cx(classes.fileUploadInput)}
                                 onChange={handleSelectFile}
                                 accept='.json'
-                                disabled={userName === DEMO_USER_NAME && !window.location.href.startsWith('http://localhost')}
                             />
                         </label>
 
@@ -346,7 +345,7 @@ const Config = (props) => {
                             variant='outlined'
                             color='secondary'
                             size='small'
-                            disabled={!selectedFile}
+                            disabled={!selectedFile || userName === DEMO_USER_NAME}
                             onClick={handleUploadBookmarkData}
                         >
                             Upload
