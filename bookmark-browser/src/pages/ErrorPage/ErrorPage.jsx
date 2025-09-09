@@ -6,9 +6,9 @@ const ErrorPage = () => {
     });
 
     return (
-        <main className='error-page'>
+        <div className='content-container error-page'>
             <p>The page you are trying to reach can't be found.</p>
-        </main>
+        </div>
     )
 }
 

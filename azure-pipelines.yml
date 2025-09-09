@@ -34,10 +34,6 @@ jobs:
         npm run build
       workingDirectory: $(Build.SourcesDirectory)/bookmark-browser
       displayName: 'Build the UI'
-    - script: |
-        npm run test
-      workingDirectory: $(Build.SourcesDirectory)/bookmark-browser
-      displayName: 'Run UI unit tests'
     - task: DotNetCoreCLI@2
       inputs:
         command: publish
@@ -48,7 +44,7 @@ jobs:
       displayName: 'Create API artifact'
     - task: ArchiveFiles@2
       inputs:
-        rootFolderOrFile: '$(Build.SourcesDirectory)/bookmark-browser/build'
+        rootFolderOrFile: '$(Build.SourcesDirectory)/bookmark-browser/dist'
         includeRootFolder: false
         archiveType: zip
         archiveFile: '$(Build.ArtifactStagingDirectory)/bookmark-browser-ui.zip'

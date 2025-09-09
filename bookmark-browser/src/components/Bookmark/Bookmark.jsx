@@ -1,12 +1,12 @@
 import { useContext } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Context } from '../../stores/mainStore';
+import { Context } from '../../contexts/mainContext.js';
 import { TypeCodes } from '../../enums/TypeCodes';
 import { colors } from '../../colors/colors';
 import folderImage from '../../images/folder.png';
 import bookmarkImage from '../../images/bookmark.png';
-import RightArrowIcon from '../Icons/RightArrowIcon';
+import RightArrowIcon from '../Icons/RightArrowIcon.jsx';
 
 const useStyles = makeStyles()(() => ({
     bookmarkBlock: {
@@ -127,7 +127,6 @@ const Bookmark = (props) => {
                     bookmark.typeCode === TypeCodes.Bookmark &&
                     // Using the ref property to set the href is needed since the URL could be a bookmarklet, and React will eventually ban
                     // 'javascript:' type href values for anchors
-                    // eslint-disable-next-line jsx-a11y/anchor-is-valid
                     <a className='no-decoration'
                        ref={node => node && node.setAttribute('href', bookmark.uri)}
                        rel='noreferrer'

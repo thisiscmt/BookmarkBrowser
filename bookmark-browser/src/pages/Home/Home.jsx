@@ -20,7 +20,7 @@ const Home = (props) => {
     });
 
     return (
-        <main className='content-container'>
+        <div className='content-container'>
             <div>
                 <h3 className={cx(classes.welcomeText)}>Welcome to the Bookmark Browser</h3>
             </div>
@@ -28,7 +28,7 @@ const Home = (props) => {
             <div className={cx(classes.content)}>
                 This site provides an easy way to navigate through and use your Firefox Sync bookmarks on a mobile device.
             </div>
-        </main>
+        </div>
     )
 }
 

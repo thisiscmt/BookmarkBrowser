@@ -8,7 +8,7 @@ export const getBookmarks = (authHeader) => {
         }
     };
 
-    return Axios.get(process.env.REACT_APP_API_URL + '/bookmark', config)
+    return Axios.get(import.meta.env.VITE_API_URL + '/bookmark', config)
 };
 
 export const uploadBookmarkData = (bookmarkData, authHeader) => {
@@ -24,7 +24,7 @@ export const uploadBookmarkData = (bookmarkData, authHeader) => {
         timestamp: new Date().getTime()
     }
 
-    return Axios.put(process.env.REACT_APP_API_URL + '/bookmark/backup', data, config)
+    return Axios.put(import.meta.env.VITE_API_URL + '/bookmark/backup', data, config)
 };
 
 export const downloadBookmarkData = (authHeader) => {
@@ -35,5 +35,5 @@ export const downloadBookmarkData = (authHeader) => {
         }
     };
 
-    return Axios.get(process.env.REACT_APP_API_URL + '/bookmark/backup', config)
+    return Axios.get(import.meta.env.VITE_API_URL + '/bookmark/backup', config)
 };

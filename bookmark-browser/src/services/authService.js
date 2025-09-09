@@ -11,5 +11,5 @@ export const login = (authHeader, reason = 'login') => {
         }
     };
 
-    return Axios.get(process.env.REACT_APP_API_URL + '/auth/login', config)
+    return Axios.get(import.meta.env.VITE_API_URL + '/auth/login', config)
 };

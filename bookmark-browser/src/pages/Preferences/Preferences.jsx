@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { Context } from '../../stores/mainStore';
+import { Context } from '../../contexts/mainContext.js';
 import * as DataService from '../../services/dataService';
 import { AlertSeverity } from '../../enums/AlertSeverity';
 import { STORAGE_PREFS_GO_TO_LAST_DIRECTORY } from '../../constants/constants';

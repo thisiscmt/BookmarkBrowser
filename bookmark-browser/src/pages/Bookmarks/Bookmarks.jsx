@@ -1,13 +1,13 @@
 import { forwardRef, useContext, useEffect, useState } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Context } from '../../stores/mainStore';
-import Bookmark from '../../components/Bookmark/Bookmark';
-import * as DataService from '../../services/dataService';
+import { Context } from '../../contexts/mainContext.js';
+import Bookmark from '../../components/Bookmark/Bookmark.jsx';
 import { TypeCodes } from '../../enums/TypeCodes';
 import { AlertSeverity } from '../../enums/AlertSeverity';
 import { STORAGE_BOOKMARK_DATA } from '../../constants/constants';
 import { colors } from '../../colors/colors';
+import * as DataService from '../../services/dataService';
 
 const useStyles = makeStyles()(() => ({
     topLevelHeader: {
@@ -59,7 +59,7 @@ const useStyles = makeStyles()(() => ({
 
     separator: {
         borderTop: `1px solid ${colors.bookmarkBorder}`,
-        borderBottom: `4px solid ${colors.bookmarkBackground}`
+        borderBottom: `3px solid ${colors.bookmarkBackground}`
     }
 }));
 

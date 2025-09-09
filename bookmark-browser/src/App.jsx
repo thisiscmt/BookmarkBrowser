@@ -1,15 +1,14 @@
 import { useRef } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import Header from './components/Header/Header';
-import Footer from './components/Footer/Footer';
-import Home from './pages/Home/Home';
-import Bookmarks from './pages/Bookmarks/Bookmarks';
-import Preferences from './pages/Preferences/Preferences';
-import Config from './pages/Config/Config';
-import ErrorPage from './pages/ErrorPage/ErrorPage';
-import Store from './stores/mainStore';
-import './App.scss';
+import Header from './components/Header/Header.jsx';
+import Footer from './components/Footer/Footer.jsx';
+import Home from './pages/Home/Home.jsx';
+import Bookmarks from './pages/Bookmarks/Bookmarks.jsx';
+import Preferences from './pages/Preferences/Preferences.jsx';
+import Config from './pages/Config/Config.jsx';
+import ErrorPage from './pages/ErrorPage/ErrorPage.jsx';
+import Store from './stores/mainStore.jsx';
 
 function App() {
     // This ref is used to scroll to the top of the page after navigation is completed, as a convenience to the user in case the link they clicked
@@ -17,7 +16,7 @@ function App() {
     const topOfPageRef = useRef();
 
     return (
-        <main ref={topOfPageRef}>
+        <div ref={topOfPageRef}>
             <Store>
                 <BrowserRouter>
                     <div className='site-container'>
@@ -35,7 +34,7 @@ function App() {
                     </div>
                 </BrowserRouter>
             </Store>
-        </main>
+        </div>
     );
 }
 

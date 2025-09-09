@@ -1,12 +1,7 @@
-import React, {createContext, useReducer} from 'react';
+import React, { useReducer } from 'react';
 
+import { Context, initialState } from '../contexts/mainContext.js';
 import Reducer from './mainReducer'
-
-const initialState = {
-    currentNavigation: {},
-    bannerMessage: '',
-    bannerSeverity: ''
-};
 
 const Store = ({children}) => {
     const [state, dispatch] = useReducer(Reducer, initialState, undefined);
@@ -17,7 +12,5 @@ const Store = ({children}) => {
         </Context.Provider>
     )
 };
-
-export const Context = createContext(initialState);
 
 export default Store;

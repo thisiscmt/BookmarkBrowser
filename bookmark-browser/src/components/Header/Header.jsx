@@ -3,11 +3,11 @@ import { useLocation } from 'react-router-dom'
 import { Alert, Button, Fade } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { Context } from '../../stores/mainStore';
-import * as DataService from '../../services/dataService';
-import * as SharedService from '../../services/sharedService';
+import { Context } from '../../contexts/mainContext.js';
 import { STORAGE_CURRENT_DIRECTORY, STORAGE_CURRENT_NODE, STORAGE_PREFS_GO_TO_LAST_DIRECTORY } from '../../constants/constants';
 import { colors } from '../../colors/colors';
+import * as DataService from '../../services/dataService';
+import * as SharedService from '../../services/sharedService';
 
 const useStyles = makeStyles()(() => ({
     headerContainer: {

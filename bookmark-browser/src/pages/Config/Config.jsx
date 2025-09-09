@@ -2,8 +2,8 @@ import { useContext, useEffect, useState } from 'react';
 import { Button, Fade, FormControl, FormControlLabel, Radio, RadioGroup, TextField } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import LoadingOverlay from '../../components/LoadingOverlay/LoadingOverlay';
-import { Context } from '../../stores/mainStore';
+import LoadingOverlay from '../../components/LoadingOverlay/LoadingOverlay.jsx';
+import { Context } from '../../contexts/mainContext.js';
 import * as SharedService from '../../services/sharedService';
 import * as DataService from '../../services/dataService';
 import * as BookmarkService from '../../services/bookmarkService';
@@ -221,7 +221,7 @@ const Config = (props) => {
     const bookmarkTimestampFormatted = getBookmarkTimestampFormatted();
 
     return (
-        <main className='content-container loadable-container'>
+        <div className='content-container loadable-container'>
             <LoadingOverlay open={loading} />
 
             <div>
@@ -358,7 +358,7 @@ const Config = (props) => {
                     onClick={handleRefreshData}>Refresh
                 </Button>
             </div>
-        </main>
+        </div>
     );
 }
 

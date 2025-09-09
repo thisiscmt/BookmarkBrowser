@@ -1,4 +1,4 @@
-import {AlertSeverity} from '../enums/AlertSeverity';
+import { AlertSeverity } from '../enums/AlertSeverity';
 
 const Reducer = (state, action) => {
     switch (action.type) {
@@ -7,7 +7,7 @@ const Reducer = (state, action) => {
                 ...state,
                 currentNavigation: action.payload
             };
-        case 'SET_BANNER_MESSAGE':
+        case 'SET_BANNER_MESSAGE':{
             let severity = AlertSeverity.Info;
 
             if (action.payload.severity) {
@@ -19,6 +19,7 @@ const Reducer = (state, action) => {
                 bannerMessage: action.payload.message,
                 bannerSeverity: severity
             };
+        }
         default:
             return state;
     }
