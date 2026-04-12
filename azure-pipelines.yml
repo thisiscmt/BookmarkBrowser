@@ -18,9 +18,9 @@ jobs:
         version: $(dotNetVersion)
         includePreviewVersions: false
       displayName: 'Install .NET Core SDK'
-    - task: NodeTool@0
+    - task: UseNodeV1@1
       inputs:
-        versionSpec: '24.x'
+        version: '24.x'
       displayName: 'Install Node.js'
     - script: |
         npm install
