@@ -15,7 +15,7 @@ namespace BookmarkBrowserAPI.Controllers
 
         #region Controller methods
         [HttpGet("backup")]
-        public IActionResult GetBookmarksBackup([FromHeader(Name = "authorization")] string authHeader)
+        public IActionResult GetBookmarkBackup([FromHeader(Name = "authorization")] string authHeader)
         {
             string bookmarkBackup;
 
