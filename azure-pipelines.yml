@@ -6,8 +6,8 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  dotNetFramework: 'net8.0'
-  dotNetVersion: '8.0.x'
+  dotNetFramework: 'net10.0'
+  dotNetVersion: '10.0.x'
   targetRuntime: 'linux-x64'
 
 jobs:
@@ -20,7 +20,7 @@ jobs:
       displayName: 'Install .NET Core SDK'
     - task: NodeTool@0
       inputs:
-        versionSpec: '22.x'
+        versionSpec: '24.x'
       displayName: 'Install Node.js'
     - script: |
         npm install

@@ -13,7 +13,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>BookmarkBrowserAPI</RootNamespace>
-    <AssemblyVersion>3.5</AssemblyVersion>
+    <AssemblyVersion>3.6</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
