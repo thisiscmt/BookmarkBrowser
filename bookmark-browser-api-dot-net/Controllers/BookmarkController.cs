@@ -47,7 +47,7 @@ namespace BookmarkBrowserAPI.Controllers
                 }
 
                 bookmarkBackup = System.IO.File.ReadAllText(Path.Combine(dirPath, BOOKMARK_FILE), Encoding.UTF8);
-                var bookmarkData = BookmarkHelpers.BuildBookmarksFromBackup(bookmarkBackup);
+                var bookmarkData = BookmarkHelpers.BuildBookmarksFromBackup(bookmarkBackup, user.Id);
                 var response = new
                 {
                     bookmarkData = bookmarkData.RootBookmark,

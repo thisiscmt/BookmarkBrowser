@@ -7,7 +7,9 @@ namespace BookmarkBrowserAPI.Util
 {
     public class BookmarkHelpers
     {
-        public static BookmarkData BuildBookmarksFromBackup(string bookmarkBackup)
+        private static readonly string BOOKMARKS_LOG_FILE = "bookmarks.log";
+
+        public static BookmarkData BuildBookmarksFromBackup(string bookmarkBackup, string userId)
         {
             Bookmark? rootItem;
             Bookmark itemForSwap;
@@ -32,14 +34,34 @@ namespace BookmarkBrowserAPI.Util
             rootItem.Children[0] = rootItem.Children[1];
             rootItem.Children[1] = itemForSwap;
 
-            // We set certain metadata on each directory to make navigation easier on the client, plus we get a count of actual bookmarks
-            SetMetadata(ref rootItem, ref bookmarkCount);
+            var logDirPathVal = AppDomain.CurrentDomain.GetData("AppDataPath");
+            StreamWriter? sr = null;
+
+            if (logDirPathVal != null && Environment.GetEnvironmentVariable("ENABLE_BOOKMARK_LOGGING")?.ToLower() == "true")
+            {
+                var logFilePath = Path.Combine((string)logDirPathVal, userId);
+                logFilePath = Path.Combine(logFilePath, BOOKMARKS_LOG_FILE);
+                sr = new StreamWriter(logFilePath, false, System.Text.Encoding.UTF8);
+            }
+
+            try
+            {
+                // We set certain metadata on each directory to make navigation easier on the client, plus we get a count of actual bookmarks
+                SetMetadata(ref rootItem, ref bookmarkCount, ref sr);
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                sr?.Close();
+            }
 
             return new BookmarkData(rootItem, bookmarkCount, bookmarkObject.Property("timestamp")!.Value.ToString());
-
         }
 
-        public static void SetMetadata(ref Bookmark dir, ref int bookmarkCount)
+        public static void SetMetadata(ref Bookmark dir, ref int bookmarkCount, ref StreamWriter? sr)
         {
             Bookmark newDir;
 
@@ -51,11 +73,12 @@ namespace BookmarkBrowserAPI.Util
                     {
                         item.Path = dir.Path + "\\" + item.Title;
                         newDir = item;
-                        SetMetadata(ref newDir, ref bookmarkCount);
+                        SetMetadata(ref newDir, ref bookmarkCount, ref sr);
                     }
                     else if (item.TypeCode == Enums.TypeCode.Bookmark)
                     {
                         bookmarkCount += 1;
+                        sr?.WriteLine(item.Title + ", " + item.Uri);
                     }
                 }
             }

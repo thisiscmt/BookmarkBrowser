@@ -2,6 +2,8 @@
 {
     public class ServiceHelpers
     {
+        private static readonly string ERROR_LOG_FILE = "error.log";
+
         #region Public methods
         public static string EnsureBackslash(string value)
         {
@@ -40,27 +42,27 @@
         public static void WriteEvent(string desc, DateTime timestamp, string longDesc = "", string source = "", string process = "", string tag = "")
         {
             string msg = string.Empty;
-            string filePath;
-            string? dirPath;
+            string logFilePath;
 
             try
             {
-                var logPath = AppDomain.CurrentDomain.GetData("LogPath");
+                var logDirPathVal = AppDomain.CurrentDomain.GetData("LogPath");
 
-                if (logPath is null)
+                if (logDirPathVal == null)
                 {
                     return;
                 }
 
-                filePath = Path.Combine((string)logPath, "errors.log");
-                dirPath = Path.GetDirectoryName(filePath);
+                var logDirPath = (string)logDirPathVal;
 
-                if (dirPath != null && !System.IO.Directory.Exists(dirPath))
+                if (!System.IO.Directory.Exists(logDirPath))
                 {
-                    System.IO.Directory.CreateDirectory(dirPath);
+                    System.IO.Directory.CreateDirectory(logDirPath);
                 }
 
-                using (StreamWriter sr = new StreamWriter(filePath, true, System.Text.Encoding.UTF8)) 
+                logFilePath = Path.Combine((string)logDirPath, ERROR_LOG_FILE);
+
+                using (StreamWriter sr = new StreamWriter(logFilePath, true, System.Text.Encoding.UTF8)) 
                 {
                     if (!string.IsNullOrEmpty(desc))
                     {
